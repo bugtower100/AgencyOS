@@ -25,8 +25,8 @@ export function DashboardPage() {
     const allAwardsZero = inService.every((a) => a.awards === 0)
     const allReprimandsZero = inService.every((a) => a.reprimands === 0)
 
-    // 观察期：先处理“全 0”与一般规则
-    let watchCandidates = inService
+  // 观察期：先处理“全 0”与一般规则
+  let watchCandidates = inService
     if (allReprimandsZero) {
       // 所有人申诫为 0 → 全员观察期
       watchCandidates = inService
@@ -42,11 +42,15 @@ export function DashboardPage() {
       }
     }
 
-    // MVP：若所有嘉奖为 0，则无人 MVP；否则按规则选
+    // MVP：从“未进入观察期”的特工中评选；若所有嘉奖为 0 或候选为空，则无人 MVP
+    const remainingForMvp = inService.filter(
+      (agent) => !watchCandidates.some((w) => w.id === agent.id),
+    )
+
     let mvpCandidates: typeof inService = []
-    if (!allAwardsZero) {
-      const maxAwards = Math.max(...inService.map((a) => a.awards))
-      const awardLeaders = inService.filter((a) => a.awards === maxAwards)
+    if (!allAwardsZero && remainingForMvp.length) {
+      const maxAwards = Math.max(...remainingForMvp.map((a) => a.awards))
+      const awardLeaders = remainingForMvp.filter((a) => a.awards === maxAwards)
       if (awardLeaders.length === 1) {
         mvpCandidates = awardLeaders
       } else {
