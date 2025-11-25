@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 
-export type ThemeMode = 'night' | 'day' | 'win98'
+export type ThemeMode = 'night' | 'day' | 'win98' | 'retro'
 
 interface ThemeState {
   mode: ThemeMode

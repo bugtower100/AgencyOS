@@ -110,6 +110,19 @@ export function SettingsPage() {
             <Laptop className="h-6 w-6" />
             <span className="text-sm font-medium">Win98</span>
           </button>
+          <button
+            onClick={() => setThemeMode('retro')}
+            className={cn(
+              "flex flex-col items-center justify-center gap-3 border p-4 transition-all hover:border-agency-cyan hover:bg-agency-cyan/5",
+              themeMode === 'retro' 
+                ? "border-agency-cyan bg-agency-cyan/10 text-agency-cyan" 
+                : "border-agency-border text-agency-muted",
+              isWin98 ? "rounded-none" : "rounded-xl"
+            )}
+          >
+            <Monitor className="h-6 w-6" />
+            <span className="text-sm font-medium">复古</span>
+          </button>
         </div>
       </section>
 

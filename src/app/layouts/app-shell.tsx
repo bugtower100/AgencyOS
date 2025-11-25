@@ -39,6 +39,8 @@ export function AppShell() {
   })
   const themeMode = useThemeStore((state) => state.mode)
   const isWin98 = themeMode === 'win98'
+  const isRetro = themeMode === 'retro'
+  const isSquare = isWin98 || isRetro
 
   useEffect(() => {
     if (typeof document === 'undefined') return
@@ -119,16 +121,33 @@ export function AppShell() {
         <aside
           className={cn(
             'space-y-6 border border-agency-border bg-agency-panel/80 p-4',
-            isWin98 ? 'rounded-none' : 'rounded-3xl shadow-panel',
+            isSquare ? 'rounded-none' : 'rounded-3xl shadow-panel',
           )}
         >
+          {isWin98 && (
+            <div className="win98-title-bar -mx-3 -mt-3 mb-4 flex items-center justify-between px-2 py-1">
+              <span className="text-sm font-bold">Agency OS</span>
+              <div className="flex gap-1">
+                <div className="flex h-4 w-4 items-center justify-center bg-[#c0c0c0] text-[10px] text-black shadow-[inset_-1px_-1px_#000000,inset_1px_1px_#ffffff,inset_-2px_-2px_#808080,inset_2px_2px_#dfdfdf] active:shadow-[inset_1px_1px_#000000,inset_-1px_-1px_#ffffff,inset_2px_2px_#808080,inset_-2px_-2px_#dfdfdf]">
+                  ?
+                </div>
+                <div className="flex h-4 w-4 items-center justify-center bg-[#c0c0c0] text-[10px] text-black shadow-[inset_-1px_-1px_#000000,inset_1px_1px_#ffffff,inset_-2px_-2px_#808080,inset_2px_2px_#dfdfdf] active:shadow-[inset_1px_1px_#000000,inset_-1px_-1px_#ffffff,inset_2px_2px_#808080,inset_-2px_-2px_#dfdfdf]">
+                  X
+                </div>
+              </div>
+            </div>
+          )}
           <header className="space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-xs uppercase tracking-[0.4em] text-red-500">Agency OS</p>
+              <p className={cn("text-xs uppercase tracking-[0.4em]", isWin98 ? "text-black" : "text-red-500")}>Agency OS</p>
               <button
                 type="button"
                 onClick={openHeaderEditor}
-                className="rounded-full border border-agency-border px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.25em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan"
+                className={cn(
+                  "rounded-full border border-agency-border px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.25em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan",
+                  isWin98 && "rounded-none bg-[#c0c0c0] text-black shadow-[inset_-1px_-1px_#000000,inset_1px_1px_#ffffff,inset_-2px_-2px_#808080,inset_2px_2px_#dfdfdf] active:shadow-[inset_1px_1px_#000000,inset_-1px_-1px_#ffffff,inset_2px_2px_#808080,inset_-2px_-2px_#dfdfdf]",
+                  isRetro && "rounded-none"
+                )}
               >
                 编辑
               </button>
@@ -140,7 +159,7 @@ export function AppShell() {
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
-                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                      isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                     value={headerDraft.name}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, name: e.target.value }))}
@@ -151,7 +170,7 @@ export function AppShell() {
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
-                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                      isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                     value={headerDraft.divisionCode}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, divisionCode: e.target.value }))}
@@ -162,7 +181,7 @@ export function AppShell() {
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
-                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                      isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                     value={headerDraft.status}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, status: e.target.value }))}
@@ -174,7 +193,7 @@ export function AppShell() {
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
-                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                      isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                     value={headerDraft.styleText}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, styleText: e.target.value }))}
@@ -187,7 +206,7 @@ export function AppShell() {
                     onClick={cancelHeaderEdit}
                     className={cn(
                       'border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.25em] text-agency-muted hover:border-agency-amber hover:text-agency-amber',
-                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                      isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                   >
                     取消
@@ -197,7 +216,7 @@ export function AppShell() {
                     onClick={confirmHeaderEdit}
                     className={cn(
                       'border border-agency-cyan px-3 py-1 text-[0.65rem] uppercase tracking-[0.25em] text-agency-cyan hover:bg-agency-cyan/10',
-                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                      isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                   >
                     保存
@@ -225,11 +244,11 @@ export function AppShell() {
                     isActive
                       ? cn(
                           'border-agency-cyan/80 bg-agency-ink text-white',
-                          isWin98 ? 'rounded-none shadow-none' : 'rounded-2xl shadow-panel',
+                          isWin98 ? 'rounded-none shadow-none win98-active' : (isRetro ? 'rounded-none shadow-none' : 'rounded-2xl shadow-panel'),
                         )
                       : cn(
                           'border-agency-border/60 text-agency-muted hover:border-agency-cyan/40 hover:text-agency-cyan',
-                          isWin98 ? 'rounded-none' : 'rounded-2xl',
+                          isSquare ? 'rounded-none' : 'rounded-2xl',
                         ),
                   )
                 }
@@ -249,7 +268,7 @@ export function AppShell() {
             <div
               className={cn(
                 'border border-agency-magenta/40 bg-gradient-to-r from-agency-magenta/20 to-transparent p-3 font-mono',
-                isWin98 ? 'rounded-none' : 'rounded-2xl',
+                isSquare ? 'rounded-none' : 'rounded-2xl',
               )}
             >
               <p>当前：{chaosValue}</p>
@@ -266,8 +285,8 @@ export function AppShell() {
           </div>
           <div
             className={cn(
-              'border border-agency-border/60 bg-agency-ink/40 p-4 text-[0.65rem] uppercase tracking-[0.4em] text-agency-muted',
-              isWin98 ? 'rounded-none' : 'rounded-3xl',
+              'border border-agency-border/60 p-4 text-[0.65rem] uppercase tracking-[0.4em] text-agency-muted',
+              isSquare ? 'rounded-none bg-agency-panel' : 'rounded-3xl bg-agency-ink/40',
             )}
           >
             <div className="flex flex-wrap items-center gap-2">
@@ -278,7 +297,7 @@ export function AppShell() {
                   onClick={handleExportSnapshot}
                   className={cn(
                     'border border-agency-cyan/40 px-3 py-1 font-mono text-agency-cyan hover:border-agency-cyan',
-                    isWin98 ? 'rounded-none' : 'rounded-xl',
+                    isSquare ? 'rounded-none' : 'rounded-xl',
                   )}
                 >
                   导出内容
@@ -288,7 +307,7 @@ export function AppShell() {
                   onClick={handleImportClick}
                   className={cn(
                     'border border-agency-border px-3 py-1 font-mono text-agency-muted hover:border-agency-cyan hover:text-agency-cyan',
-                    isWin98 ? 'rounded-none' : 'rounded-xl',
+                    isSquare ? 'rounded-none' : 'rounded-xl',
                   )}
                   disabled={importing}
                 >
@@ -302,7 +321,7 @@ export function AppShell() {
           <div
             className={cn(
               'border border-agency-border/80 bg-agency-panel/70 p-6 backdrop-blur',
-              isWin98 ? 'rounded-none' : 'rounded-3xl shadow-panel',
+              isSquare ? 'rounded-none' : 'rounded-3xl shadow-panel',
             )}
           >
             <Outlet />
