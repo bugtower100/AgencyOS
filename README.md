@@ -1,104 +1,111 @@
-# React + TypeScript + Vite
+ # Agency OS · GM 信息追踪工具
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> 面向三角机构桌游主持人（GM）的离线优先控制台。复刻 Agency OS 的冷峻企业风，实现战役、特工、任务、异常体与混沌池的全流程追踪。
 
-Currently, two official plugins are available:
+- 产品/技术架构：`docs/product-architecture.md`
+- 规则原文参考：仓库根目录 `规则文本/`（如存在）
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ 核心能力（MVP）
 
-## React Compiler
+1. **战役仪表板**：展示分部状态、下一次任务、混沌池与异常体统计（`/` 仪表盘）。
+2. **人力资源档案**：特工列表、在职状态、嘉奖/申诫统计等（`/agents`）。
+3. **任务控制台**：单页实时面板，集中日志、混沌池、散逸端、可选目标提示等（`/missions`）。
+4. **异常体 / 散逸端库**：按焦点、领域、状态浏览，追踪相关任务与混沌效应（`/anomalies`）。
+5. **结算报告**：任务简报与结算信息归档，支持按战役维度回顾（`/reports`）。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+扩展路线：申领物商店、请求机构特效、高墙文件解锁、云同步与插件化报表。
 
-## Expanding the ESLint configuration
+## 🧱 技术栈
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **框架**：React 19 + TypeScript
+- **构建**：Vite 7
+- **路由**：`react-router-dom`（多模块页面）
+- **状态管理**：Zustand（实体 store）
+- **异步数据**：TanStack Query
+- **表单/校验**：React Hook Form + Zod
+- **样式**：Tailwind CSS + Radix UI 主题组件
+- **数据层**：Dexie.js（IndexedDB 持久化）+ JSON 导入/导出战役快照
+- **图标**：Lucide React
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    # Agency OS · GM 信息追踪工具
+> ⚠️ Vite 7 推荐使用 Node.js ≥ 20.19（或 22.12+）。如果你的 Node 版本较低，`npm run dev` 时可能出现警告或失败，建议升级。
 
-    > 面向三角机构桌游主持人（GM）的离线优先控制台。复刻 Agency OS 的冷峻企业风，实现战役、特工、任务、异常体与混沌池的全流程追踪。
+## 📁 项目结构
 
-    - 产品/技术架构：`docs/product-architecture.md`
-    - 规则原文参考：仓库根目录 `规则文本/`
+```text
+src/
+  main.tsx           # React 入口
+  App.tsx            # 根组件，挂载路由/布局
+  app/
+    providers.tsx    # Router、主题等全局 providers
+    layouts/
+      app-shell.tsx  # 左侧导航 + 顶部状态条 + 导入导出快照
+  modules/
+    dashboard/
+      pages/
+        dashboard-page.tsx  # 战役仪表板
+    agents/
+      pages/
+        agents-page.tsx     # 特工档案
+    missions/
+      pages/
+        missions-page.tsx   # 任务控制
+    anomalies/
+      pages/
+        anomalies-page.tsx  # 异常体库
+    reports/
+      pages/
+        reports-page.tsx    # 任务报告
+  components/ui/     # 设计系统组件（面板、统计卡、命令条等）
+  services/db/       # Dexie client、快照导入导出
+  stores/            # 状态 store（战役、主题等）
+  lib/               # 工具函数、mock 数据与类型
+```
 
-    ## ✨ 核心能力（MVP）
+更多整体架构、数据模型与模块说明见 `docs/product-architecture.md`。
 
-    1. **战役仪表板**：展示分部状态、下一次任务、混沌与异常体统计。
-    2. **人力资源档案**：ARC 三件套、资质 QA、嘉奖/申诫、关系网络与快照。
-    3. **任务控制台**：单页实时面板，集中日志、混沌池、散逸端、可选目标及励志提示弹窗。
-    4. **异常体 / 散逸端库**：按焦点、领域、状态搜索，追踪相关任务与混沌效应。
-    5. **结算向导**：引导式任务报告、MVP 与机构评级自动计算、战役快照与导出。
+## 🚀 快速开始
 
-    扩展路线：申领物商店、请求机构特效、高墙文件解锁、云同步与插件化报表。
+1. 安装依赖：
 
-    ## 🧱 技术栈
+   ```powershell
+   npm install
+   ```
 
-    - **构建**：Vite 7 + React 18 + TypeScript
-    - **状态**：Zustand（实体 store）+ TanStack Query（异步）
-    - **表单/校验**：React Hook Form + Zod
-    - **样式**：Tailwind CSS + Radix UI，自定义暗色/紧急模式主题
-    - **数据层**：Dexie.js（IndexedDB 持久化）+ JSON 导入导出
-    - **图表/表格**：Recharts、TanStack Table
+2. 启动开发服务器：
 
-    > ⚠️ Vite 7 需要 Node.js ≥ 20.19（或 22.12+）。当前环境为 20.16.0，会在启动 dev server 时产生警告甚至失败，请升级 Node 版本。
+   ```powershell
+   npm run dev
+   ```
 
-    ## 📁 目录约定
+   默认会在浏览器中打开本地地址（通常是 http://localhost:5173）。
 
-    ```
-    src/
-      app/            # 入口、路由、布局、主题 providers
-      modules/
-        campaigns/
-        agents/
-        missions/
-        anomalies/
-        reports/
-      components/ui/  # 设计系统组件
-      stores/         # Zustand slices（campaignSlice 等）
-      services/db/    # Dexie schema、导入导出、快照
-      lib/            # 工具与规则映射
-    ```
+3. 构建生产包：
 
-    ## 🚀 开发指引
+   ```powershell
+   npm run build
+   ```
 
-    1. 确认 Node.js 版本 ≥ 20.19。
-    2. 安装依赖：
+4. 预览构建结果：
 
-    ```powershell
-    npm install
-    ```
+   ```powershell
+   npm run preview
+   ```
 
-    3. 启动开发服务器：
+## 💾 数据存储与快照
 
-    ```powershell
-    npm run dev
-    ```
+- 所有战役数据（特工、任务、异常体等）存储在浏览器的 IndexedDB 中，通过 Dexie.js 进行读写。
+- 在左侧导航下方的「数据快照」区域可以：
+  - **导出内容**：将当前战役状态导出为 JSON 文件，便于备份或在其他浏览器导入。
+  - **导入内容**：从 JSON 快照中恢复战役进度。
+- 快照结构由 `services/db/repository.ts` 中的方法维护，前后版本不兼容时请参考代码中的迁移逻辑。
 
-    4. 运行计划中的单元测试（Vitest + Testing Library）：
+## 🧪 质量建议
 
-    ```powershell
-    npm run test
-    ```
+当前仓库尚未配置测试脚本，如需补充自动化测试，建议：
 
-    5. 构建生产包：
+- 使用 Vitest + Testing Library 覆盖关键页面（仪表板、任务控制等）的交互。
+- 针对混沌池、散逸端、嘉奖统计等核心逻辑编写单元测试。
 
-    ```powershell
-    npm run build
-    ```
+## 📜 参考资料
 
-    ## 🧪 质量与安全守则
-
-    - 核心操作（混沌增减、嘉奖/申诫、任务结算）需覆盖单元测试。
-    - Dexie 快照在任务结算后自动触发，并提供手动备份按钮。
-    - 敏感内容标签仅 GM 可见，导出时可选择脱敏字段。
-
-    ## 📜 参考资料
-
-    - `文档1.txt`：规则映射与实体字段详解。
-    - `文档2.txt`：UI 氛围、特色功能、结算规则建议。
-    - `docs/product-architecture.md`：需求整合、数据模型、模块划分、技术路线。
+- `docs/product-architecture.md`：整体需求、数据模型、模块划分、技术路线。
