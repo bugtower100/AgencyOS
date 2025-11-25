@@ -7,6 +7,7 @@ import { MissionsPage } from '@/modules/missions/pages/missions-page'
 import { AnomaliesPage } from '@/modules/anomalies/pages/anomalies-page'
 import { ReportsPage } from '@/modules/reports/pages/reports-page'
 import { TracksPage } from '@/modules/tracks/pages/tracks-page'
+import { SettingsPage } from '@/modules/settings/pages/settings-page'
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="anomalies" element={<AnomaliesPage />} />
             <Route path="reports" element={<ReportsPage />} />
             <Route path="tracks" element={<TracksPage />} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
       </HashRouter>

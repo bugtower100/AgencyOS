@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, BriefcaseBusiness, Atom, ScrollText, Orbit } from 'lucide-react'
+import { LayoutDashboard, Users, BriefcaseBusiness, Atom, ScrollText, Orbit, Settings } from 'lucide-react'
 import { CommandStrip } from '@/components/ui/command-strip'
 import { cn } from '@/lib/utils'
 import { getAgencySnapshot, useCampaignStore } from '@/stores/campaign-store'
@@ -16,6 +16,7 @@ const navItems = [
   { label: '异常体库', path: '/anomalies', icon: Atom },
   { label: '任务报告', path: '/reports', icon: ScrollText },
   { label: '自定义轨道', path: '/tracks', icon: Orbit },
+  { label: '系统设置', path: '/settings', icon: Settings },
 ]
 
 export function AppShell() {
@@ -37,7 +38,6 @@ export function AppShell() {
     styleText: '',
   })
   const themeMode = useThemeStore((state) => state.mode)
-  const setThemeMode = useThemeStore((state) => state.setMode)
   const isWin98 = themeMode === 'win98'
 
   useEffect(() => {
@@ -295,18 +295,6 @@ export function AppShell() {
                   {importing ? '导入中…' : '导入内容'}
                 </button>
                 <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleImportChange} />
-                <select
-                  value={themeMode}
-                  onChange={(e) => setThemeMode(e.target.value as typeof themeMode)}
-                  className={cn(
-                    'border border-agency-border bg-agency-panel/60 px-3 py-1 font-mono text-xs text-agency-muted hover:border-agency-cyan hover:text-agency-cyan focus:outline-none',
-                    isWin98 ? 'rounded-none' : 'rounded-xl',
-                  )}
-                >
-                  <option value="night">夜间模式</option>
-                  <option value="day">白天模式</option>
-                  <option value="win98">Win98 模式</option>
-                </select>
               </div>
             </div>
             {importMessage ? <p className="mt-2 text-[0.65rem] normal-case text-agency-amber">{importMessage}</p> : null}
