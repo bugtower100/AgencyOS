@@ -22,29 +22,44 @@ export function DashboardPage() {
       return { mvpLabel: '—', watchlistLabel: '—' }
     }
 
-    // MVP：嘉奖最多；若并列，则选申诫最少；若仍并列，则全部并列 MVP
-    const maxAwards = Math.max(...inService.map((a) => a.awards))
-    const awardLeaders = inService.filter((a) => a.awards === maxAwards)
+    const allAwardsZero = inService.every((a) => a.awards === 0)
+    const allReprimandsZero = inService.every((a) => a.reprimands === 0)
 
-    let mvpCandidates = awardLeaders
-    if (awardLeaders.length > 1) {
-      const minReprimandsAmongLeaders = Math.min(...awardLeaders.map((a) => a.reprimands))
-      mvpCandidates = awardLeaders.filter((a) => a.reprimands === minReprimandsAmongLeaders)
+    // 观察期：先处理“全 0”与一般规则
+    let watchCandidates = inService
+    if (allReprimandsZero) {
+      // 所有人申诫为 0 → 全员观察期
+      watchCandidates = inService
+    } else {
+      // 申诫最多；若平局 → 嘉奖最少；再平局 → 全员平局者观察期
+      const maxReprimands = Math.max(...inService.map((a) => a.reprimands))
+      const reprimandLeaders = inService.filter((a) => a.reprimands === maxReprimands)
+      if (reprimandLeaders.length === 1) {
+        watchCandidates = reprimandLeaders
+      } else {
+        const minAwardsAmongLeaders = Math.min(...reprimandLeaders.map((a) => a.awards))
+        watchCandidates = reprimandLeaders.filter((a) => a.awards === minAwardsAmongLeaders)
+      }
     }
-    const mvpLabel = maxAwards > 0 && mvpCandidates.length
+
+    // MVP：若所有嘉奖为 0，则无人 MVP；否则按规则选
+    let mvpCandidates: typeof inService = []
+    if (!allAwardsZero) {
+      const maxAwards = Math.max(...inService.map((a) => a.awards))
+      const awardLeaders = inService.filter((a) => a.awards === maxAwards)
+      if (awardLeaders.length === 1) {
+        mvpCandidates = awardLeaders
+      } else {
+        const minReprimandsAmongLeaders = Math.min(...awardLeaders.map((a) => a.reprimands))
+        mvpCandidates = awardLeaders.filter((a) => a.reprimands === minReprimandsAmongLeaders)
+      }
+    }
+
+    const mvpLabel = mvpCandidates.length
       ? mvpCandidates.map((a) => a.codename).join(' · ')
       : '—'
 
-    // 观察期：申诫最多；若并列，则选嘉奖最少；若仍并列，则全部并列观察期
-    const maxReprimands = Math.max(...inService.map((a) => a.reprimands))
-    const reprimandLeaders = inService.filter((a) => a.reprimands === maxReprimands)
-
-    let watchCandidates = reprimandLeaders
-    if (reprimandLeaders.length > 1) {
-      const minAwardsAmongLeaders = Math.min(...reprimandLeaders.map((a) => a.awards))
-      watchCandidates = reprimandLeaders.filter((a) => a.awards === minAwardsAmongLeaders)
-    }
-    const watchlistLabel = maxReprimands > 0 && watchCandidates.length
+    const watchlistLabel = watchCandidates.length
       ? watchCandidates.map((a) => a.codename).join(' · ')
       : '—'
 
