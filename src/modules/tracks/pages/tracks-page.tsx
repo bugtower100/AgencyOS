@@ -6,6 +6,7 @@ export function TracksPage() {
   const tracks = useTracksStore((state) => state.tracks)
   const createTrack = useTracksStore((state) => state.createTrack)
   const updateTrackMeta = useTracksStore((state) => state.updateTrackMeta)
+  const updateTrackItemCount = useTracksStore((state) => state.updateTrackItemCount)
   const updateTrackItem = useTracksStore((state) => state.updateTrackItem)
   const deleteTrack = useTracksStore((state) => state.deleteTrack)
 
@@ -72,12 +73,18 @@ export function TracksPage() {
 
       {tracks.length ? (
         <div className="space-y-4">
-          {tracks.map((track) => (
-            <Panel key={track.id} className="space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
+          {tracks.map((track, index) => (
+            <Panel
+              key={track.id}
+              className="space-y-4 border border-agency-border/60 bg-agency-ink/70 shadow-[0_0_0_1px_rgba(15,23,42,0.5)]"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-agency-ink/80 text-xs text-agency-muted">
+                    #{index + 1}
+                  </span>
                   <input
-                    className="rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan"
+                    className="min-w-[160px] rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm font-medium text-agency-cyan shadow-inner"
                     value={track.name}
                     onChange={(event) =>
                       updateTrackMeta(track.id, {
@@ -85,54 +92,77 @@ export function TracksPage() {
                       })
                     }
                   />
-                  <input
-                    type="color"
-                    className="h-8 w-16 cursor-pointer rounded border border-agency-border bg-agency-ink/60"
-                    value={track.color}
-                    onChange={(event) =>
-                      updateTrackMeta(track.id, {
-                        color: event.target.value,
-                      })
-                    }
-                  />
+                  <div className="flex items-center gap-2 rounded-full bg-agency-ink/60 px-2 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted">
+                    <span
+                      className="h-3 w-3 rounded-full shadow-[0_0_0_1px_rgba(15,23,42,0.8)]"
+                      style={{ backgroundColor: track.color }}
+                    />
+                    <span>颜色</span>
+                    <input
+                      type="color"
+                      className="h-6 w-10 cursor-pointer rounded border border-agency-border bg-agency-ink/60"
+                      value={track.color}
+                      onChange={(event) =>
+                        updateTrackMeta(track.id, {
+                          color: event.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 rounded-full bg-agency-ink/60 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted">
+                    <span>复选框数量</span>
+                    <input
+                      type="number"
+                      min={1}
+                      max={32}
+                      className="h-7 w-16 rounded-lg border border-agency-border bg-agency-ink/80 px-2 text-xs text-agency-cyan"
+                      value={track.items.length}
+                      onChange={(event) =>
+                        updateTrackItemCount(track.id, Number(event.target.value) || 1)
+                      }
+                    />
+                  </div>
                 </div>
                 <button
                   type="button"
-                  className="rounded-2xl border border-agency-border px-3 py-1 text-xs uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta"
+                  className="rounded-2xl border border-agency-border/70 px-3 py-1 text-xs uppercase tracking-[0.3em] text-agency-muted transition hover:border-agency-magenta hover:text-agency-magenta"
                   onClick={() => deleteTrack(track.id)}
                 >
                   删除轨道
                 </button>
               </div>
 
-              <div className="flex flex-wrap gap-4">
-                {track.items.map((item) => (
-                  <label
-                    key={item.id}
-                    className="flex flex-col items-center gap-1 text-center text-xs text-agency-muted"
-                    style={{ color: track.color }}
-                  >
-                    <input
-                      type="checkbox"
-                      className="h-5 w-5 cursor-pointer rounded border border-agency-border bg-agency-ink/80"
-                      checked={item.checked}
-                      onChange={(event) =>
-                        updateTrackItem(track.id, item.id, {
-                          checked: event.target.checked,
-                        })
-                      }
-                    />
-                    <input
-                      className="w-24 rounded border border-agency-border bg-agency-ink/60 px-1 py-0.5 text-[0.65rem] text-agency-cyan"
-                      value={item.label}
-                      onChange={(event) =>
-                        updateTrackItem(track.id, item.id, {
-                          label: event.target.value,
-                        })
-                      }
-                    />
-                  </label>
-                ))}
+              <div className="rounded-2xl border border-dashed border-agency-border/70 bg-gradient-to-r from-agency-ink/60 via-agency-ink/40 to-agency-ink/60 p-3">
+                <div className="flex flex-wrap gap-3">
+                  {track.items.map((item) => (
+                    <label
+                      key={item.id}
+                      className="group flex flex-col items-center gap-1 rounded-xl border border-transparent bg-agency-ink/60 px-3 py-2 text-center text-xs text-agency-muted shadow-sm transition hover:border-agency-cyan/60 hover:bg-agency-ink/80"
+                      style={{ color: track.color }}
+                    >
+                      <input
+                        type="checkbox"
+                        className="h-5 w-5 cursor-pointer rounded border border-agency-border bg-agency-ink/80 shadow-inner outline-none ring-0 focus-visible:outline-none"
+                        checked={item.checked}
+                        onChange={(event) =>
+                          updateTrackItem(track.id, item.id, {
+                            checked: event.target.checked,
+                          })
+                        }
+                      />
+                      <input
+                        className="w-24 rounded border border-agency-border bg-agency-ink/60 px-1 py-0.5 text-[0.65rem] text-agency-cyan placeholder:text-agency-muted/60"
+                        value={item.label}
+                        onChange={(event) =>
+                          updateTrackItem(track.id, item.id, {
+                            label: event.target.value,
+                          })
+                        }
+                        placeholder="节点标签"
+                      />
+                    </label>
+                  ))}
+                </div>
               </div>
             </Panel>
           ))}

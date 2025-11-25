@@ -20,6 +20,7 @@ interface TracksState {
 interface TracksActions {
   createTrack: (payload: { name: string; color: string; itemCount: number }) => void
   updateTrackMeta: (id: string, payload: { name?: string; color?: string }) => void
+  updateTrackItemCount: (id: string, nextCount: number) => void
   updateTrackItem: (trackId: string, itemId: string, patch: Partial<TrackItem>) => void
   deleteTrack: (id: string) => void
 }
@@ -48,6 +49,36 @@ export const useTracksStore = create<TracksStore>((set) => ({
           })),
         },
       ],
+    })),
+  updateTrackItemCount: (id, nextCount) =>
+    set((state) => ({
+      tracks: state.tracks.map((track) => {
+        if (track.id !== id) return track
+
+        const count = Math.max(1, Math.min(32, nextCount || 1))
+
+        if (count === track.items.length) return track
+
+        if (count > track.items.length) {
+          const toAdd = count - track.items.length
+          const newItems = Array.from({ length: toAdd }, (_, index) => ({
+            id: createId(),
+            label: `节点 ${track.items.length + index + 1}`,
+            checked: false,
+          }))
+
+          return {
+            ...track,
+            items: [...track.items, ...newItems],
+          }
+        }
+
+        // count < current length => trim from the end
+        return {
+          ...track,
+          items: track.items.slice(0, count),
+        }
+      }),
     })),
   updateTrackMeta: (id, payload) =>
     set((state) => ({
