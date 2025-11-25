@@ -128,18 +128,18 @@ export function MissionsPage() {
               <p className="text-sm text-agency-muted">{mission.type} · {formatDate(mission.scheduledDate)}</p>
             </div>
             <div className="flex gap-2 text-xs uppercase tracking-[0.3em] text-agency-muted">
-              <span className="rounded-xl border border-agency-border px-3 py-1">混沌：{mission.chaos}</span>
-              <span className="rounded-xl border border-agency-border px-3 py-1">散逸端：{mission.looseEnds}</span>
+              <span className="border border-agency-border px-3 py-1 rounded-xl win98:rounded-none">混沌：{mission.chaos}</span>
+              <span className="border border-agency-border px-3 py-1 rounded-xl win98:rounded-none">散逸端：{mission.looseEnds}</span>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">混沌调整</p>
               <div className="flex gap-2">
-                <button type="button" className="rounded-2xl border border-agency-cyan/40 px-4 py-2 text-sm text-agency-cyan" onClick={() => adjustMissionChaos(mission.id, 1, note)}>
+                <button type="button" className="border border-agency-cyan/40 px-4 py-2 text-sm text-agency-cyan rounded-2xl win98:rounded-none" onClick={() => adjustMissionChaos(mission.id, 1, note)}>
                   +1
                 </button>
-                <button type="button" className="rounded-2xl border border-agency-magenta/40 px-4 py-2 text-sm text-agency-magenta" onClick={() => adjustMissionChaos(mission.id, -1, note)}>
+                <button type="button" className="border border-agency-magenta/40 px-4 py-2 text-sm text-agency-magenta rounded-2xl win98:rounded-none" onClick={() => adjustMissionChaos(mission.id, -1, note)}>
                   -1
                 </button>
               </div>
@@ -147,10 +147,10 @@ export function MissionsPage() {
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">散逸端调整</p>
               <div className="flex gap-2">
-                <button type="button" className="rounded-2xl border border-agency-amber/40 px-4 py-2 text-sm text-agency-amber" onClick={() => adjustMissionLooseEnds(mission.id, 1, note)}>
+                <button type="button" className="border border-agency-amber/40 px-4 py-2 text-sm text-agency-amber rounded-2xl win98:rounded-none" onClick={() => adjustMissionLooseEnds(mission.id, 1, note)}>
                   +1
                 </button>
-                <button type="button" className="rounded-2xl border border-agency-border px-4 py-2 text-sm text-agency-muted" onClick={() => adjustMissionLooseEnds(mission.id, -1, note)}>
+                <button type="button" className="border border-agency-border px-4 py-2 text-sm text-agency-muted rounded-2xl win98:rounded-none" onClick={() => adjustMissionLooseEnds(mission.id, -1, note)}>
                   -1
                 </button>
               </div>
@@ -158,11 +158,11 @@ export function MissionsPage() {
           </div>
           <label className="block text-xs uppercase tracking-[0.3em] text-agency-muted">
             备注
-            <input value={note} onChange={(event) => setNote(event.target.value)} className="mt-1 w-full rounded-2xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm" />
+            <input value={note} onChange={(event) => setNote(event.target.value)} className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm rounded-2xl win98:rounded-none" />
           </label>
           <button
             type="button"
-            className="rounded-2xl border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan"
+            className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan rounded-2xl win98:rounded-none"
             onClick={() => appendMissionLog(mission.id, note)}
           >
             记录日志
@@ -174,15 +174,15 @@ export function MissionsPage() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-3">
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             任务代号
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('code')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('code')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             名称
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('name')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('name')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             类型
-            <select className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('type')}>
+            <select className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('type')}>
               <option value="收容">异常体回收</option>
               <option value="清扫">清扫行动</option>
               <option value="市场破坏">市场破坏</option>
@@ -191,7 +191,7 @@ export function MissionsPage() {
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             状态
-            <select className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('status')}>
+            <select className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('status')}>
               <option value="planning">筹备</option>
               <option value="active">进行中</option>
               <option value="debrief">结算</option>
@@ -200,35 +200,35 @@ export function MissionsPage() {
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             混沌
-            <input type="number" className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('chaos', { valueAsNumber: true })} />
+            <input type="number" className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('chaos', { valueAsNumber: true })} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             散逸端
-            <input type="number" className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('looseEnds', { valueAsNumber: true })} />
+            <input type="number" className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('looseEnds', { valueAsNumber: true })} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             日期
-            <input type="date" className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('scheduledDate')} />
+            <input type="date" className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('scheduledDate')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             可选目标提示
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('optionalObjectiveHint')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('optionalObjectiveHint')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             预计参与特工
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('expectedAgents')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('expectedAgents')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             任务目标概要
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('goalsSummary')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('goalsSummary')} />
           </label>
           <div className="flex items-center gap-3 self-end">
             {editingMissionId ? (
-              <button type="button" onClick={cancelMissionEdit} className="rounded-2xl border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted">
+              <button type="button" onClick={cancelMissionEdit} className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted rounded-2xl win98:rounded-none">
                 取消编辑
               </button>
             ) : null}
-            <button type="submit" className="rounded-2xl border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan">
+            <button type="submit" className="border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan rounded-2xl win98:rounded-none">
               {editingMissionId ? '保存任务' : '创建任务'}
             </button>
           </div>

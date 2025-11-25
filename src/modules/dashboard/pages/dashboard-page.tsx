@@ -102,7 +102,7 @@ export function DashboardPage() {
               <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">当前任务</p>
               <h2 className="text-2xl font-semibold text-white">{activeMission?.name ?? '暂无任务'}</h2>
             </div>
-            <span className="rounded-full border border-agency-cyan/40 px-3 py-1 text-xs uppercase text-agency-cyan">
+            <span className="border border-agency-cyan/40 px-3 py-1 text-xs uppercase text-agency-cyan rounded-full win98:rounded-none">
               {activeMission?.status ?? '待机'}
             </span>
           </header>
@@ -160,7 +160,7 @@ export function DashboardPage() {
           </div>
           <button
             type="button"
-            className="rounded-xl border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan transition hover:border-agency-cyan/60"
+            className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan transition hover:border-agency-cyan/60 rounded-2xl win98:rounded-none"
             onClick={() => navigate('/anomalies')}
           >
             查看收容库

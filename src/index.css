@@ -4,6 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  :root[data-theme='win98'] .rounded-sm,
+  :root[data-theme='win98'] .rounded,
+  :root[data-theme='win98'] .rounded-md,
+  :root[data-theme='win98'] .rounded-lg,
+  :root[data-theme='win98'] .rounded-xl,
+  :root[data-theme='win98'] .rounded-2xl,
+  :root[data-theme='win98'] .rounded-3xl,
+  :root[data-theme='win98'] .rounded-full {
+    border-radius: 0 !important;
+  }
+}
+
 :root {
   --agency-ink: 13 13 15;
   --agency-panel: 16 17 26;

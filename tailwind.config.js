@@ -42,6 +42,10 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addVariant }) {
+      addVariant('win98', '[data-theme="win98"] &')
+    }
+  ],
 }
 

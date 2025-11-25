@@ -138,7 +138,10 @@ export function AppShell() {
                 <div>
                   <label className="block text-[0.6rem] uppercase tracking-[0.25em]">分部名称</label>
                   <input
-                    className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan"
+                    className={cn(
+                      'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
+                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                    )}
                     value={headerDraft.name}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, name: e.target.value }))}
                   />
@@ -146,7 +149,10 @@ export function AppShell() {
                 <div>
                   <label className="block text-[0.6rem] uppercase tracking-[0.25em]">Session / 代号</label>
                   <input
-                    className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan"
+                    className={cn(
+                      'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
+                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                    )}
                     value={headerDraft.divisionCode}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, divisionCode: e.target.value }))}
                   />
@@ -154,7 +160,10 @@ export function AppShell() {
                 <div>
                   <label className="block text-[0.6rem] uppercase tracking-[0.25em]">状态</label>
                   <input
-                    className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan"
+                    className={cn(
+                      'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
+                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                    )}
                     value={headerDraft.status}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, status: e.target.value }))}
                     placeholder={campaign.status}
@@ -163,7 +172,10 @@ export function AppShell() {
                 <div>
                   <label className="block text-[0.6rem] uppercase tracking-[0.25em]">标签（用 / 分隔）</label>
                   <input
-                    className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan"
+                    className={cn(
+                      'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
+                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                    )}
                     value={headerDraft.styleText}
                     onChange={(e) => setHeaderDraft((prev) => ({ ...prev, styleText: e.target.value }))}
                     placeholder={campaign.styleTags.join(' / ')}
@@ -173,14 +185,20 @@ export function AppShell() {
                   <button
                     type="button"
                     onClick={cancelHeaderEdit}
-                    className="rounded-xl border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.25em] text-agency-muted hover:border-agency-amber hover:text-agency-amber"
+                    className={cn(
+                      'border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.25em] text-agency-muted hover:border-agency-amber hover:text-agency-amber',
+                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                    )}
                   >
                     取消
                   </button>
                   <button
                     type="button"
                     onClick={confirmHeaderEdit}
-                    className="rounded-xl border border-agency-cyan px-3 py-1 text-[0.65rem] uppercase tracking-[0.25em] text-agency-cyan hover:bg-agency-cyan/10"
+                    className={cn(
+                      'border border-agency-cyan px-3 py-1 text-[0.65rem] uppercase tracking-[0.25em] text-agency-cyan hover:bg-agency-cyan/10',
+                      isWin98 ? 'rounded-none' : 'rounded-xl',
+                    )}
                   >
                     保存
                   </button>
@@ -203,10 +221,16 @@ export function AppShell() {
                 to={item.path}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center justify-between rounded-2xl border px-4 py-3 font-mono text-xs uppercase tracking-[0.35em] transition',
+                    'flex items-center justify-between border px-4 py-3 font-mono text-xs uppercase tracking-[0.35em] transition',
                     isActive
-                      ? 'border-agency-cyan/80 bg-agency-ink text-white shadow-panel'
-                      : 'border-agency-border/60 text-agency-muted hover:border-agency-cyan/40 hover:text-agency-cyan',
+                      ? cn(
+                          'border-agency-cyan/80 bg-agency-ink text-white',
+                          isWin98 ? 'rounded-none shadow-none' : 'rounded-2xl shadow-panel',
+                        )
+                      : cn(
+                          'border-agency-border/60 text-agency-muted hover:border-agency-cyan/40 hover:text-agency-cyan',
+                          isWin98 ? 'rounded-none' : 'rounded-2xl',
+                        ),
                   )
                 }
               >
@@ -222,7 +246,12 @@ export function AppShell() {
 
           <div className="space-y-2 text-[0.65rem] text-agency-muted">
             <p className="uppercase tracking-[0.5em]">混沌警戒</p>
-            <div className="rounded-2xl border border-agency-magenta/40 bg-gradient-to-r from-agency-magenta/20 to-transparent p-3 font-mono">
+            <div
+              className={cn(
+                'border border-agency-magenta/40 bg-gradient-to-r from-agency-magenta/20 to-transparent p-3 font-mono',
+                isWin98 ? 'rounded-none' : 'rounded-2xl',
+              )}
+            >
               <p>当前：{chaosValue}</p>
               <p>散逸端：{looseEndsValue}</p>
             </div>
@@ -247,14 +276,20 @@ export function AppShell() {
                 <button
                   type="button"
                   onClick={handleExportSnapshot}
-                  className="rounded-xl border border-agency-cyan/40 px-3 py-1 font-mono text-agency-cyan hover:border-agency-cyan"
+                  className={cn(
+                    'border border-agency-cyan/40 px-3 py-1 font-mono text-agency-cyan hover:border-agency-cyan',
+                    isWin98 ? 'rounded-none' : 'rounded-xl',
+                  )}
                 >
                   导出内容
                 </button>
                 <button
                   type="button"
                   onClick={handleImportClick}
-                  className="rounded-xl border border-agency-border px-3 py-1 font-mono text-agency-muted hover:border-agency-cyan hover:text-agency-cyan"
+                  className={cn(
+                    'border border-agency-border px-3 py-1 font-mono text-agency-muted hover:border-agency-cyan hover:text-agency-cyan',
+                    isWin98 ? 'rounded-none' : 'rounded-xl',
+                  )}
                   disabled={importing}
                 >
                   {importing ? '导入中…' : '导入内容'}
@@ -263,7 +298,10 @@ export function AppShell() {
                 <select
                   value={themeMode}
                   onChange={(e) => setThemeMode(e.target.value as typeof themeMode)}
-                  className="rounded-xl border border-agency-border bg-agency-panel/60 px-3 py-1 font-mono text-xs text-agency-muted hover:border-agency-cyan hover:text-agency-cyan focus:outline-none"
+                  className={cn(
+                    'border border-agency-border bg-agency-panel/60 px-3 py-1 font-mono text-xs text-agency-muted hover:border-agency-cyan hover:text-agency-cyan focus:outline-none',
+                    isWin98 ? 'rounded-none' : 'rounded-xl',
+                  )}
                 >
                   <option value="night">夜间模式</option>
                   <option value="day">白天模式</option>

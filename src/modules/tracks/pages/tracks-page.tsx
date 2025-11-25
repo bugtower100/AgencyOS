@@ -33,7 +33,7 @@ export function TracksPage() {
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             名称
             <input
-              className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan"
+              className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="例如：观察日程 / 特殊流程"
@@ -43,7 +43,7 @@ export function TracksPage() {
             颜色
             <input
               type="color"
-              className="mt-1 h-[42px] w-full cursor-pointer rounded-xl border border-agency-border bg-agency-ink/60"
+              className="mt-1 h-[42px] w-full cursor-pointer border border-agency-border bg-agency-ink/60 rounded-xl win98:rounded-none"
               value={color}
               onChange={(event) => setColor(event.target.value)}
             />
@@ -54,7 +54,7 @@ export function TracksPage() {
               type="number"
               min={1}
               max={32}
-              className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan"
+              className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
               value={itemCount}
               onChange={(event) => setItemCount(Number(event.target.value) || 1)}
             />
@@ -62,7 +62,7 @@ export function TracksPage() {
           <div className="flex items-end">
             <button
               type="button"
-              className="w-full rounded-2xl border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan"
+              className="w-full border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan rounded-2xl win98:rounded-none"
               onClick={handleCreate}
             >
               创建轨道
@@ -80,11 +80,11 @@ export function TracksPage() {
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-xl bg-agency-ink/80 text-xs text-agency-muted">
+                  <span className="flex h-7 w-7 items-center justify-center bg-agency-ink/80 text-xs text-agency-muted rounded-xl win98:rounded-none">
                     #{index + 1}
                   </span>
                   <input
-                    className="min-w-[160px] rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm font-medium text-agency-cyan shadow-inner"
+                    className="min-w-[160px] border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm font-medium text-agency-cyan shadow-inner rounded-xl win98:rounded-none"
                     value={track.name}
                     onChange={(event) =>
                       updateTrackMeta(track.id, {
@@ -92,15 +92,15 @@ export function TracksPage() {
                       })
                     }
                   />
-                  <div className="flex items-center gap-2 rounded-full bg-agency-ink/60 px-2 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted">
+                  <div className="flex items-center gap-2 bg-agency-ink/60 px-2 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted rounded-full win98:rounded-none">
                     <span
-                      className="h-3 w-3 rounded-full shadow-[0_0_0_1px_rgba(15,23,42,0.8)]"
+                      className="h-3 w-3 shadow-[0_0_0_1px_rgba(15,23,42,0.8)] rounded-full win98:rounded-none"
                       style={{ backgroundColor: track.color }}
                     />
                     <span>颜色</span>
                     <input
                       type="color"
-                      className="h-6 w-10 cursor-pointer rounded border border-agency-border bg-agency-ink/60"
+                      className="h-6 w-10 cursor-pointer border border-agency-border bg-agency-ink/60 rounded win98:rounded-none"
                       value={track.color}
                       onChange={(event) =>
                         updateTrackMeta(track.id, {
@@ -109,13 +109,13 @@ export function TracksPage() {
                       }
                     />
                   </div>
-                  <div className="flex items-center gap-2 rounded-full bg-agency-ink/60 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted">
+                  <div className="flex items-center gap-2 bg-agency-ink/60 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted rounded-full win98:rounded-none">
                     <span>复选框数量</span>
                     <input
                       type="number"
                       min={1}
                       max={32}
-                      className="h-7 w-16 rounded-lg border border-agency-border bg-agency-ink/80 px-2 text-xs text-agency-cyan"
+                      className="h-7 w-16 border border-agency-border bg-agency-ink/80 px-2 text-xs text-agency-cyan rounded-lg win98:rounded-none"
                       value={track.items.length}
                       onChange={(event) =>
                         updateTrackItemCount(track.id, Number(event.target.value) || 1)
@@ -125,24 +125,24 @@ export function TracksPage() {
                 </div>
                 <button
                   type="button"
-                  className="rounded-2xl border border-agency-border/70 px-3 py-1 text-xs uppercase tracking-[0.3em] text-agency-muted transition hover:border-agency-magenta hover:text-agency-magenta"
+                  className="border border-agency-border/70 px-3 py-1 text-xs uppercase tracking-[0.3em] text-agency-muted transition hover:border-agency-magenta hover:text-agency-magenta rounded-2xl win98:rounded-none"
                   onClick={() => deleteTrack(track.id)}
                 >
                   删除轨道
                 </button>
               </div>
 
-              <div className="rounded-2xl border border-dashed border-agency-border/70 bg-gradient-to-r from-agency-ink/60 via-agency-ink/40 to-agency-ink/60 p-3">
+              <div className="border border-dashed border-agency-border/70 bg-gradient-to-r from-agency-ink/60 via-agency-ink/40 to-agency-ink/60 p-3 rounded-2xl win98:rounded-none">
                 <div className="flex flex-wrap gap-3">
                   {track.items.map((item) => (
                     <label
                       key={item.id}
-                      className="group flex flex-col items-center gap-1 rounded-xl border border-transparent bg-agency-ink/60 px-3 py-2 text-center text-xs text-agency-muted shadow-sm transition hover:border-agency-cyan/60 hover:bg-agency-ink/80"
+                      className="group flex flex-col items-center gap-1 border border-transparent bg-agency-ink/60 px-3 py-2 text-center text-xs text-agency-muted shadow-sm transition hover:border-agency-cyan/60 hover:bg-agency-ink/80 rounded-xl win98:rounded-none"
                       style={{ color: track.color }}
                     >
                       <input
                         type="checkbox"
-                        className="h-5 w-5 cursor-pointer rounded border border-agency-border bg-agency-ink/80 shadow-inner outline-none ring-0 focus-visible:outline-none"
+                        className="h-5 w-5 cursor-pointer border border-agency-border bg-agency-ink/80 shadow-inner outline-none ring-0 focus-visible:outline-none rounded win98:rounded-none"
                         checked={item.checked}
                         onChange={(event) =>
                           updateTrackItem(track.id, item.id, {
@@ -151,7 +151,7 @@ export function TracksPage() {
                         }
                       />
                       <input
-                        className="w-24 rounded border border-agency-border bg-agency-ink/60 px-1 py-0.5 text-[0.65rem] text-agency-cyan placeholder:text-agency-muted/60"
+                        className="w-24 border border-agency-border bg-agency-ink/60 px-1 py-0.5 text-[0.65rem] text-agency-cyan placeholder:text-agency-muted/60 rounded win98:rounded-none"
                         value={item.label}
                         onChange={(event) =>
                           updateTrackItem(track.id, item.id, {

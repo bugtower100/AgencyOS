@@ -76,19 +76,19 @@ export function AnomaliesPage() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-4">
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             代号
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('codename')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('codename')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             焦点
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('focus')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('focus')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             领域
-            <input className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('domain')} />
+            <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('domain')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             状态
-            <select className="mt-1 w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('status')}>
+            <select className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('status')}>
               <option value="active">活跃</option>
               <option value="contained">已收容</option>
               <option value="neutralized">已中和</option>
@@ -97,11 +97,11 @@ export function AnomaliesPage() {
           </label>
           <div className="md:col-span-4 flex items-center gap-3">
             {editingAnomalyId ? (
-              <button type="button" onClick={cancelEdit} className="rounded-2xl border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted">
+              <button type="button" onClick={cancelEdit} className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted rounded-2xl win98:rounded-none">
                 取消编辑
               </button>
             ) : null}
-            <button type="submit" className="rounded-2xl border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan">
+            <button type="submit" className="border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan rounded-2xl win98:rounded-none">
               {editingAnomalyId ? '保存异常体' : '录入异常体'}
             </button>
           </div>
@@ -118,14 +118,14 @@ export function AnomaliesPage() {
             <div className="mt-4 flex gap-2">
               <button
                 type="button"
-                className="rounded-xl border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan"
+                className="border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan rounded-xl win98:rounded-none"
                 onClick={() => startEdit(anomaly.id)}
               >
                 {editingAnomalyId === anomaly.id ? '编辑中' : '编辑'}
               </button>
               <button
                 type="button"
-                className="rounded-xl border border-agency-border/70 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta"
+                className="border border-agency-border/70 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta rounded-xl win98:rounded-none"
                 onClick={() => handleDelete(anomaly.id)}
               >
                 删除

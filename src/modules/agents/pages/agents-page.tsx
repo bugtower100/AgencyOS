@@ -157,7 +157,7 @@ export function AgentsPage() {
           <button
             type="button"
             onClick={handleSettleDeltas}
-            className="rounded-2xl border border-agency-cyan/60 px-4 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-agency-cyan hover:border-agency-cyan"
+            className="border border-agency-cyan/60 px-4 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-agency-cyan hover:border-agency-cyan rounded-2xl win98:rounded-none"
           >
             结算本任务嘉奖/申诫
           </button>
@@ -168,37 +168,37 @@ export function AgentsPage() {
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
             代号
             <input
-              className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 font-mono text-sm text-agency-cyan"
+              className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 font-mono text-sm text-agency-cyan rounded-xl win98:rounded-none"
               {...form.register('codename')}
             />
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
             异常
-            <input className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('arcAnomaly')} />
+            <input className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('arcAnomaly')} />
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
             现实
-            <input className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('arcReality')} />
+            <input className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('arcReality')} />
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
             职能
-            <input className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('arcRole')} />
+            <input className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('arcRole')} />
           </label>
           <div className="space-y-2 text-xs uppercase tracking-[0.3em] text-agency-muted md:col-span-3">
             <p>QA 当前/上限</p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {QA_CATEGORIES.map((category) => (
-                <label key={category.key} className="space-y-1 rounded-2xl border border-agency-border/80 bg-agency-ink/60 p-3">
+                <label key={category.key} className="space-y-1 border border-agency-border/80 bg-agency-ink/60 p-3 rounded-2xl win98:rounded-none">
                   <span className="text-[0.65rem] tracking-[0.4em] text-agency-muted">{category.label}</span>
                   <div className="mt-2 flex gap-2">
                     <input
                       type="number"
-                      className="w-full rounded-xl border border-agency-border bg-agency-ink px-3 py-2 text-sm text-agency-cyan"
+                      className="w-full border border-agency-border bg-agency-ink px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                       {...form.register(`qa.${category.key}.current` as const, { valueAsNumber: true })}
                     />
                     <input
                       type="number"
-                      className="w-full rounded-xl border border-agency-border bg-agency-ink px-3 py-2 text-sm text-agency-cyan"
+                      className="w-full border border-agency-border bg-agency-ink px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                       {...form.register(`qa.${category.key}.max` as const, { valueAsNumber: true })}
                     />
                   </div>
@@ -209,13 +209,13 @@ export function AgentsPage() {
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
             嘉奖/申诫
             <div className="flex gap-2">
-              <input type="number" className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('awards', { valueAsNumber: true })} />
-              <input type="number" className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('reprimands', { valueAsNumber: true })} />
+              <input type="number" className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('awards', { valueAsNumber: true })} />
+              <input type="number" className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('reprimands', { valueAsNumber: true })} />
             </div>
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
             状态
-            <select className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan" {...form.register('status')}>
+            <select className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('status')}>
               <option value="active">在职</option>
               <option value="resting">休整</option>
               <option value="retired">退休</option>
@@ -233,7 +233,7 @@ export function AgentsPage() {
                 <label className="space-y-1">
                   <span className="text-[0.65rem] tracking-[0.3em]">物品名称</span>
                   <input
-                    className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan"
+                    className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                     value={claimDraft.itemName}
                     onChange={(e) => setClaimDraft((prev) => ({ ...prev, itemName: e.target.value }))}
                     placeholder="例如：一次性收容装备包"
@@ -242,7 +242,7 @@ export function AgentsPage() {
                 <label className="space-y-1">
                   <span className="text-[0.65rem] tracking-[0.3em]">类别</span>
                   <input
-                    className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan"
+                    className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                     value={claimDraft.category}
                     onChange={(e) => setClaimDraft((prev) => ({ ...prev, category: e.target.value }))}
                     placeholder="收容装备 / 后勤物资"
@@ -251,7 +251,7 @@ export function AgentsPage() {
                 <label className="space-y-1">
                   <span className="text-[0.65rem] tracking-[0.3em]">理由</span>
                   <input
-                    className="w-full rounded-xl border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan"
+                    className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                     value={claimDraft.reason}
                     onChange={(e) => setClaimDraft((prev) => ({ ...prev, reason: e.target.value }))}
                     placeholder="简要写明任务与用途"
@@ -261,7 +261,7 @@ export function AgentsPage() {
                   <button
                     type="button"
                     onClick={handleAddClaim}
-                    className="w-full rounded-2xl border border-agency-cyan/60 px-3 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-agency-cyan hover:border-agency-cyan disabled:border-agency-border disabled:text-agency-border"
+                    className="w-full border border-agency-cyan/60 px-3 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-agency-cyan hover:border-agency-cyan disabled:border-agency-border disabled:text-agency-border rounded-2xl win98:rounded-none"
                     disabled={!claimDraft.itemName.trim()}
                   >
                     添加申领物
@@ -269,13 +269,13 @@ export function AgentsPage() {
                 </div>
               </div>
               {currentClaims.length ? (
-                <div className="mt-2 space-y-2 rounded-2xl border border-agency-border/80 bg-agency-ink/60 p-3">
+                <div className="mt-2 space-y-2 border border-agency-border/80 bg-agency-ink/60 p-3 rounded-2xl win98:rounded-none">
                   <p className="text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted">历史记录</p>
                   <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                     {currentClaims.map((claim) => (
                       <div
                         key={claim.id}
-                        className="flex items-start justify-between gap-3 rounded-xl border border-agency-border/60 bg-agency-ink/80 px-3 py-2 text-[0.75rem] text-agency-muted"
+                        className="flex items-start justify-between gap-3 border border-agency-border/60 bg-agency-ink/80 px-3 py-2 text-[0.75rem] text-agency-muted rounded-xl win98:rounded-none"
                       >
                         <div className="space-y-1">
                           <div className="flex flex-wrap items-center gap-2">
@@ -293,7 +293,7 @@ export function AgentsPage() {
                         <button
                           type="button"
                           onClick={() => handleDeleteClaim(claim.id)}
-                          className="mt-1 rounded-xl border border-agency-border px-2 py-1 text-[0.6rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta"
+                          className="mt-1 border border-agency-border px-2 py-1 text-[0.6rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta rounded-xl win98:rounded-none"
                         >
                           移除
                         </button>
@@ -306,11 +306,11 @@ export function AgentsPage() {
           ) : null}
           <div className="flex items-center gap-3 self-end">
             {editingAgentId ? (
-              <button type="button" onClick={cancelEdit} className="rounded-2xl border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted">
+              <button type="button" onClick={cancelEdit} className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted rounded-2xl win98:rounded-none">
                 取消编辑
               </button>
             ) : null}
-            <button type="submit" className="rounded-2xl border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan transition hover:border-agency-cyan">
+            <button type="submit" className="border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan transition hover:border-agency-cyan rounded-2xl win98:rounded-none">
               {editingAgentId ? '保存特工' : '录入特工'}
             </button>
           </div>
@@ -342,7 +342,7 @@ export function AgentsPage() {
                 <td className="px-4 py-3">
                   <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                     {QA_CATEGORIES.map((category) => (
-                      <div key={category.key} className="rounded-xl border border-agency-border/60 bg-agency-ink/40 px-3 py-2 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted">
+                      <div key={category.key} className="border border-agency-border/60 bg-agency-ink/40 px-3 py-2 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted rounded-xl win98:rounded-none">
                         <div className="flex items-center justify-between font-medium">
                           <span>{category.label}</span>
                           <span className="font-mono text-agency-cyan">{agent.qa[category.key].current} / {agent.qa[category.key].max}</span>
@@ -359,7 +359,7 @@ export function AgentsPage() {
                       <span className="text-[0.65rem]">嘉奖+</span>
                       <input
                         type="number"
-                        className="w-16 rounded border border-agency-border bg-agency-ink/60 px-2 py-1 text-[0.75rem] font-mono text-agency-cyan"
+                        className="w-16 border border-agency-border bg-agency-ink/60 px-2 py-1 text-[0.75rem] font-mono text-agency-cyan rounded win98:rounded-none"
                         value={agent.awardsDelta ?? 0}
                         onChange={(e) => {
                           const delta = Number.isNaN(Number(e.target.value)) ? 0 : Number(e.target.value)
@@ -373,7 +373,7 @@ export function AgentsPage() {
                       <span className="text-[0.65rem]">申诫+</span>
                       <input
                         type="number"
-                        className="w-16 rounded border border-agency-border bg-agency-ink/60 px-2 py-1 text-[0.75rem] font-mono text-agency-cyan"
+                        className="w-16 border border-agency-border bg-agency-ink/60 px-2 py-1 text-[0.75rem] font-mono text-agency-cyan rounded win98:rounded-none"
                         value={agent.reprimandsDelta ?? 0}
                         onChange={(e) => {
                           const delta = Number.isNaN(Number(e.target.value)) ? 0 : Number(e.target.value)
@@ -389,7 +389,7 @@ export function AgentsPage() {
                 <td className="px-4 py-3">
                   <button
                     type="button"
-                    className="rounded-xl border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta"
+                    className="border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta rounded-xl win98:rounded-none"
                     onClick={(event) => {
                       event.stopPropagation()
                       handleDelete(agent.id)
