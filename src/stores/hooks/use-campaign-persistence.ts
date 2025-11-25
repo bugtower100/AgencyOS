@@ -1,0 +1,62 @@
+import { useEffect } from 'react'
+import { loadAgencySnapshot, saveAgencySnapshot } from '@/services/db/repository'
+import { selectAgencySnapshot, useCampaignStore } from '@/stores/campaign-store'
+
+export function useCampaignPersistence() {
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    let ready = false
+    let unsub: (() => void) | undefined
+    let pendingSnapshot: ReturnType<typeof selectAgencySnapshot> | null = null
+    let saving = false
+
+    const persist = async (snapshot: ReturnType<typeof selectAgencySnapshot>) => {
+      if (saving) {
+        pendingSnapshot = snapshot
+        return
+      }
+      saving = true
+      try {
+        await saveAgencySnapshot(snapshot)
+      } catch (error) {
+        console.error('[AgencyOS] 持久化失败', error)
+      } finally {
+        saving = false
+        if (pendingSnapshot) {
+          const next = pendingSnapshot
+          pendingSnapshot = null
+          void persist(next)
+        }
+      }
+    }
+
+    const bootstrap = async () => {
+      try {
+        const snapshot = await loadAgencySnapshot()
+        if (snapshot) {
+          useCampaignStore.getState().hydrate(snapshot)
+        } else {
+          await persist(selectAgencySnapshot(useCampaignStore.getState()))
+        }
+      } catch (error) {
+        console.error('[AgencyOS] 初始化持久化失败', error)
+      } finally {
+        ready = true
+      }
+    }
+
+    void bootstrap()
+
+    unsub = useCampaignStore.subscribe((state) => {
+      if (!ready) return
+      void persist(selectAgencySnapshot(state))
+    })
+
+    return () => {
+      unsub?.()
+    }
+  }, [])
+}
