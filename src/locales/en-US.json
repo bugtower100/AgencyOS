@@ -1,0 +1,275 @@
+{
+  "app": {
+    "title": "Agency OS",
+    "nav": {
+      "dashboard": "Dashboard",
+      "agents": "Agents",
+      "missions": "Mission Control",
+      "anomalies": "Anomalies",
+      "reports": "Reports",
+      "tracks": "Custom Tracks",
+      "settings": "Settings"
+    },
+    "common": {
+      "edit": "Edit",
+      "editing": "Editing",
+      "cancelEdit": "Cancel Edit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete",
+      "status": "Status",
+      "tags": "Tags",
+      "export": "Export Data",
+      "import": "Import Data",
+      "importing": "Importing...",
+      "chaos": "Chaos",
+      "current": "Current",
+      "looseEnds": "Loose Ends",
+      "session": "SESSION",
+      "nextBriefing": "NEXT BRIEFING",
+      "weather": "WEATHER",
+      "snapshot": "Data Snapshot",
+      "divisionName": "Division Name",
+      "divisionCode": "Session / Code",
+      "tagsPlaceholder": "Tags (separated by /)",
+      "importSuccess": "Import complete, data updated.",
+      "importError": "Import failed, please check file format.",
+      "exportSuccess": "Snapshot exported.",
+      "note": "Note",
+      "recordLog": "Record Log"
+    }
+  },
+  "dashboard": {
+    "chaosPool": "Chaos Pool",
+    "chaosHint": "Free within 3 in domain, triple effect",
+    "looseEnds": "Loose Ends",
+    "weatherHint": "Watch the weather",
+    "mvp": "MVP",
+    "mvpHint": "Most awards; fewest reprimands on tie",
+    "watchlist": "Watchlist",
+    "watchlistHint": "Most reprimands; fewest awards on tie",
+    "none": "—",
+    "currentMission": "Current Mission",
+    "noMission": "No Active Mission",
+    "standby": "Standby",
+    "missionCode": "Mission Code",
+    "missionType": "Type",
+    "scheduledDate": "Scheduled Date",
+    "optionalHint": "Optional Objective Hint",
+    "nextMission": "Next Mission",
+    "tbd": "TBD",
+    "code": "Code",
+    "expectedAgents": "Expected Agents",
+    "goals": "Goals",
+    "briefingUpdate": "Briefing Update",
+    "anomalyMonitor": "Anomaly Monitor",
+    "registered": "{{count}} Registered",
+    "viewContainment": "View Containment",
+    "domain": "Domain"
+  },
+  "agents": {
+    "title": "Agent Roster",
+    "subtitle": "Personnel Database",
+    "create": "Register New Agent",
+    "edit": "Edit Dossier",
+    "deleteConfirm": "Delete agent \"{{name}}\"?",
+    "settleDeltas": "Settle Mission Awards/Reprimands",
+    "settleConfirm": "Confirm settling this mission's awards/reprimands into totals? This will clear all agents' mission deltas.",
+    "form": {
+      "codename": "Codename",
+      "codenamePlaceholder": "Enter codename",
+      "arcAnomaly": "Anomaly",
+      "arcReality": "Reality",
+      "arcRole": "Role",
+      "awards": "Awards",
+      "reprimands": "Reprimands",
+      "status": "Status",
+      "cancel": "Cancel Edit",
+      "submit": "Register Agent",
+      "update": "Save Agent",
+      "qaLabel": "QA Current/Max"
+    },
+    "stats": {
+      "focus": "Attentiveness",
+      "deceit": "Duplicity",
+      "vitality": "Dynamism",
+      "empathy": "Empathy",
+      "initiative": "Initiative",
+      "resilience": "Persistence",
+      "presence": "Presence",
+      "expertise": "Professionalism",
+      "mystique": "Subtlety"
+    },
+    "statusOptions": {
+      "active": "Active",
+      "resting": "Resting",
+      "retired": "Retired",
+      "dead": "Deceased",
+      "pending": "Pending"
+    },
+    "claims": {
+      "title": "Claimed Items",
+      "count": "{{count}} records for current agent",
+      "itemName": "Item Name",
+      "itemNamePlaceholder": "e.g., Disposable Containment Kit",
+      "category": "Category",
+      "categoryPlaceholder": "Containment Gear / Logistics",
+      "reason": "Reason",
+      "reasonPlaceholder": "Brief mission and purpose",
+      "reasonDefault": "No reason provided",
+      "addClaim": "Add Claim",
+      "history": "History",
+      "uncategorized": "Uncategorized",
+      "status": "Status",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "editing": "Editing"
+  },
+  "missions": {
+    "title": "Mission List",
+    "subtitle": "Mission Console",
+    "create": "Launch New Mission",
+    "edit": "Edit Mission",
+    "deleteConfirm": "Delete mission \"{{code}} · {{name}}\"? Related logs will also be removed.",
+    "currentMission": "Current Mission",
+    "chaosAdjust": "Chaos Adjustment",
+    "looseEndsAdjust": "Loose Ends Adjustment",
+    "defaultNote": "Manual Adjustment",
+    "saveMission": "Save Mission",
+    "createMission": "Create Mission",
+    "form": {
+      "code": "Mission Code",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "chaos": "Chaos",
+      "looseEnds": "Loose Ends",
+      "date": "Date",
+      "optionalHint": "Optional Objective Hint",
+      "expectedAgents": "Expected Agents",
+      "goalsSummary": "Goals Summary",
+      "cancel": "Cancel Edit",
+      "submit": "Register Mission",
+      "update": "Save Mission"
+    },
+    "table": {
+      "code": "Code",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions"
+    },
+    "types": {
+      "containment": "Anomaly Recovery",
+      "cleanup": "Cleanup Operation",
+      "disruption": "Market Disruption",
+      "other": "Other"
+    },
+    "statusOptions": {
+      "planning": "Planning",
+      "active": "Active",
+      "debrief": "Debrief",
+      "archived": "Archived"
+    }
+  },
+  "anomalies": {
+    "title": "Anomaly Overview",
+    "subtitle": "Containment Database",
+    "deleteConfirm": "Delete anomaly \"{{name}}\"?",
+    "saveAnomaly": "Save Anomaly",
+    "createAnomaly": "Register Anomaly",
+    "form": {
+      "codename": "Codename",
+      "focus": "Focus",
+      "domain": "Domain",
+      "status": "Status",
+      "cancel": "Cancel Edit",
+      "submit": "Register Anomaly",
+      "update": "Save Anomaly"
+    },
+    "card": {
+      "focus": "Focus",
+      "domain": "Domain"
+    },
+    "statusOptions": {
+      "active": "Active",
+      "contained": "Contained",
+      "neutralized": "Neutralized",
+      "escaped": "Escaped"
+    },
+    "editing": "Editing"
+  },
+  "reports": {
+    "title": "Debrief & Export",
+    "subtitle": "Mission Reports",
+    "pending": "Pending Reports",
+    "noPending": "No pending missions.",
+    "archived": "Archived Reports",
+    "noArchived": "No archived reports.",
+    "logs": "Mission Event Logs",
+    "noLogs": "No logs available.",
+    "type": "Type",
+    "date": "Date",
+    "lastUpdate": "Last Updated"
+  },
+  "tracks": {
+    "title": "Custom Track Management",
+    "subtitle": "Custom Tracks",
+    "create": "New Track",
+    "empty": "No tracks created yet. Create a custom track above to get started.",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "e.g. Observation Schedule / Special Process",
+      "color": "Color",
+      "count": "Checkbox Count",
+      "submit": "Create Track"
+    },
+    "item": {
+      "colorLabel": "Color",
+      "checkboxCount": "Checkbox Count",
+      "deleteTrack": "Delete Track",
+      "nodeLabelPlaceholder": "Node Label",
+      "delete": "Delete",
+      "deleteConfirm": "Delete track?"
+    }
+  },
+  "settings": {
+    "title": "System Settings",
+    "description": "Configure AgencyOS appearance and behavior.",
+    "theme": {
+      "title": "Interface Theme",
+      "night": "Night Mode",
+      "day": "Day Mode",
+      "win98": "Win98",
+      "retro": "Retro"
+    },
+    "language": {
+      "title": "Language"
+    },
+    "instructions": {
+      "title": "Instructions",
+      "intro": "AgencyOS is a campaign management tool designed for Tabletop RPGs. As a Game Master (GM), you can use this tool to track agent status, mission progress, and anomaly containment.",
+      "dashboard": "Dashboard: Overview of key campaign metrics.",
+      "agents": "Agents: Manage player character status, harm, and stress.",
+      "missions": "Mission Control: Track current mission objectives and completion.",
+      "persistence": "Data Persistence: All campaign data is automatically saved in your local browser. Please export snapshots regularly to prevent data loss."
+    },
+    "management": {
+      "title": "Settings Management",
+      "description": "Import or export your personalization settings (such as theme preferences). This does not affect campaign data.",
+      "exportSettings": "Export Settings",
+      "importSettings": "Import Settings"
+    },
+    "exportSuccess": "Settings exported.",
+    "importSuccess": "Settings imported.",
+    "importError": "Import failed: Invalid file format.",
+    "community": {
+      "title": "Open Source Community",
+      "description": "AgencyOS is an open source project. GMs are welcome to contribute code, submit bug reports, or suggest features.",
+      "visitGithub": "Visit GitHub Repository"
+    }
+  }
+}

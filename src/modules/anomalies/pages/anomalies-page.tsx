@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const anomalySchema = z.object({
   codename: z.string().min(2),
@@ -15,6 +16,7 @@ const anomalySchema = z.object({
 type AnomalyFormValues = z.infer<typeof anomalySchema>
 
 export function AnomaliesPage() {
+  const { t } = useTranslation()
   const anomalies = useCampaignStore((state) => state.anomalies)
   const createAnomaly = useCampaignStore((state) => state.createAnomaly)
   const updateAnomaly = useCampaignStore((state) => state.updateAnomaly)
@@ -57,7 +59,7 @@ export function AnomaliesPage() {
   const handleDelete = (id: string) => {
     const anomaly = anomalies.find((item) => item.id === id)
     if (!anomaly) return
-    if (window.confirm(`确认删除异常体「${anomaly.codename}」？`)) {
+    if (window.confirm(t('anomalies.deleteConfirm', { name: anomaly.codename }))) {
       deleteAnomaly(id)
       if (editingAnomalyId === id) {
         cancelEdit()
@@ -68,41 +70,41 @@ export function AnomaliesPage() {
   return (
     <div className="space-y-4">
       <header>
-        <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">收容库</p>
-        <h1 className="text-2xl font-semibold text-white">异常体总览</h1>
+        <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{t('anomalies.subtitle')}</p>
+        <h1 className="text-2xl font-semibold text-white">{t('anomalies.title')}</h1>
       </header>
 
       <Panel>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-4">
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            代号
+            {t('anomalies.form.codename')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('codename')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            焦点
+            {t('anomalies.form.focus')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('focus')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            领域
+            {t('anomalies.form.domain')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('domain')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            状态
+            {t('anomalies.form.status')}
             <select className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('status')}>
-              <option value="active">活跃</option>
-              <option value="contained">已收容</option>
-              <option value="neutralized">已中和</option>
-              <option value="escaped">已逃脱</option>
+              <option value="active">{t('anomalies.statusOptions.active')}</option>
+              <option value="contained">{t('anomalies.statusOptions.contained')}</option>
+              <option value="neutralized">{t('anomalies.statusOptions.neutralized')}</option>
+              <option value="escaped">{t('anomalies.statusOptions.escaped')}</option>
             </select>
           </label>
           <div className="md:col-span-4 flex items-center gap-3">
             {editingAnomalyId ? (
               <button type="button" onClick={cancelEdit} className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted rounded-2xl win98:rounded-none">
-                取消编辑
+                {t('app.common.cancelEdit')}
               </button>
             ) : null}
             <button type="submit" className="border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan rounded-2xl win98:rounded-none">
-              {editingAnomalyId ? '保存异常体' : '录入异常体'}
+              {editingAnomalyId ? t('anomalies.saveAnomaly') : t('anomalies.createAnomaly')}
             </button>
           </div>
         </form>
@@ -113,22 +115,22 @@ export function AnomaliesPage() {
           <Panel key={anomaly.id} className={editingAnomalyId === anomaly.id ? 'border-agency-cyan/60' : undefined}>
             <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{anomaly.status}</p>
             <h2 className="text-xl font-semibold text-white">{anomaly.codename}</h2>
-            <p className="text-sm text-agency-muted">焦点：{anomaly.focus}</p>
-            <p className="text-sm text-agency-muted">领域：{anomaly.domain}</p>
+            <p className="text-sm text-agency-muted">{t('anomalies.card.focus')}：{anomaly.focus}</p>
+            <p className="text-sm text-agency-muted">{t('anomalies.card.domain')}：{anomaly.domain}</p>
             <div className="mt-4 flex gap-2">
               <button
                 type="button"
                 className="border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan rounded-xl win98:rounded-none"
                 onClick={() => startEdit(anomaly.id)}
               >
-                {editingAnomalyId === anomaly.id ? '编辑中' : '编辑'}
+                {editingAnomalyId === anomaly.id ? t('app.common.editing') : t('app.common.edit')}
               </button>
               <button
                 type="button"
                 className="border border-agency-border/70 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta rounded-xl win98:rounded-none"
                 onClick={() => handleDelete(anomaly.id)}
               >
-                删除
+                {t('app.common.delete')}
               </button>
             </div>
           </Panel>

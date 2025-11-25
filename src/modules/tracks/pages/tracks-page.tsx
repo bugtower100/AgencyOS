@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Panel } from '@/components/ui/panel'
 import { useTracksStore } from '@/stores/tracks-store'
+import { useTranslation } from 'react-i18next'
 
 export function TracksPage() {
+  const { t } = useTranslation()
   const tracks = useTracksStore((state) => state.tracks)
   const createTrack = useTracksStore((state) => state.createTrack)
   const updateTrackMeta = useTracksStore((state) => state.updateTrackMeta)
@@ -23,24 +25,24 @@ export function TracksPage() {
   return (
     <div className="space-y-4">
       <header>
-        <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">自定义轨道</p>
-        <h1 className="text-2xl font-semibold text-white">自定义轨道管理</h1>
+        <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{t('tracks.subtitle')}</p>
+        <h1 className="text-2xl font-semibold text-white">{t('tracks.title')}</h1>
       </header>
 
       <Panel className="space-y-3">
-        <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">新建轨道</p>
+        <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">{t('tracks.create')}</p>
         <div className="grid gap-3 md:grid-cols-4">
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            名称
+            {t('tracks.form.name')}
             <input
               className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="例如：观察日程 / 特殊流程"
+              placeholder={t('tracks.form.namePlaceholder')}
             />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            颜色
+            {t('tracks.form.color')}
             <input
               type="color"
               className="mt-1 h-[42px] w-full cursor-pointer border border-agency-border bg-agency-ink/60 rounded-xl win98:rounded-none"
@@ -49,7 +51,7 @@ export function TracksPage() {
             />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            复选框数量
+            {t('tracks.form.count')}
             <input
               type="number"
               min={1}
@@ -65,7 +67,7 @@ export function TracksPage() {
               className="w-full border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan rounded-2xl win98:rounded-none"
               onClick={handleCreate}
             >
-              创建轨道
+              {t('tracks.form.submit')}
             </button>
           </div>
         </div>
@@ -97,7 +99,7 @@ export function TracksPage() {
                       className="h-3 w-3 shadow-[0_0_0_1px_rgba(15,23,42,0.8)] rounded-full win98:rounded-none"
                       style={{ backgroundColor: track.color }}
                     />
-                    <span>颜色</span>
+                    <span>{t('tracks.item.colorLabel')}</span>
                     <input
                       type="color"
                       className="h-6 w-10 cursor-pointer border border-agency-border bg-agency-ink/60 rounded win98:rounded-none"
@@ -110,7 +112,7 @@ export function TracksPage() {
                     />
                   </div>
                   <div className="flex items-center gap-2 bg-agency-ink/60 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted rounded-full win98:rounded-none">
-                    <span>复选框数量</span>
+                    <span>{t('tracks.item.checkboxCount')}</span>
                     <input
                       type="number"
                       min={1}
@@ -128,7 +130,7 @@ export function TracksPage() {
                   className="border border-agency-border/70 px-3 py-1 text-xs uppercase tracking-[0.3em] text-agency-muted transition hover:border-agency-magenta hover:text-agency-magenta rounded-2xl win98:rounded-none"
                   onClick={() => deleteTrack(track.id)}
                 >
-                  删除轨道
+                  {t('tracks.item.deleteTrack')}
                 </button>
               </div>
 
@@ -158,7 +160,7 @@ export function TracksPage() {
                             label: event.target.value,
                           })
                         }
-                        placeholder="节点标签"
+                        placeholder={t('tracks.item.nodeLabelPlaceholder')}
                       />
                     </label>
                   ))}
@@ -169,7 +171,7 @@ export function TracksPage() {
         </div>
       ) : (
         <Panel>
-          <p className="text-sm text-agency-muted">尚未创建任何轨道。先在上方创建一条自定义轨道吧。</p>
+          <p className="text-sm text-agency-muted">{t('tracks.empty')}</p>
         </Panel>
       )}
     </div>

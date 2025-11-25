@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { QA_CATEGORIES } from '@/lib/types'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const agentSchema = z.object({
   codename: z.string().min(2, '请输入代号'),
@@ -47,6 +48,7 @@ const createEmptyAgentForm = (): AgentFormValues => ({
 })
 
 export function AgentsPage() {
+  const { t } = useTranslation()
   const agents = useCampaignStore((state) => state.agents)
   const createAgent = useCampaignStore((state) => state.createAgent)
   const updateAgent = useCampaignStore((state) => state.updateAgent)
@@ -95,7 +97,7 @@ export function AgentsPage() {
   const handleDelete = (agentId: string) => {
     const target = agents.find((agent) => agent.id === agentId)
     if (!target) return
-    if (window.confirm(`确认删除特工「${target.codename}」？`)) {
+    if (window.confirm(t('agents.deleteConfirm', { name: target.codename }))) {
       deleteAgent(agentId)
       if (editingAgentId === agentId) {
         cancelEdit()
@@ -125,8 +127,8 @@ export function AgentsPage() {
       {
         id: Math.random().toString(36).slice(2, 10),
         itemName: claimDraft.itemName.trim(),
-        category: claimDraft.category.trim() || '一般物资',
-        reason: claimDraft.reason.trim() || '未填写理由',
+        category: claimDraft.category.trim() || t('agents.claims.uncategorized'),
+        reason: claimDraft.reason.trim() || t('agents.claims.reasonDefault'),
         claimedAt: new Date().toISOString(),
         status: 'pending' as const,
       },
@@ -141,7 +143,7 @@ export function AgentsPage() {
   }
 
   const handleSettleDeltas = () => {
-    if (window.confirm('确认将本次任务的嘉奖/申诫增量结算入总和？此操作会清空所有特工的本任务增量。')) {
+    if (window.confirm(t('agents.settleConfirm'))) {
       settleAgentDeltas()
     }
   }
@@ -151,45 +153,45 @@ export function AgentsPage() {
       <header>
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">人力资源档案</p>
-            <h1 className="text-2xl font-semibold text-white">特工列表</h1>
+            <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{t('agents.subtitle')}</p>
+            <h1 className="text-2xl font-semibold text-white">{t('agents.title')}</h1>
           </div>
           <button
             type="button"
             onClick={handleSettleDeltas}
             className="border border-agency-cyan/60 px-4 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-agency-cyan hover:border-agency-cyan rounded-2xl win98:rounded-none"
           >
-            结算本任务嘉奖/申诫
+            {t('agents.settleDeltas')}
           </button>
         </div>
       </header>
       <Panel>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-3">
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
-            代号
+            {t('agents.form.codename')}
             <input
               className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 font-mono text-sm text-agency-cyan rounded-xl win98:rounded-none"
               {...form.register('codename')}
             />
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
-            异常
+            {t('agents.form.arcAnomaly')}
             <input className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('arcAnomaly')} />
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
-            现实
+            {t('agents.form.arcReality')}
             <input className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('arcReality')} />
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
-            职能
+            {t('agents.form.arcRole')}
             <input className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('arcRole')} />
           </label>
           <div className="space-y-2 text-xs uppercase tracking-[0.3em] text-agency-muted md:col-span-3">
-            <p>QA 当前/上限</p>
+            <p>{t('agents.form.qaLabel')}</p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {QA_CATEGORIES.map((category) => (
                 <label key={category.key} className="space-y-1 border border-agency-border/80 bg-agency-ink/60 p-3 rounded-2xl win98:rounded-none">
-                  <span className="text-[0.65rem] tracking-[0.4em] text-agency-muted">{category.label}</span>
+                  <span className="text-[0.65rem] tracking-[0.4em] text-agency-muted">{t(`agents.stats.${category.key}`)}</span>
                   <div className="mt-2 flex gap-2">
                     <input
                       type="number"
@@ -207,54 +209,54 @@ export function AgentsPage() {
             </div>
           </div>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
-            嘉奖/申诫
+            {t('agents.form.awards')}/{t('agents.form.reprimands')}
             <div className="flex gap-2">
               <input type="number" className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('awards', { valueAsNumber: true })} />
               <input type="number" className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('reprimands', { valueAsNumber: true })} />
             </div>
           </label>
           <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
-            状态
+            {t('agents.form.status')}
             <select className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('status')}>
-              <option value="active">在职</option>
-              <option value="resting">休整</option>
-              <option value="retired">退休</option>
-              <option value="dead">死亡</option>
-              <option value="pending">待入职</option>
+              <option value="active">{t('agents.statusOptions.active')}</option>
+              <option value="resting">{t('agents.statusOptions.resting')}</option>
+              <option value="retired">{t('agents.statusOptions.retired')}</option>
+              <option value="dead">{t('agents.statusOptions.dead')}</option>
+              <option value="pending">{t('agents.statusOptions.pending')}</option>
             </select>
           </label>
           {editingAgentId ? (
             <div className="md:col-span-3 space-y-2 text-xs uppercase tracking-[0.3em] text-agency-muted">
               <div className="flex items-center justify-between">
-                <span>申领物记录</span>
-                <span className="text-[0.65rem] text-agency-muted normal-case">当前特工共 {currentClaims.length} 条</span>
+                <span>{t('agents.claims.title')}</span>
+                <span className="text-[0.65rem] text-agency-muted normal-case">{t('agents.claims.count', { count: currentClaims.length })}</span>
               </div>
               <div className="grid gap-3 md:grid-cols-[2fr_1.5fr_3fr_auto] items-start">
                 <label className="space-y-1">
-                  <span className="text-[0.65rem] tracking-[0.3em]">物品名称</span>
+                  <span className="text-[0.65rem] tracking-[0.3em]">{t('agents.claims.itemName')}</span>
                   <input
                     className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                     value={claimDraft.itemName}
                     onChange={(e) => setClaimDraft((prev) => ({ ...prev, itemName: e.target.value }))}
-                    placeholder="例如：一次性收容装备包"
+                    placeholder={t('agents.claims.itemNamePlaceholder')}
                   />
                 </label>
                 <label className="space-y-1">
-                  <span className="text-[0.65rem] tracking-[0.3em]">类别</span>
+                  <span className="text-[0.65rem] tracking-[0.3em]">{t('agents.claims.category')}</span>
                   <input
                     className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                     value={claimDraft.category}
                     onChange={(e) => setClaimDraft((prev) => ({ ...prev, category: e.target.value }))}
-                    placeholder="收容装备 / 后勤物资"
+                    placeholder={t('agents.claims.categoryPlaceholder')}
                   />
                 </label>
                 <label className="space-y-1">
-                  <span className="text-[0.65rem] tracking-[0.3em]">理由</span>
+                  <span className="text-[0.65rem] tracking-[0.3em]">{t('agents.claims.reason')}</span>
                   <input
                     className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
                     value={claimDraft.reason}
                     onChange={(e) => setClaimDraft((prev) => ({ ...prev, reason: e.target.value }))}
-                    placeholder="简要写明任务与用途"
+                    placeholder={t('agents.claims.reasonPlaceholder')}
                   />
                 </label>
                 <div className="flex items-end">
@@ -264,13 +266,13 @@ export function AgentsPage() {
                     className="w-full border border-agency-cyan/60 px-3 py-2 text-[0.7rem] uppercase tracking-[0.3em] text-agency-cyan hover:border-agency-cyan disabled:border-agency-border disabled:text-agency-border rounded-2xl win98:rounded-none"
                     disabled={!claimDraft.itemName.trim()}
                   >
-                    添加申领物
+                    {t('agents.claims.addClaim')}
                   </button>
                 </div>
               </div>
               {currentClaims.length ? (
                 <div className="mt-2 space-y-2 border border-agency-border/80 bg-agency-ink/60 p-3 rounded-2xl win98:rounded-none">
-                  <p className="text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted">历史记录</p>
+                  <p className="text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted">{t('agents.claims.history')}</p>
                   <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
                     {currentClaims.map((claim) => (
                       <div
@@ -281,21 +283,21 @@ export function AgentsPage() {
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="font-mono text-agency-cyan">{claim.itemName}</span>
                             <span className="rounded-full border border-agency-border px-2 py-0.5 text-[0.6rem] uppercase tracking-[0.3em]">
-                              {claim.category || '未分类'}
+                              {claim.category || t('agents.claims.uncategorized')}
                             </span>
                             <span className="text-[0.6rem] uppercase tracking-[0.3em] text-agency-muted">
                               {new Date(claim.claimedAt).toLocaleString()}
                             </span>
                           </div>
-                          <p className="text-[0.7rem] leading-relaxed">理由：{claim.reason}</p>
-                          <p className="text-[0.65rem] uppercase tracking-[0.3em] text-agency-amber">状态：{claim.status}</p>
+                          <p className="text-[0.7rem] leading-relaxed">{t('agents.claims.reason')}：{claim.reason}</p>
+                          <p className="text-[0.65rem] uppercase tracking-[0.3em] text-agency-amber">{t('agents.claims.status')}：{claim.status}</p>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleDeleteClaim(claim.id)}
                           className="mt-1 border border-agency-border px-2 py-1 text-[0.6rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta rounded-xl win98:rounded-none"
                         >
-                          移除
+                          {t('app.common.delete')}
                         </button>
                       </div>
                     ))}
@@ -307,11 +309,11 @@ export function AgentsPage() {
           <div className="flex items-center gap-3 self-end">
             {editingAgentId ? (
               <button type="button" onClick={cancelEdit} className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted rounded-2xl win98:rounded-none">
-                取消编辑
+                {t('agents.form.cancel')}
               </button>
             ) : null}
             <button type="submit" className="border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan transition hover:border-agency-cyan rounded-2xl win98:rounded-none">
-              {editingAgentId ? '保存特工' : '录入特工'}
+              {editingAgentId ? t('agents.form.update') : t('agents.form.submit')}
             </button>
           </div>
         </form>
@@ -320,16 +322,16 @@ export function AgentsPage() {
         <table className="min-w-full divide-y divide-agency-border/60 text-sm">
           <thead className="bg-agency-ink/60 text-xs uppercase tracking-[0.3em] text-agency-muted">
             <tr>
-              <th className="px-4 py-3 text-left">代号</th>
-              <th className="px-4 py-3 text-left">异常</th>
-              <th className="px-4 py-3 text-left">现实</th>
-              <th className="px-4 py-3 text-left">职能</th>
-              <th className="px-4 py-3 text-left">QA 素质</th>
-              <th className="px-4 py-3 text-left">嘉奖</th>
-              <th className="px-4 py-3 text-left">申诫</th>
-              <th className="px-4 py-3 text-left">本任务增量</th>
-              <th className="px-4 py-3 text-left">状态</th>
-              <th className="px-4 py-3 text-left">操作</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.codename')}</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.arcAnomaly')}</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.arcReality')}</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.arcRole')}</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.qaLabel')}</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.awards')}</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.reprimands')}</th>
+              <th className="px-4 py-3 text-left">Δ</th>
+              <th className="px-4 py-3 text-left">{t('agents.form.status')}</th>
+              <th className="px-4 py-3 text-left">{t('app.common.edit')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-agency-border/40">
@@ -344,7 +346,7 @@ export function AgentsPage() {
                     {QA_CATEGORIES.map((category) => (
                       <div key={category.key} className="border border-agency-border/60 bg-agency-ink/40 px-3 py-2 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted rounded-xl win98:rounded-none">
                         <div className="flex items-center justify-between font-medium">
-                          <span>{category.label}</span>
+                          <span>{t(`agents.stats.${category.key}`)}</span>
                           <span className="font-mono text-agency-cyan">{agent.qa[category.key].current} / {agent.qa[category.key].max}</span>
                         </div>
                       </div>
@@ -356,7 +358,7 @@ export function AgentsPage() {
                 <td className="px-4 py-3 text-xs text-agency-muted">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-[0.65rem]">嘉奖+</span>
+                      <span className="text-[0.65rem]">{t('agents.form.awards')}+</span>
                       <input
                         type="number"
                         className="w-16 border border-agency-border bg-agency-ink/60 px-2 py-1 text-[0.75rem] font-mono text-agency-cyan rounded win98:rounded-none"
@@ -370,7 +372,7 @@ export function AgentsPage() {
                       />
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[0.65rem]">申诫+</span>
+                      <span className="text-[0.65rem]">{t('agents.form.reprimands')}+</span>
                       <input
                         type="number"
                         className="w-16 border border-agency-border bg-agency-ink/60 px-2 py-1 text-[0.75rem] font-mono text-agency-cyan rounded win98:rounded-none"
@@ -385,7 +387,7 @@ export function AgentsPage() {
                     </div>
                   </div>
                 </td>
-                <td className="px-4 py-3 uppercase tracking-[0.3em] text-xs text-agency-muted">{agent.status}</td>
+                <td className="px-4 py-3 uppercase tracking-[0.3em] text-xs text-agency-muted">{t(`agents.statusOptions.${agent.status}`)}</td>
                 <td className="px-4 py-3">
                   <button
                     type="button"
@@ -395,7 +397,7 @@ export function AgentsPage() {
                       handleDelete(agent.id)
                     }}
                   >
-                    删除
+                    {t('app.common.delete')}
                   </button>
                 </td>
               </tr>

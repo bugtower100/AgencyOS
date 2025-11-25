@@ -1,15 +1,21 @@
 import { useState, useRef, type ChangeEvent } from 'react'
-import { Github, Download, Upload, Monitor, Moon, Sun, Laptop } from 'lucide-react'
+import { Github, Download, Upload, Monitor, Moon, Sun, Laptop, Languages } from 'lucide-react'
 import { useThemeStore } from '@/stores/theme-store'
 import { cn } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 export function SettingsPage() {
+  const { t, i18n } = useTranslation()
   const themeMode = useThemeStore((state) => state.mode)
   const setThemeMode = useThemeStore((state) => state.setMode)
   const isWin98 = themeMode === 'win98'
   
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [importMessage, setImportMessage] = useState<string | null>(null)
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng)
+  }
 
   const handleExportSettings = () => {
     const settings = {
@@ -27,7 +33,7 @@ export function SettingsPage() {
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    setImportMessage('设置已导出。')
+    setImportMessage(t('settings.exportSuccess'))
   }
 
   const handleImportSettings = (event: ChangeEvent<HTMLInputElement>) => {
@@ -44,10 +50,10 @@ export function SettingsPage() {
           setThemeMode(settings.theme)
         }
         
-        setImportMessage('设置已导入。')
+        setImportMessage(t('settings.importSuccess'))
       } catch (error) {
         console.error('Failed to import settings', error)
-        setImportMessage('导入失败：文件格式错误。')
+        setImportMessage(t('settings.importError'))
       }
     }
     reader.readAsText(file)
@@ -57,9 +63,48 @@ export function SettingsPage() {
   return (
     <div className="space-y-8">
       <div className="space-y-2">
-        <h1 className={cn("text-2xl font-bold tracking-tight", isWin98 ? "font-mono" : "")}>系统设置</h1>
-        <p className="text-agency-muted">配置 AgencyOS 的外观与行为。</p>
+        <h1 className={cn("text-2xl font-bold tracking-tight", isWin98 ? "font-mono" : "")}>{t('settings.title')}</h1>
+        <p className="text-agency-muted">{t('settings.description')}</p>
       </div>
+
+      {/* Language Settings */}
+      <section className={cn(
+        "space-y-4 border border-agency-border/60 p-6",
+        isWin98 ? "bg-agency-ink" : "rounded-2xl bg-agency-ink/40"
+      )}>
+        <h2 className="text-lg font-semibold text-agency-cyan flex items-center gap-2">
+          <Languages className="h-5 w-5" />
+          {t('settings.language.title')}
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <button
+            onClick={() => changeLanguage('zh-CN')}
+            className={cn(
+              "flex flex-col items-center justify-center gap-3 border p-4 transition-all hover:border-agency-cyan hover:bg-agency-cyan/5",
+              i18n.language === 'zh-CN' 
+                ? "border-agency-cyan bg-agency-cyan/10 text-agency-cyan" 
+                : "border-agency-border text-agency-muted",
+              isWin98 ? "rounded-none" : "rounded-xl"
+            )}
+          >
+            <span className="text-2xl">🇨🇳</span>
+            <span className="text-sm font-medium">简体中文</span>
+          </button>
+          <button
+            onClick={() => changeLanguage('en-US')}
+            className={cn(
+              "flex flex-col items-center justify-center gap-3 border p-4 transition-all hover:border-agency-cyan hover:bg-agency-cyan/5",
+              i18n.language === 'en-US' 
+                ? "border-agency-cyan bg-agency-cyan/10 text-agency-cyan" 
+                : "border-agency-border text-agency-muted",
+              isWin98 ? "rounded-none" : "rounded-xl"
+            )}
+          >
+            <span className="text-2xl">🇺🇸</span>
+            <span className="text-sm font-medium">English</span>
+          </button>
+        </div>
+      </section>
 
       {/* Theme Settings */}
       <section className={cn(
@@ -68,7 +113,7 @@ export function SettingsPage() {
       )}>
         <h2 className="text-lg font-semibold text-agency-cyan flex items-center gap-2">
           <Monitor className="h-5 w-5" />
-          界面主题
+          {t('settings.theme.title')}
         </h2>
         <div className="grid gap-4 sm:grid-cols-3">
           <button
@@ -82,7 +127,7 @@ export function SettingsPage() {
             )}
           >
             <Moon className="h-6 w-6" />
-            <span className="text-sm font-medium">夜间模式</span>
+            <span className="text-sm font-medium">{t('settings.theme.night')}</span>
           </button>
           <button
             onClick={() => setThemeMode('day')}
@@ -95,7 +140,7 @@ export function SettingsPage() {
             )}
           >
             <Sun className="h-6 w-6" />
-            <span className="text-sm font-medium">日间模式</span>
+            <span className="text-sm font-medium">{t('settings.theme.day')}</span>
           </button>
           <button
             onClick={() => setThemeMode('win98')}
@@ -108,7 +153,7 @@ export function SettingsPage() {
             )}
           >
             <Laptop className="h-6 w-6" />
-            <span className="text-sm font-medium">Win98</span>
+            <span className="text-sm font-medium">{t('settings.theme.win98')}</span>
           </button>
           <button
             onClick={() => setThemeMode('retro')}
@@ -121,7 +166,7 @@ export function SettingsPage() {
             )}
           >
             <Monitor className="h-6 w-6" />
-            <span className="text-sm font-medium">复古</span>
+            <span className="text-sm font-medium">{t('settings.theme.retro')}</span>
           </button>
         </div>
       </section>
@@ -131,24 +176,23 @@ export function SettingsPage() {
         "space-y-4 border border-agency-border/60 p-6",
         isWin98 ? "bg-agency-ink" : "rounded-2xl bg-agency-ink/40"
       )}>
-        <h2 className="text-lg font-semibold text-agency-cyan">使用说明</h2>
+        <h2 className="text-lg font-semibold text-agency-cyan">{t('settings.instructions.title')}</h2>
         <div className="space-y-4 text-sm text-agency-muted leading-relaxed">
           <p>
-            <strong className="text-agency-cyan">AgencyOS</strong> 是专为桌面角色扮演游戏（TRPG）设计的战役管理工具。
-            作为总经理（GM），你可以使用此工具追踪特工状态、任务进度以及异常体收容情况。
+            {t('settings.instructions.intro')}
           </p>
           <ul className="list-disc pl-5 space-y-2">
             <li>
-              <span className="text-agency-cyan">仪表板</span>：概览当前战役的关键指标。
+              {t('settings.instructions.dashboard')}
             </li>
             <li>
-              <span className="text-agency-cyan">特工档案</span>：管理玩家角色的状态、伤害与压力。
+              {t('settings.instructions.agents')}
             </li>
             <li>
-              <span className="text-agency-cyan">任务控制</span>：追踪当前任务目标与完成度。
+              {t('settings.instructions.missions')}
             </li>
             <li>
-              <span className="text-agency-cyan">数据持久化</span>：所有战役数据自动保存在本地浏览器中。请定期导出快照以防数据丢失。
+              {t('settings.instructions.persistence')}
             </li>
           </ul>
         </div>
@@ -159,9 +203,9 @@ export function SettingsPage() {
         "space-y-4 border border-agency-border/60 p-6",
         isWin98 ? "bg-agency-ink" : "rounded-2xl bg-agency-ink/40"
       )}>
-        <h2 className="text-lg font-semibold text-agency-cyan">设置管理</h2>
+        <h2 className="text-lg font-semibold text-agency-cyan">{t('settings.management.title')}</h2>
         <p className="text-sm text-agency-muted">
-          导入或导出您的个性化设置（如主题偏好）。此操作不会影响战役数据。
+          {t('settings.management.description')}
         </p>
         <div className="flex flex-wrap gap-4">
           <button
@@ -172,7 +216,7 @@ export function SettingsPage() {
             )}
           >
             <Download className="h-4 w-4" />
-            导出设置
+            {t('settings.management.exportSettings')}
           </button>
           <button
             onClick={() => fileInputRef.current?.click()}
@@ -182,7 +226,7 @@ export function SettingsPage() {
             )}
           >
             <Upload className="h-4 w-4" />
-            导入设置
+            {t('settings.management.importSettings')}
           </button>
           <input
             ref={fileInputRef}
@@ -204,10 +248,10 @@ export function SettingsPage() {
       )}>
         <h2 className="text-lg font-semibold text-agency-cyan flex items-center gap-2">
           <Github className="h-5 w-5" />
-          开源社区
+          {t('settings.community.title')}
         </h2>
         <p className="text-sm text-agency-muted">
-          AgencyOS 是一个开源项目。欢迎各位总经理参与代码贡献，提交 Bug 反馈或功能建议。
+          {t('settings.community.description')}
         </p>
         <a
           href="https://github.com/shakugannosaints/AgencyOS"
@@ -219,7 +263,7 @@ export function SettingsPage() {
           )}
         >
           <Github className="h-4 w-4" />
-          访问 GitHub 仓库
+          {t('settings.community.visitGithub')}
         </a>
       </section>
     </div>

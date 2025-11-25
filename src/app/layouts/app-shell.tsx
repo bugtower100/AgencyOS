@@ -8,18 +8,10 @@ import { getAgencySnapshot, useCampaignStore } from '@/stores/campaign-store'
 import { useCampaignPersistence } from '@/stores/hooks/use-campaign-persistence'
 import { createSnapshotEnvelope, parseSnapshotFile } from '@/services/db/repository'
 import { useThemeStore } from '@/stores/theme-store'
-
-const navItems = [
-  { label: '仪表板', path: '/', icon: LayoutDashboard },
-  { label: '特工档案', path: '/agents', icon: Users },
-  { label: '任务控制', path: '/missions', icon: BriefcaseBusiness },
-  { label: '异常体库', path: '/anomalies', icon: Atom },
-  { label: '任务报告', path: '/reports', icon: ScrollText },
-  { label: '自定义轨道', path: '/tracks', icon: Orbit },
-  { label: '系统设置', path: '/settings', icon: Settings },
-]
+import { useTranslation } from 'react-i18next'
 
 export function AppShell() {
+  const { t } = useTranslation()
   useCampaignPersistence()
   const campaign = useCampaignStore((state) => state.campaign)
   const missions = useCampaignStore((state) => state.missions)
@@ -42,6 +34,16 @@ export function AppShell() {
   const isRetro = themeMode === 'retro'
   const isSquare = isWin98 || isRetro
 
+  const navItems = [
+    { label: t('app.nav.dashboard'), path: '/', icon: LayoutDashboard },
+    { label: t('app.nav.agents'), path: '/agents', icon: Users },
+    { label: t('app.nav.missions'), path: '/missions', icon: BriefcaseBusiness },
+    { label: t('app.nav.anomalies'), path: '/anomalies', icon: Atom },
+    { label: t('app.nav.reports'), path: '/reports', icon: ScrollText },
+    { label: t('app.nav.tracks'), path: '/tracks', icon: Orbit },
+    { label: t('app.nav.settings'), path: '/settings', icon: Settings },
+  ]
+
   useEffect(() => {
     if (typeof document === 'undefined') return
     document.documentElement.dataset.theme = themeMode
@@ -60,7 +62,7 @@ export function AppShell() {
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    setImportMessage('已导出当前快照。')
+    setImportMessage(t('app.common.exportSuccess'))
   }
 
   const handleImportClick = () => {
@@ -77,10 +79,10 @@ export function AppShell() {
       const parsed = JSON.parse(text)
       const snapshot = parseSnapshotFile(parsed)
       useCampaignStore.getState().hydrate(snapshot)
-      setImportMessage('导入完成，数据已更新。')
+      setImportMessage(t('app.common.importSuccess'))
     } catch (error) {
       console.error('[AgencyOS] 导入失败', error)
-      setImportMessage(error instanceof Error ? error.message : '导入失败，请检查文件格式。')
+      setImportMessage(error instanceof Error ? error.message : t('app.common.importError'))
     } finally {
       setImporting(false)
       event.target.value = ''
@@ -149,13 +151,13 @@ export function AppShell() {
                   isRetro && "rounded-none"
                 )}
               >
-                编辑
+                {t('app.common.edit')}
               </button>
             </div>
             {isEditingHeader ? (
               <div className="space-y-2 text-xs text-agency-muted">
                 <div>
-                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">分部名称</label>
+                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">{t('app.common.divisionName')}</label>
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
@@ -166,7 +168,7 @@ export function AppShell() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">Session / 代号</label>
+                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">{t('app.common.divisionCode')}</label>
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
@@ -177,7 +179,7 @@ export function AppShell() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">状态</label>
+                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">{t('app.common.status')}</label>
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
@@ -189,7 +191,7 @@ export function AppShell() {
                   />
                 </div>
                 <div>
-                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">标签（用 / 分隔）</label>
+                  <label className="block text-[0.6rem] uppercase tracking-[0.25em]">{t('app.common.tags')}</label>
                   <input
                     className={cn(
                       'mt-1 w-full border border-agency-border bg-agency-ink/40 px-2 py-1 text-sm text-agency-cyan outline-none focus:border-agency-cyan',
@@ -209,7 +211,7 @@ export function AppShell() {
                       isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                   >
-                    取消
+                    {t('app.common.cancel')}
                   </button>
                   <button
                     type="button"
@@ -219,7 +221,7 @@ export function AppShell() {
                       isSquare ? 'rounded-none' : 'rounded-xl',
                     )}
                   >
-                    保存
+                    {t('app.common.save')}
                   </button>
                 </div>
               </div>
@@ -227,7 +229,7 @@ export function AppShell() {
               <>
                 <p className="text-xl font-semibold text-white">{campaign.name}</p>
                 <p className="text-xs text-agency-muted">
-                  状态：{campaign.status} · {campaign.styleTags.join(' / ')}
+                  {t('app.common.status')}：{campaign.status} · {campaign.styleTags.join(' / ')}
                 </p>
               </>
             )}
@@ -264,24 +266,24 @@ export function AppShell() {
           </div>
 
           <div className="space-y-2 text-[0.65rem] text-agency-muted">
-            <p className="uppercase tracking-[0.5em]">混沌警戒</p>
+            <p className="uppercase tracking-[0.5em]">{t('app.common.chaos')}</p>
             <div
               className={cn(
                 'border border-agency-magenta/40 bg-gradient-to-r from-agency-magenta/20 to-transparent p-3 font-mono',
                 isSquare ? 'rounded-none' : 'rounded-2xl',
               )}
             >
-              <p>当前：{chaosValue}</p>
-              <p>散逸端：{looseEndsValue}</p>
+              <p>{t('app.common.current')}：{chaosValue}</p>
+              <p>{t('app.common.looseEnds')}：{looseEndsValue}</p>
             </div>
           </div>
         </aside>
 
         <main className="space-y-6">
           <div className="grid gap-3 md:grid-cols-3">
-            <CommandStrip label="SESSION" value={campaign.divisionCode} />
-            <CommandStrip label="NEXT BRIEFING" value={activeMission?.code ?? '—'} />
-            <CommandStrip label="WEATHER" value={`散逸端×${looseEndsValue}`} />
+            <CommandStrip label={t('app.common.session')} value={campaign.divisionCode} />
+            <CommandStrip label={t('app.common.nextBriefing')} value={activeMission?.code ?? '—'} />
+            <CommandStrip label={t('app.common.weather')} value={`${t('app.common.looseEnds')}×${looseEndsValue}`} />
           </div>
           <div
             className={cn(
@@ -290,7 +292,7 @@ export function AppShell() {
             )}
           >
             <div className="flex flex-wrap items-center gap-2">
-              <span>数据快照</span>
+              <span>{t('app.common.snapshot')}</span>
               <div className="flex flex-wrap gap-2 text-xs normal-case">
                 <button
                   type="button"
@@ -300,7 +302,7 @@ export function AppShell() {
                     isSquare ? 'rounded-none' : 'rounded-xl',
                   )}
                 >
-                  导出内容
+                  {t('app.common.export')}
                 </button>
                 <button
                   type="button"
@@ -311,7 +313,7 @@ export function AppShell() {
                   )}
                   disabled={importing}
                 >
-                  {importing ? '导入中…' : '导入内容'}
+                  {importing ? t('app.common.importing') : t('app.common.import')}
                 </button>
                 <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleImportChange} />
               </div>

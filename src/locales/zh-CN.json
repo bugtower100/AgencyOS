@@ -1,0 +1,275 @@
+{
+  "app": {
+    "title": "Agency OS",
+    "nav": {
+      "dashboard": "仪表板",
+      "agents": "特工档案",
+      "missions": "任务控制",
+      "anomalies": "异常体库",
+      "reports": "任务报告",
+      "tracks": "自定义轨道",
+      "settings": "系统设置"
+    },
+    "common": {
+      "edit": "编辑",
+      "editing": "编辑中",
+      "cancelEdit": "取消编辑",
+      "cancel": "取消",
+      "save": "保存",
+      "delete": "删除",
+      "status": "状态",
+      "tags": "标签",
+      "export": "导出内容",
+      "import": "导入内容",
+      "importing": "导入中…",
+      "chaos": "混沌",
+      "current": "当前",
+      "looseEnds": "散逸端",
+      "session": "SESSION",
+      "nextBriefing": "NEXT BRIEFING",
+      "weather": "WEATHER",
+      "snapshot": "数据快照",
+      "divisionName": "分部名称",
+      "divisionCode": "Session / 代号",
+      "tagsPlaceholder": "标签（用 / 分隔）",
+      "importSuccess": "导入完成，数据已更新。",
+      "importError": "导入失败，请检查文件格式。",
+      "exportSuccess": "已导出当前快照。",
+      "note": "备注",
+      "recordLog": "记录日志"
+    }
+  },
+  "dashboard": {
+    "chaosPool": "混沌池",
+    "chaosHint": "领域中3以内免费，并且三倍效果",
+    "looseEnds": "散逸端",
+    "weatherHint": "注意天气",
+    "mvp": "MVP",
+    "mvpHint": "嘉奖最多；并列时申诫最少者优先",
+    "watchlist": "观察期",
+    "watchlistHint": "申诫最多；并列时嘉奖最少者优先",
+    "none": "—",
+    "currentMission": "当前任务",
+    "noMission": "暂无任务",
+    "standby": "待机",
+    "missionCode": "任务代号",
+    "missionType": "类型",
+    "scheduledDate": "计划日期",
+    "optionalHint": "可选目标提示",
+    "nextMission": "下一任务",
+    "tbd": "待定",
+    "code": "代号",
+    "expectedAgents": "预计参与特工",
+    "goals": "目标",
+    "briefingUpdate": "简报更新时间",
+    "anomalyMonitor": "异常体监控",
+    "registered": "已登记 {{count}} 项",
+    "viewContainment": "查看收容库",
+    "domain": "领域"
+  },
+  "agents": {
+    "title": "特工列表",
+    "subtitle": "人力资源档案",
+    "create": "注册新特工",
+    "edit": "编辑档案",
+    "deleteConfirm": "确认删除特工「{{name}}」？",
+    "settleDeltas": "结算本任务嘉奖/申诫",
+    "settleConfirm": "确认将本次任务的嘉奖/申诫增量结算入总和？此操作会清空所有特工的本任务增量。",
+    "form": {
+      "codename": "代号",
+      "codenamePlaceholder": "请输入代号",
+      "arcAnomaly": "异常",
+      "arcReality": "现实",
+      "arcRole": "职能",
+      "awards": "嘉奖",
+      "reprimands": "申诫",
+      "status": "状态",
+      "cancel": "取消编辑",
+      "submit": "录入特工",
+      "update": "保存特工",
+      "qaLabel": "QA 当前/上限"
+    },
+    "stats": {
+      "focus": "专注",
+      "deceit": "欺瞒",
+      "vitality": "活力",
+      "empathy": "共情",
+      "initiative": "主动",
+      "resilience": "坚毅",
+      "presence": "气场",
+      "expertise": "专业",
+      "mystique": "诡秘"
+    },
+    "statusOptions": {
+      "active": "现役",
+      "resting": "休整",
+      "retired": "退役",
+      "dead": "阵亡",
+      "pending": "待定"
+    },
+    "claims": {
+      "title": "申领物记录",
+      "count": "当前特工共 {{count}} 条",
+      "itemName": "物品名称",
+      "itemNamePlaceholder": "例如：一次性收容装备包",
+      "category": "类别",
+      "categoryPlaceholder": "收容装备 / 后勤物资",
+      "reason": "理由",
+      "reasonPlaceholder": "简要写明任务与用途",
+      "reasonDefault": "未填写理由",
+      "addClaim": "添加申领物",
+      "history": "历史记录",
+      "uncategorized": "未分类",
+      "status": "状态",
+      "pending": "待审核",
+      "approved": "已批准",
+      "rejected": "已拒绝"
+    },
+    "editing": "编辑中"
+  },
+  "missions": {
+    "title": "任务列表",
+    "subtitle": "任务控制台",
+    "create": "发布新任务",
+    "edit": "编辑任务",
+    "deleteConfirm": "确认删除任务「{{code}} · {{name}}」？相关日志会一并移除。",
+    "currentMission": "当前任务",
+    "chaosAdjust": "混沌调整",
+    "looseEndsAdjust": "散逸端调整",
+    "defaultNote": "手动调整",
+    "saveMission": "保存任务",
+    "createMission": "创建任务",
+    "form": {
+      "code": "任务代号",
+      "name": "名称",
+      "type": "类型",
+      "status": "状态",
+      "chaos": "混沌",
+      "looseEnds": "散逸端",
+      "date": "日期",
+      "optionalHint": "可选目标提示",
+      "expectedAgents": "预计参与特工",
+      "goalsSummary": "任务目标概要",
+      "cancel": "取消编辑",
+      "submit": "录入任务",
+      "update": "保存任务"
+    },
+    "table": {
+      "code": "代号",
+      "name": "名称",
+      "type": "类型",
+      "status": "状态",
+      "date": "日期",
+      "actions": "操作"
+    },
+    "types": {
+      "containment": "异常体回收",
+      "cleanup": "清扫行动",
+      "disruption": "市场破坏",
+      "other": "其他"
+    },
+    "statusOptions": {
+      "planning": "筹备",
+      "active": "进行中",
+      "debrief": "结算",
+      "archived": "归档"
+    }
+  },
+  "anomalies": {
+    "title": "异常体总览",
+    "subtitle": "收容库",
+    "deleteConfirm": "确认删除异常体「{{name}}」？",
+    "saveAnomaly": "保存异常体",
+    "createAnomaly": "录入异常体",
+    "form": {
+      "codename": "代号",
+      "focus": "焦点",
+      "domain": "领域",
+      "status": "状态",
+      "cancel": "取消编辑",
+      "submit": "录入异常体",
+      "update": "保存异常体"
+    },
+    "card": {
+      "focus": "焦点",
+      "domain": "领域"
+    },
+    "statusOptions": {
+      "active": "活跃",
+      "contained": "已收容",
+      "neutralized": "已中和",
+      "escaped": "已逃脱"
+    },
+    "editing": "编辑中"
+  },
+  "reports": {
+    "title": "结算与导出",
+    "subtitle": "任务报告",
+    "pending": "待完成报告",
+    "noPending": "暂无待结算任务。",
+    "archived": "归档报告",
+    "noArchived": "尚未归档报告。",
+    "logs": "任务事件日志",
+    "noLogs": "暂无日志。",
+    "type": "类型",
+    "date": "日期",
+    "lastUpdate": "最后更新"
+  },
+  "tracks": {
+    "title": "自定义轨道管理",
+    "subtitle": "自定义轨道",
+    "create": "新建轨道",
+    "empty": "尚未创建任何轨道。先在上方创建一条自定义轨道吧。",
+    "form": {
+      "name": "名称",
+      "namePlaceholder": "例如：观察日程 / 特殊流程",
+      "color": "颜色",
+      "count": "复选框数量",
+      "submit": "创建轨道"
+    },
+    "item": {
+      "colorLabel": "颜色",
+      "checkboxCount": "复选框数量",
+      "deleteTrack": "删除轨道",
+      "nodeLabelPlaceholder": "节点标签",
+      "delete": "删除",
+      "deleteConfirm": "确认删除轨道？"
+    }
+  },
+  "settings": {
+    "title": "系统设置",
+    "description": "配置 AgencyOS 的外观与行为。",
+    "theme": {
+      "title": "界面主题",
+      "night": "夜间模式",
+      "day": "日间模式",
+      "win98": "Win98",
+      "retro": "复古"
+    },
+    "language": {
+      "title": "语言设置"
+    },
+    "instructions": {
+      "title": "使用说明",
+      "intro": "AgencyOS 是专为桌面角色扮演游戏（TRPG）设计的战役管理工具。作为总经理（GM），你可以使用此工具追踪特工状态、任务进度以及异常体收容情况。",
+      "dashboard": "仪表板：概览当前战役的关键指标。",
+      "agents": "特工档案：管理玩家角色的状态、伤害与压力。",
+      "missions": "任务控制：追踪当前任务目标与完成度。",
+      "persistence": "数据持久化：所有战役数据自动保存在本地浏览器中。请定期导出快照以防数据丢失。"
+    },
+    "management": {
+      "title": "设置管理",
+      "description": "导入或导出您的个性化设置（如主题偏好）。此操作不会影响战役数据。",
+      "exportSettings": "导出设置",
+      "importSettings": "导入设置"
+    },
+    "exportSuccess": "设置已导出。",
+    "importSuccess": "设置已导入。",
+    "importError": "导入失败：文件格式错误。",
+    "community": {
+      "title": "开源社区",
+      "description": "AgencyOS 是一个开源项目。欢迎各位总经理参与代码贡献，提交 Bug 反馈或功能建议。",
+      "visitGithub": "访问 GitHub 仓库"
+    }
+  }
+}

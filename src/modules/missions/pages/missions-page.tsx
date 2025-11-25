@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useTranslation } from 'react-i18next'
 
 const missionSchema = z.object({
   code: z.string().min(2),
@@ -22,6 +23,7 @@ const missionSchema = z.object({
 type MissionFormValues = z.infer<typeof missionSchema>
 
 export function MissionsPage() {
+  const { t } = useTranslation()
   const missions = useCampaignStore((state) => state.missions)
   const adjustMissionChaos = useCampaignStore((state) => state.adjustMissionChaos)
   const adjustMissionLooseEnds = useCampaignStore((state) => state.adjustMissionLooseEnds)
@@ -31,7 +33,7 @@ export function MissionsPage() {
   const deleteMission = useCampaignStore((state) => state.deleteMission)
   const [selectedMissionId, setSelectedMissionId] = useState<string | undefined>(missions[0]?.id)
   const [editingMissionId, setEditingMissionId] = useState<string | null>(null)
-  const [note, setNote] = useState('手动调整')
+  const [note, setNote] = useState(t('missions.defaultNote'))
   const mission = useMemo(() => missions.find((item) => item.id === selectedMissionId) ?? missions[0], [missions, selectedMissionId])
 
   const createDefaultMissionValues = (): MissionFormValues => ({
@@ -101,7 +103,7 @@ export function MissionsPage() {
   const handleDeleteMission = (missionId: string) => {
     const mission = missions.find((item) => item.id === missionId)
     if (!mission) return
-    if (window.confirm(`确认删除任务「${mission.code} · ${mission.name}」？相关日志会一并移除。`)) {
+    if (window.confirm(t('missions.deleteConfirm', { code: mission.code, name: mission.name }))) {
       deleteMission(missionId)
       if (editingMissionId === missionId) {
         cancelMissionEdit()
@@ -115,26 +117,26 @@ export function MissionsPage() {
   return (
     <div className="space-y-4">
       <header>
-        <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">任务控制台</p>
-        <h1 className="text-2xl font-semibold text-white">任务列表</h1>
+        <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{t('missions.subtitle')}</p>
+        <h1 className="text-2xl font-semibold text-white">{t('missions.title')}</h1>
       </header>
 
       {mission ? (
         <Panel className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">当前任务</p>
+              <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{t('missions.currentMission')}</p>
               <h2 className="text-2xl font-semibold text-white">{mission.name}</h2>
               <p className="text-sm text-agency-muted">{mission.type} · {formatDate(mission.scheduledDate)}</p>
             </div>
             <div className="flex gap-2 text-xs uppercase tracking-[0.3em] text-agency-muted">
-              <span className="border border-agency-border px-3 py-1 rounded-xl win98:rounded-none">混沌：{mission.chaos}</span>
-              <span className="border border-agency-border px-3 py-1 rounded-xl win98:rounded-none">散逸端：{mission.looseEnds}</span>
+              <span className="border border-agency-border px-3 py-1 rounded-xl win98:rounded-none">{t('app.common.chaos')}：{mission.chaos}</span>
+              <span className="border border-agency-border px-3 py-1 rounded-xl win98:rounded-none">{t('app.common.looseEnds')}：{mission.looseEnds}</span>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">混沌调整</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">{t('missions.chaosAdjust')}</p>
               <div className="flex gap-2">
                 <button type="button" className="border border-agency-cyan/40 px-4 py-2 text-sm text-agency-cyan rounded-2xl win98:rounded-none" onClick={() => adjustMissionChaos(mission.id, 1, note)}>
                   +1
@@ -145,7 +147,7 @@ export function MissionsPage() {
               </div>
             </div>
             <div className="space-y-3">
-              <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">散逸端调整</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">{t('missions.looseEndsAdjust')}</p>
               <div className="flex gap-2">
                 <button type="button" className="border border-agency-amber/40 px-4 py-2 text-sm text-agency-amber rounded-2xl win98:rounded-none" onClick={() => adjustMissionLooseEnds(mission.id, 1, note)}>
                   +1
@@ -157,7 +159,7 @@ export function MissionsPage() {
             </div>
           </div>
           <label className="block text-xs uppercase tracking-[0.3em] text-agency-muted">
-            备注
+            {t('app.common.note')}
             <input value={note} onChange={(event) => setNote(event.target.value)} className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm rounded-2xl win98:rounded-none" />
           </label>
           <button
@@ -165,7 +167,7 @@ export function MissionsPage() {
             className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan rounded-2xl win98:rounded-none"
             onClick={() => appendMissionLog(mission.id, note)}
           >
-            记录日志
+            {t('app.common.recordLog')}
           </button>
         </Panel>
       ) : null}
@@ -173,63 +175,63 @@ export function MissionsPage() {
       <Panel>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4 md:grid-cols-3">
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            任务代号
+            {t('missions.form.code')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('code')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            名称
+            {t('missions.form.name')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('name')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            类型
+            {t('missions.form.type')}
             <select className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('type')}>
-              <option value="收容">异常体回收</option>
-              <option value="清扫">清扫行动</option>
-              <option value="市场破坏">市场破坏</option>
-              <option value="其他">其他</option>
+              <option value="收容">{t('missions.types.containment')}</option>
+              <option value="清扫">{t('missions.types.cleanup')}</option>
+              <option value="市场破坏">{t('missions.types.disruption')}</option>
+              <option value="其他">{t('missions.types.other')}</option>
             </select>
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            状态
+            {t('missions.form.status')}
             <select className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('status')}>
-              <option value="planning">筹备</option>
-              <option value="active">进行中</option>
-              <option value="debrief">结算</option>
-              <option value="archived">归档</option>
+              <option value="planning">{t('missions.statusOptions.planning')}</option>
+              <option value="active">{t('missions.statusOptions.active')}</option>
+              <option value="debrief">{t('missions.statusOptions.debrief')}</option>
+              <option value="archived">{t('missions.statusOptions.archived')}</option>
             </select>
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            混沌
+            {t('app.common.chaos')}
             <input type="number" className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('chaos', { valueAsNumber: true })} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            散逸端
+            {t('app.common.looseEnds')}
             <input type="number" className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('looseEnds', { valueAsNumber: true })} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            日期
+            {t('missions.form.date')}
             <input type="date" className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('scheduledDate')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            可选目标提示
+            {t('missions.form.optionalHint')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('optionalObjectiveHint')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            预计参与特工
+            {t('missions.form.expectedAgents')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('expectedAgents')} />
           </label>
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
-            任务目标概要
+            {t('missions.form.goalsSummary')}
             <input className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none" {...form.register('goalsSummary')} />
           </label>
           <div className="flex items-center gap-3 self-end">
             {editingMissionId ? (
               <button type="button" onClick={cancelMissionEdit} className="border border-agency-border px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-muted rounded-2xl win98:rounded-none">
-                取消编辑
+                {t('app.common.cancelEdit')}
               </button>
             ) : null}
             <button type="submit" className="border border-agency-cyan/60 px-4 py-2 text-xs uppercase tracking-[0.3em] text-agency-cyan rounded-2xl win98:rounded-none">
-              {editingMissionId ? '保存任务' : '创建任务'}
+              {editingMissionId ? t('missions.saveMission') : t('missions.createMission')}
             </button>
           </div>
         </form>
@@ -239,14 +241,14 @@ export function MissionsPage() {
         <table className="min-w-full divide-y divide-agency-border/60 text-sm">
           <thead className="bg-agency-ink/60 text-xs uppercase tracking-[0.3em] text-agency-muted">
             <tr>
-              <th className="px-4 py-3 text-left">代号</th>
-              <th className="px-4 py-3 text-left">名称</th>
-              <th className="px-4 py-3 text-left">类型</th>
-              <th className="px-4 py-3 text-left">状态</th>
-              <th className="px-4 py-3 text-left">混沌</th>
-              <th className="px-4 py-3 text-left">散逸端</th>
-              <th className="px-4 py-3 text-left">日期</th>
-              <th className="px-4 py-3 text-left">操作</th>
+              <th className="px-4 py-3 text-left">{t('missions.table.code')}</th>
+              <th className="px-4 py-3 text-left">{t('missions.table.name')}</th>
+              <th className="px-4 py-3 text-left">{t('missions.table.type')}</th>
+              <th className="px-4 py-3 text-left">{t('missions.table.status')}</th>
+              <th className="px-4 py-3 text-left">{t('app.common.chaos')}</th>
+              <th className="px-4 py-3 text-left">{t('app.common.looseEnds')}</th>
+              <th className="px-4 py-3 text-left">{t('missions.table.date')}</th>
+              <th className="px-4 py-3 text-left">{t('missions.table.actions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-agency-border/40">
@@ -273,7 +275,7 @@ export function MissionsPage() {
                         startEditMission(item.id)
                       }}
                     >
-                      {editingMissionId === item.id ? '编辑中' : '编辑'}
+                      {editingMissionId === item.id ? t('app.common.editing') : t('app.common.edit')}
                     </button>
                     <button
                       type="button"
@@ -283,7 +285,7 @@ export function MissionsPage() {
                         handleDeleteMission(item.id)
                       }}
                     >
-                      删除
+                      {t('app.common.delete')}
                     </button>
                   </div>
                 </td>
