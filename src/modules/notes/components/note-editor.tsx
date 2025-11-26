@@ -34,6 +34,75 @@ export function NoteEditor({ initialContent, onSave, className }: NoteEditorProp
     return () => clearTimeout(id)
   }, [isDirty, value, onSave])
 
+  // Build an extended sanitize schema once so preview and split use the same rules
+  const extendedSanitizeSchema = (() => {
+    const base = { ...(defaultSchema as any) }
+    const existingAttrs = (base.attributes || {}) as Record<string, string[]>
+
+    const mergeAttrs = (tag: string, extra: string[]) => {
+      const prev = existingAttrs[tag] || []
+      return Array.from(new Set([...prev, ...extra]))
+    }
+
+    const extendedAttributes: Record<string, string[]> = {
+      ...existingAttrs,
+      '*': mergeAttrs('*', ['className', 'id', 'style']),
+      'span': mergeAttrs('span', ['style']),
+      'div': mergeAttrs('div', ['style']),
+      'p': mergeAttrs('p', ['style']),
+      'h1': mergeAttrs('h1', ['style']),
+      'h2': mergeAttrs('h2', ['style']),
+      'h3': mergeAttrs('h3', ['style']),
+      'h4': mergeAttrs('h4', ['style']),
+      'h5': mergeAttrs('h5', ['style']),
+      'h6': mergeAttrs('h6', ['style']),
+      'a': mergeAttrs('a', ['href', 'title', 'target', 'rel', 'style', 'className']),
+      'img': mergeAttrs('img', ['src', 'alt', 'title', 'width', 'height', 'style', 'className']),
+      'iframe': mergeAttrs('iframe', ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen', 'style']),
+      'table': mergeAttrs('table', ['style', 'className']),
+      'thead': mergeAttrs('thead', ['style']),
+      'tbody': mergeAttrs('tbody', ['style']),
+      'tr': mergeAttrs('tr', ['style']),
+      'th': mergeAttrs('th', ['style']),
+      'td': mergeAttrs('td', ['style']),
+      'pre': mergeAttrs('pre', ['style']),
+      'code': mergeAttrs('code', ['className', 'style']),
+      'blockquote': mergeAttrs('blockquote', ['style'])
+    }
+
+    const extraTagNames = [
+      'div',
+      'span',
+      'section',
+      'article',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'img',
+      'iframe',
+      'table',
+      'thead',
+      'tbody',
+      'tr',
+      'th',
+      'td',
+      'pre',
+      'code',
+      'blockquote'
+    ]
+
+    const tagNames = Array.from(new Set([...(base.tagNames || []), ...extraTagNames]))
+
+    return {
+      ...base,
+      tagNames,
+      attributes: extendedAttributes
+    }
+  })()
+
   return (
     <div className={cn('flex flex-col border rounded-md overflow-hidden bg-background', className)}>
       <div className="flex items-center gap-2 p-2 border-b bg-muted/50">
@@ -105,86 +174,7 @@ export function NoteEditor({ initialContent, onSave, className }: NoteEditorProp
             }
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              rehypePlugins={[
-                rehypeRaw,
-                [
-                  rehypeSanitize,
-                  (() => {
-                    // Build an extended sanitize schema based on the default one.
-                    const base = { ...(defaultSchema as any) }
-
-                    const existingAttrs = (base.attributes || {}) as Record<string, string[]>
-
-                    // Helper to merge attribute arrays safely
-                    const mergeAttrs = (tag: string, extra: string[]) => {
-                      const prev = existingAttrs[tag] || []
-                      return Array.from(new Set([...prev, ...extra]))
-                    }
-
-                    const extendedAttributes: Record<string, string[]> = {
-                      ...existingAttrs,
-                      // allow common presentation attributes and style on many elements
-                      '*': mergeAttrs('*', ['className', 'id', 'style']),
-                      'span': mergeAttrs('span', ['style']),
-                      'div': mergeAttrs('div', ['style']),
-                      'p': mergeAttrs('p', ['style']),
-                      'h1': mergeAttrs('h1', ['style']),
-                      'h2': mergeAttrs('h2', ['style']),
-                      'h3': mergeAttrs('h3', ['style']),
-                      'h4': mergeAttrs('h4', ['style']),
-                      'h5': mergeAttrs('h5', ['style']),
-                      'h6': mergeAttrs('h6', ['style']),
-                      'a': mergeAttrs('a', ['href', 'title', 'target', 'rel', 'style', 'className']),
-                      'img': mergeAttrs('img', ['src', 'alt', 'title', 'width', 'height', 'style', 'className']),
-                      'iframe': mergeAttrs('iframe', ['src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen', 'style']),
-                      'table': mergeAttrs('table', ['style', 'className']),
-                      'thead': mergeAttrs('thead', ['style']),
-                      'tbody': mergeAttrs('tbody', ['style']),
-                      'tr': mergeAttrs('tr', ['style']),
-                      'th': mergeAttrs('th', ['style']),
-                      'td': mergeAttrs('td', ['style']),
-                      'pre': mergeAttrs('pre', ['style']),
-                      'code': mergeAttrs('code', ['className', 'style']),
-                      'blockquote': mergeAttrs('blockquote', ['style'])
-                    }
-
-                    // Extend allowed tagNames to include common structural and media elements
-                    const extraTagNames = [
-                      'div',
-                      'span',
-                      'section',
-                      'article',
-                      'h1',
-                      'h2',
-                      'h3',
-                      'h4',
-                      'h5',
-                      'h6',
-                      'img',
-                      'iframe',
-                      'table',
-                      'thead',
-                      'tbody',
-                      'tr',
-                      'th',
-                      'td',
-                      'pre',
-                      'code',
-                      'blockquote'
-                    ]
-
-                    const tagNames = Array.from(
-                      new Set([...(base.tagNames || []), ...extraTagNames])
-                    )
-
-                    return {
-                      ...base,
-                      tagNames,
-                      attributes: extendedAttributes
-                    }
-                  })()
-                ]
-              ]}
+              rehypePlugins={[rehypeRaw, [rehypeSanitize, extendedSanitizeSchema]]}
             >
               {value || ''}
             </ReactMarkdown>
@@ -204,7 +194,7 @@ export function NoteEditor({ initialContent, onSave, className }: NoteEditorProp
             />
 
             <div className="flex-1 min-h-[200px] rounded-md border border-input bg-transparent p-3 prose prose-sm dark:prose-invert overflow-auto">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, rehypeSanitize]}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw, [rehypeSanitize, extendedSanitizeSchema]]}>
                 {value || ''}
               </ReactMarkdown>
             </div>
