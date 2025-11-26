@@ -6,10 +6,12 @@ import { useMvpWatchlist } from '@/stores/hooks/use-mvp-watchlist'
 import { ActivitySquare, AlertTriangle, Trophy, ShieldAlert } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useState, useEffect } from 'react'
 
 export function DashboardPage() {
   const { t } = useTranslation()
   const campaign = useCampaignStore((state) => state.campaign)
+  const updateCampaign = useCampaignStore((state) => state.updateCampaign)
   const missions = useCampaignStore((state) => state.missions)
   const anomalies = useCampaignStore((state) => state.anomalies)
   const navigate = useNavigate()
@@ -19,6 +21,14 @@ export function DashboardPage() {
 
   // Use extracted hook to calculate MVP and watchlist
   const { mvpLabel, watchlistLabel } = useMvpWatchlist()
+
+  // Editable General Manager state
+  const [isEditingGM, setIsEditingGM] = useState(false)
+  const [gmValue, setGmValue] = useState<string>(campaign.generalManager ?? '')
+
+  useEffect(() => {
+    setGmValue(campaign.generalManager ?? '')
+  }, [campaign.generalManager])
 
   return (
     <div className="space-y-6">
@@ -60,6 +70,63 @@ export function DashboardPage() {
             <div className="flex justify-between border-b border-agency-border/30 pb-2">
               <dt>{t('dashboard.missionType')}</dt>
               <dd>{activeMission?.type ?? '-'}</dd>
+            </div>
+            <div className="flex justify-between border-b border-agency-border/30 pb-2">
+              <dt>{t('dashboard.currentGeneralManager')}</dt>
+              <dd className="flex items-center gap-3">
+                {!isEditingGM ? (
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setIsEditingGM(true)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') setIsEditingGM(true)
+                    }}
+                    className={`cursor-pointer focus:outline-none focus:ring-2 focus:ring-agency-cyan/40 rounded ${campaign.generalManager ? 'text-agency-cyan font-medium' : 'text-agency-muted italic'}`}
+                    aria-label={t('dashboard.currentGeneralManager') as string}
+                  >
+                    {campaign.generalManager ? campaign.generalManager : t('dashboard.currentGeneralManagerHint')}
+                  </span>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <input
+                      className="rounded bg-agency-ink/30 px-2 py-1 text-sm text-white border border-agency-border/30"
+                      value={gmValue}
+                      onChange={(e) => setGmValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          updateCampaign({ generalManager: gmValue })
+                          setIsEditingGM(false)
+                        } else if (e.key === 'Escape') {
+                          setGmValue(campaign.generalManager ?? '')
+                          setIsEditingGM(false)
+                        }
+                      }}
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      className="text-xs text-agency-cyan/80 hover:text-agency-cyan"
+                      onClick={() => {
+                        updateCampaign({ generalManager: gmValue })
+                        setIsEditingGM(false)
+                      }}
+                    >
+                      {t('app.common.save')}
+                    </button>
+                    <button
+                      type="button"
+                      className="text-xs text-agency-muted hover:text-white"
+                      onClick={() => {
+                        setGmValue(campaign.generalManager ?? '')
+                        setIsEditingGM(false)
+                      }}
+                    >
+                      {t('app.common.cancel')}
+                    </button>
+                  </div>
+                )}
+              </dd>
             </div>
             <div className="flex justify-between border-b border-agency-border/30 pb-2">
               <dt>{t('dashboard.scheduledDate')}</dt>

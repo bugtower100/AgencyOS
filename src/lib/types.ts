@@ -48,6 +48,8 @@ export interface Campaign {
   contentFlags: string[]
   defaultRules: string[]
   nextMissionId?: ID
+  // Optional current on-duty general manager (editable in UI)
+  generalManager?: string
   updatedAt: string
 }
 

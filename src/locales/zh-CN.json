@@ -91,7 +91,9 @@
     "anomalyMonitor": "异常体监控",
     "registered": "已登记 {{count}} 项",
     "viewContainment": "查看收容库",
-    "domain": "领域"
+    "domain": "领域",
+    "currentGeneralManager": "当前值班总经理",
+    "currentGeneralManagerHint": "点击编辑以修改当前值班总经理"
   },
   "agents": {
     "title": "特工列表",

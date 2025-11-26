@@ -17,6 +17,8 @@ export const mockCampaign: Campaign = {
   contentFlags: ['内容-情感操控', '内容-精神压力'],
   defaultRules: ['A4', 'B2', 'F1'],
   nextMissionId: 'msn-018',
+  // initial on-duty general manager (empty by default)
+  generalManager: '',
   updatedAt: new Date().toISOString(),
 }
 

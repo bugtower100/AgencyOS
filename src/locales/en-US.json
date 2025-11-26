@@ -92,6 +92,9 @@
     "registered": "{{count}} Registered",
     "viewContainment": "View Containment",
     "domain": "Domain"
+  ,
+  "currentGeneralManager": "Current General Manager",
+  "currentGeneralManagerHint": "Click edit to change the on-duty general manager"
   },
   "agents": {
     "title": "Agent Roster",
