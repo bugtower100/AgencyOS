@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Bold, Italic, Palette, Save } from 'lucide-react'
+import { Bold, Italic, Save } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
 
@@ -138,31 +138,35 @@ export function NoteEditor({ initialContent, onSave, className }: NoteEditorProp
         <div className="w-px h-4 bg-border mx-1" />
         <button
           onClick={() => execCommand('foreColor', '#ef4444')} // Red
-          className="p-1.5 hover:bg-accent rounded transition-colors text-red-500"
+          className="p-1.5 hover:bg-accent rounded transition-colors"
           title={t('notes.editor.colorRed')}
+          aria-label={t('notes.editor.colorRed')}
         >
-          <Palette className="w-4 h-4" />
+          <span className="inline-block h-3 w-3 rounded-full shadow-sm" style={{ backgroundColor: '#ef4444' }} />
         </button>
         <button
           onClick={() => execCommand('foreColor', '#3b82f6')} // Blue
-          className="p-1.5 hover:bg-accent rounded transition-colors text-blue-500"
+          className="p-1.5 hover:bg-accent rounded transition-colors"
           title={t('notes.editor.colorBlue')}
+          aria-label={t('notes.editor.colorBlue')}
         >
-          <Palette className="w-4 h-4" />
+          <span className="inline-block h-3 w-3 rounded-full shadow-sm" style={{ backgroundColor: '#3b82f6' }} />
         </button>
         <button
           onClick={() => execCommand('foreColor', '#f59e0b')} // Yellow
-          className="p-1.5 hover:bg-accent rounded transition-colors text-yellow-500"
+          className="p-1.5 hover:bg-accent rounded transition-colors"
           title={t('notes.editor.colorYellow')}
+          aria-label={t('notes.editor.colorYellow')}
         >
-          <Palette className="w-4 h-4" />
+          <span className="inline-block h-3 w-3 rounded-full shadow-sm" style={{ backgroundColor: '#f59e0b' }} />
         </button>
         <button
           onClick={() => execCommand('foreColor', '#000000')} // Black
-          className="p-1.5 hover:bg-accent rounded transition-colors text-black"
+          className="p-1.5 hover:bg-accent rounded transition-colors"
           title={t('notes.editor.colorBlack')}
+          aria-label={t('notes.editor.colorBlack')}
         >
-          <Palette className="w-4 h-4" />
+          <span className="inline-block h-3 w-3 rounded-full shadow-sm border" style={{ backgroundColor: '#000000' }} />
         </button>
         <div className="w-px h-4 bg-border mx-1" />
         <select
