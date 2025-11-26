@@ -95,7 +95,11 @@ export function NoteList({ notes, onUpdate, onDelete }: NoteListProps) {
                   <input
                     type="text"
                     value={note.title}
-                    onChange={(e) => onUpdate(note.id, { title: e.target.value })}
+                    onChange={(e) => {
+                      const updatedTitle = e.target.value;
+                      onUpdate(note.id, { title: updatedTitle });
+                      note.title = updatedTitle; // Update local state immediately
+                    }}
                     className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                     placeholder={t('notes.titlePlaceholder')}
                   />
