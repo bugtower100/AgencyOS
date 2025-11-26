@@ -97,6 +97,7 @@ interface SnapshotLike {
   anomalies?: unknown
   logs?: unknown
   tracks?: unknown
+  notes?: unknown
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -115,6 +116,7 @@ const normalizeSnapshot = (candidate: SnapshotLike): AgencySnapshot => {
     anomalies: candidate.anomalies as unknown as AgencySnapshot['anomalies'],
     logs: Array.isArray(candidate.logs) ? (candidate.logs as unknown as AgencySnapshot['logs']) : [],
     tracks: Array.isArray(candidate.tracks) ? (candidate.tracks as unknown as AgencySnapshot['tracks']) : [],
+    notes: Array.isArray(candidate.notes) ? (candidate.notes as unknown as AgencySnapshot['notes']) : [],
   }
 }
 
