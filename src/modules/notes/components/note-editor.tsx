@@ -22,6 +22,7 @@ interface NoteEditorProps {
 export function NoteEditor({ initialContent, onSave, className }: NoteEditorProps) {
   const { t } = useTranslation()
   const editorRef = useRef<HTMLDivElement>(null)
+  const savedRangeRef = useRef<Range | null>(null)
   const [isDirty, setIsDirty] = useState(false)
 
   useEffect(() => {
@@ -87,35 +88,117 @@ export function NoteEditor({ initialContent, onSave, className }: NoteEditorProp
     setIsDirty(true)
   }
 
+  const removeFontFamilyInRange = (range: Range) => {
+    const walker = document.createTreeWalker(
+      range.commonAncestorContainer,
+      NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT,
+      {
+        acceptNode(node) {
+          // Only accept nodes that intersect the range
+          try {
+            if (range.intersectsNode(node)) return NodeFilter.FILTER_ACCEPT
+          } catch {
+            // Some browsers throw when testing certain nodes; ignore
+          }
+          return NodeFilter.FILTER_REJECT
+        }
+      }
+    )
+
+    const toUnwrap: Element[] = []
+    while (walker.nextNode()) {
+      const node = walker.currentNode as Node
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement
+        if (el.style && el.style.fontFamily) {
+          el.style.fontFamily = ''
+          // If the element is a span with no other attributes/styles, schedule to unwrap
+          if (el.tagName.toLowerCase() === 'span' && el.getAttributeNames().length === 0 && !el.getAttribute('style')) {
+            toUnwrap.push(el)
+          }
+        }
+      }
+    }
+
+    // unwrap simple spans
+    toUnwrap.forEach((el) => {
+      const parent = el.parentNode
+      if (!parent) return
+      while (el.firstChild) parent.insertBefore(el.firstChild, el)
+      parent.removeChild(el)
+    })
+  }
+
+  const clearFontFamilyFromSelection = () => {
+    const sel = window.getSelection()
+    if (!sel || sel.rangeCount === 0) return
+    for (let i = 0; i < sel.rangeCount; i++) {
+      const range = sel.getRangeAt(i)
+      try {
+        removeFontFamilyInRange(range)
+      } catch {
+        // ignore
+      }
+    }
+  }
+
   const applyFont = (fontFamily: string) => {
-    if (!fontFamily) {
-      execCommand('removeFormat')
+    const doApply = (ff: string) => {
+      if (!ff) {
+        // remove only font-family styles within selection
+        clearFontFamilyFromSelection()
+        setIsDirty(true)
+        return
+      }
+
+      // remove any existing font-family inside selection to avoid nesting
+      clearFontFamilyFromSelection()
+
+      const selection = window.getSelection()
+      if (!selection || selection.rangeCount === 0) {
+        execCommand('fontName', ff)
+        return
+      }
+
+      const range = selection.getRangeAt(0)
+      if (range.collapsed) {
+        execCommand('fontName', ff)
+        return
+      }
+
+      const span = document.createElement('span')
+      span.style.fontFamily = ff
+
+      try {
+        range.surroundContents(span)
+      } catch {
+        execCommand('fontName', ff)
+      }
+
+      editorRef.current?.focus()
+      setIsDirty(true)
+    }
+
+    // If a saved range exists (select stole focus), restore it first
+    if (savedRangeRef.current) {
+      const range = savedRangeRef.current
+      savedRangeRef.current = null
+      editorRef.current?.focus()
+      // restore selection in next macrotask then apply
+      setTimeout(() => {
+        try {
+          const sel = window.getSelection()
+          sel?.removeAllRanges()
+          sel?.addRange(range)
+        } catch {
+          // ignore if restoration fails
+        }
+        doApply(fontFamily)
+      }, 0)
       return
     }
 
-    const selection = window.getSelection()
-    if (!selection || selection.rangeCount === 0) {
-      execCommand('fontName', fontFamily)
-      return
-    }
-
-    const range = selection.getRangeAt(0)
-    if (range.collapsed) {
-      execCommand('fontName', fontFamily)
-      return
-    }
-
-    const span = document.createElement('span')
-    span.style.fontFamily = fontFamily
-
-    try {
-      range.surroundContents(span)
-    } catch {
-      execCommand('fontName', fontFamily)
-    }
-
-    editorRef.current?.focus()
-    setIsDirty(true)
+    doApply(fontFamily)
   }
 
   return (
@@ -170,6 +253,14 @@ export function NoteEditor({ initialContent, onSave, className }: NoteEditorProp
         </button>
         <div className="w-px h-4 bg-border mx-1" />
         <select
+          onMouseDown={() => {
+            // Save current selection range before the select steals focus
+            const sel = window.getSelection()
+            if (sel && sel.rangeCount > 0) {
+              // clone the range to avoid future mutation
+              savedRangeRef.current = sel.getRangeAt(0).cloneRange()
+            }
+          }}
           onChange={(e) => applyFont(e.target.value)}
           className="h-7 px-2 text-sm rounded border border-input bg-transparent focus:outline-none focus:ring-1 focus:ring-ring"
           defaultValue=""
