@@ -54,6 +54,7 @@
     "summary": "摘要",
     "summaryPlaceholder": "笔记简要说明...",
     "content": "内容",
+  "contentPlaceholder": "在此输入 Markdown 或 HTML 内容...",
     "editor": {
       "bold": "加粗",
       "italic": "斜体",
@@ -62,7 +63,12 @@
       "colorYellow": "黄色",
       "colorBlack": "黑色",
       "fontMono": "等宽字体",
-      "fontSans": "无衬线字体"
+      "fontSans": "无衬线字体",
+      "markdownMode": "Markdown",
+      "edit": "编辑",
+      "preview": "预览",
+      "split": "并排",
+      "contentPlaceholder": "在这里编辑 Markdown..."
     }
   },
   "dashboard": {

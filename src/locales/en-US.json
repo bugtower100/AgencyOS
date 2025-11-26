@@ -54,6 +54,7 @@
     "summary": "Summary",
     "summaryPlaceholder": "Brief summary of the note...",
     "content": "Content",
+  "contentPlaceholder": "Write markdown or HTML here...",
     "editor": {
       "bold": "Bold",
       "italic": "Italic",
@@ -62,7 +63,12 @@
       "colorYellow": "Yellow",
       "colorBlack": "Black",
       "fontMono": "Monospace",
-      "fontSans": "Sans-serif"
+      "fontSans": "Sans-serif",
+      "markdownMode": "Markdown",
+      "edit": "Edit",
+      "preview": "Preview",
+      "split": "Split",
+      "contentPlaceholder": "Write markdown here..."
     }
   },
   "dashboard": {
