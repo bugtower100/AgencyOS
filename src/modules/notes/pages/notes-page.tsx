@@ -40,6 +40,14 @@ export function NotesPage() {
     setLocalNotes(updatedNotes)
   }
 
+  // Wrap store update to keep localNotes in sync so collapsed/expanded views reflect latest edits
+  const handleUpdateNote = (id: string, patch: Partial<Note>) => {
+    updateNote(id, patch)
+    setLocalNotes((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, ...patch, updatedAt: new Date().toISOString() } : n))
+    )
+  }
+
   const handleDeleteNote = (id: string) => {
     deleteNote(id)
     setLocalNotes((prevNotes) => prevNotes.filter((note) => note.id !== id))
@@ -66,7 +74,7 @@ export function NotesPage() {
       <div className="flex-1 overflow-y-auto pr-2 pb-10">
         <NoteList
           notes={localNotes}
-          onUpdate={updateNote}
+          onUpdate={handleUpdateNote}
           onDelete={handleDeleteNote}
         />
       </div>
