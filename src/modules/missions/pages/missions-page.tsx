@@ -9,12 +9,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCommonTranslations, useTrans } from '@/lib/i18n-utils'
 
 const missionSchema = z.object({
-  code: z.string().min(2),
-  name: z.string().min(2),
+  code: z.string().min(1),
+  name: z.string().min(1),
   type: z.enum(['收容', '清扫', '市场破坏', '其他']),
   status: z.enum(['planning', 'active', 'debrief', 'archived']),
-  chaos: z.number().min(0),
-  looseEnds: z.number().min(0),
+  chaos: z.number(),
+  looseEnds: z.number(),
   scheduledDate: z.string(),
   optionalObjectiveHint: z.string().optional().or(z.literal('')),
   expectedAgents: z.string().optional().or(z.literal('')),
