@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
+import { createId } from '@/lib/utils'
 import { useIsTheme } from '@/lib/theme-utils'
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react'
 
@@ -40,7 +41,7 @@ export function ToastProvider({ children }: ToastProviderProps) {
 
   const showToast = useCallback(
     (type: ToastType, message: string, duration = 3000) => {
-      const id = Math.random().toString(36).slice(2, 10)
+  const id = createId()
       const newToast: Toast = { id, type, message, duration }
       
       setToasts((prev) => [...prev, newToast])

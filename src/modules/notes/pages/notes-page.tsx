@@ -1,10 +1,11 @@
 import { Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useCampaignStore } from '@/stores/campaign-store'
+import { useCampaignStore, selectAgencySnapshot } from '@/stores/campaign-store'
 import { NoteList } from '../components/note-list'
-import { loadNotes, saveNotes } from '@/services/db/repository'
+import { saveAgencySnapshot } from '@/services/db/repository'
 import type { Note } from '@/lib/types'
 import { useTrans } from '@/lib/i18n-utils'
+import { createId } from '@/lib/utils'
 
 export function NotesPage() {
   const t = useTrans()
@@ -12,19 +13,15 @@ export function NotesPage() {
   const addNote = useCampaignStore((state) => state.addNote)
   const updateNote = useCampaignStore((state) => state.updateNote)
   const deleteNote = useCampaignStore((state) => state.deleteNote)
-  const [localNotes, setLocalNotes] = useState<Note[]>([])
+  const [localNotes, setLocalNotes] = useState<Note[]>(notes)
 
   useEffect(() => {
-    const fetchNotes = async () => {
-      const loadedNotes = await loadNotes()
-      setLocalNotes(loadedNotes)
-    }
-    fetchNotes()
-  }, [])
+    setLocalNotes(notes)
+  }, [notes])
 
   const handleCreateNote = () => {
     const newNote = {
-      id: crypto.randomUUID(),
+      id: createId(),
       title: t('notes.newNoteTitle'),
       summary: '',
       content: '',
@@ -36,8 +33,14 @@ export function NotesPage() {
   }
 
   const handleSaveNotes = async (updatedNotes: Note[]) => {
-    await saveNotes(updatedNotes)
-    setLocalNotes(updatedNotes)
+    // Persist the whole agency snapshot using the existing repo API so persistence remains centralized
+    try {
+      const snapshot = selectAgencySnapshot(useCampaignStore.getState())
+      await saveAgencySnapshot(snapshot)
+      setLocalNotes(updatedNotes)
+    } catch (error) {
+      console.error('保存笔记失败', error)
+    }
   }
 
   // Wrap store update to keep localNotes in sync so collapsed/expanded views reflect latest edits

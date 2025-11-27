@@ -1,4 +1,5 @@
 import type { StateCreator } from 'zustand'
+import { createId } from '@/lib/utils'
 import type { AgentSummary } from '@/lib/types'
 
 export interface AgentSlice {
@@ -8,11 +9,6 @@ export interface AgentSlice {
   deleteAgent: (id: string) => void
   settleAgentDeltas: () => void
 }
-
-const createId = () =>
-  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2, 10)
 
 export const createAgentSlice: StateCreator<
   AgentSlice,

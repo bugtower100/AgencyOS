@@ -1,4 +1,5 @@
 import type { StateCreator } from 'zustand'
+import { createId } from '@/lib/utils'
 import type { AnomalySummary } from '@/lib/types'
 
 export interface AnomalySlice {
@@ -7,11 +8,6 @@ export interface AnomalySlice {
   updateAnomaly: (id: string, payload: Omit<AnomalySummary, 'id'>) => void
   deleteAnomaly: (id: string) => void
 }
-
-const createId = () =>
-  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2, 10)
 
 export const createAnomalySlice: StateCreator<
   AnomalySlice,

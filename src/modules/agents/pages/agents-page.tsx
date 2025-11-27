@@ -7,6 +7,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { QA_CATEGORIES } from '@/lib/types'
 import { useMemo, useState } from 'react'
+import { createId } from '@/lib/utils'
 import { useCommonTranslations, useTrans } from '@/lib/i18n-utils'
 
 const agentSchema = z.object({
@@ -139,7 +140,7 @@ export function AgentsPage() {
     const next = [
       ...currentClaims,
       {
-        id: Math.random().toString(36).slice(2, 10),
+        id: createId(),
         itemName: claimDraft.itemName.trim(),
         category: claimDraft.category.trim() || t('agents.claims.uncategorized'),
         reason: claimDraft.reason.trim() || t('agents.claims.reasonDefault'),

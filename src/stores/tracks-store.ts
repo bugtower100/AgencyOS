@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { createId } from '@/lib/utils'
 
 export interface TrackItem {
   id: string
@@ -27,10 +28,7 @@ interface TracksActions {
 
 type TracksStore = TracksState & TracksActions
 
-const createId = () =>
-  (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2, 10))
+// Using shared createId for consistent IDs
 
 export const useTracksStore = create<TracksStore>((set) => ({
   tracks: [],

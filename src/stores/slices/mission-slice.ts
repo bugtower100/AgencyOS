@@ -1,4 +1,5 @@
 import type { StateCreator } from 'zustand'
+import { createId } from '@/lib/utils'
 import type { MissionLogEntry, MissionSummary } from '@/lib/types'
 
 export interface MissionSlice {
@@ -11,11 +12,6 @@ export interface MissionSlice {
   adjustMissionLooseEnds: (missionId: string, delta: number, note: string) => void
   appendMissionLog: (missionId: string, detail: string) => void
 }
-
-const createId = () =>
-  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2, 10)
 
 export const createMissionSlice: StateCreator<
   MissionSlice,
@@ -45,7 +41,7 @@ export const createMissionSlice: StateCreator<
           ? { ...mission, chaos: Math.max(0, mission.chaos + delta) }
           : mission,
       ),
-      logs: [
+        logs: [
         ...state.logs,
         {
           id: createId(),
@@ -64,7 +60,7 @@ export const createMissionSlice: StateCreator<
           ? { ...mission, looseEnds: Math.max(0, mission.looseEnds + delta) }
           : mission,
       ),
-      logs: [
+        logs: [
         ...state.logs,
         {
           id: createId(),
@@ -78,7 +74,7 @@ export const createMissionSlice: StateCreator<
     })),
   appendMissionLog: (missionId, detail) =>
     set((state) => ({
-      logs: [
+        logs: [
         ...state.logs,
         {
           id: createId(),
