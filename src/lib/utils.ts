@@ -19,10 +19,11 @@ export function formatDate(value: string | number | Date) {
  */
 export function createId() {
   try {
-    if (typeof crypto !== 'undefined' && typeof (crypto as any).randomUUID === 'function') {
-      return (crypto as any).randomUUID()
+    const g = globalThis as unknown as { crypto?: { randomUUID?: () => string } }
+    if (g?.crypto && typeof g.crypto.randomUUID === 'function') {
+      return g.crypto.randomUUID()
     }
-  } catch (e) {
+  } catch {
     // ignore
   }
   return Math.random().toString(36).slice(2, 10)

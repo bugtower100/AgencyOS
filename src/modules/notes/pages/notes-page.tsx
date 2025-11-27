@@ -5,12 +5,12 @@ import { NoteList } from '../components/note-list'
 import { saveAgencySnapshot } from '@/services/db/repository'
 import type { Note } from '@/lib/types'
 import { useTrans } from '@/lib/i18n-utils'
-import { createId } from '@/lib/utils'
+// using store-managed createNote now
 
 export function NotesPage() {
   const t = useTrans()
   const notes = useCampaignStore((state) => state.notes)
-  const addNote = useCampaignStore((state) => state.addNote)
+  const createNote = useCampaignStore((state) => state.createNote)
   const updateNote = useCampaignStore((state) => state.updateNote)
   const deleteNote = useCampaignStore((state) => state.deleteNote)
   const [localNotes, setLocalNotes] = useState<Note[]>(notes)
@@ -20,16 +20,15 @@ export function NotesPage() {
   }, [notes])
 
   const handleCreateNote = () => {
-    const newNote = {
-      id: createId(),
+    if (!createNote) return
+    const payload = {
       title: t('notes.newNoteTitle'),
       summary: '',
       content: '',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     }
-    addNote(newNote)
-    setLocalNotes((prevNotes) => [newNote, ...prevNotes])
+    const created = createNote(payload)
+    // immediate local update for responsive UI
+    setLocalNotes((prevNotes) => [created, ...prevNotes])
   }
 
   const handleSaveNotes = async (updatedNotes: Note[]) => {

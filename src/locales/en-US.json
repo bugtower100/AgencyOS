@@ -37,7 +37,9 @@
       "importError": "Import failed, please check file format.",
       "exportSuccess": "Snapshot exported.",
       "note": "Note",
-      "recordLog": "Record Log"
+      "recordLog": "Record Log",
+      "submit": "Submit",
+      "update": "Update" 
     }
   },
   "notes": {

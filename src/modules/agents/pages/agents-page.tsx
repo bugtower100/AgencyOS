@@ -76,7 +76,8 @@ export function AgentsPage() {
       const agent = agents.find((item) => item.id === editingAgentId)
       if (!agent) return
       // 保留现有的非表单字段（例如申领物记录 claims），只用表单值覆盖基础信息
-      const { id: _id, claims, awardsDelta, reprimandsDelta, ...rest } = agent
+  const { id: _id, claims, awardsDelta, reprimandsDelta, ...rest } = agent
+  void _id
       updateAgent(editingAgentId, { ...rest, ...values, claims, awardsDelta, reprimandsDelta })
       setEditingAgentId(null)
       showToast('success', t('agents.toast.updated', { name: values.codename }))
@@ -92,7 +93,8 @@ export function AgentsPage() {
     const agent = agents.find((item) => item.id === agentId)
     if (!agent) return
     setEditingAgentId(agentId)
-    const { id: _id, awardsDelta, reprimandsDelta, ...rest } = agent
+  const { id: _id, ...rest } = agent
+  void _id
     form.reset({ ...rest })
     setClaimDraft({ itemName: '', category: '', reason: '' })
   }
@@ -128,7 +130,8 @@ export function AgentsPage() {
     if (editingAgentId) {
       const agent = agents.find((item) => item.id === editingAgentId)
       if (!agent) return
-      const { id: _id, ...rest } = agent
+    const { id: _id, ...rest } = agent
+    void _id
       updateAgent(editingAgentId, { ...rest, claims: nextClaims })
     } else {
       setPendingClaims(nextClaims)
@@ -396,6 +399,7 @@ export function AgentsPage() {
                         onChange={(e) => {
                           const delta = Number.isNaN(Number(e.target.value)) ? 0 : Number(e.target.value)
                           const { id: _id, ...rest } = agent
+                          void _id
                           updateAgent(agent.id, { ...rest, awardsDelta: delta })
                         }}
                         onClick={(e) => e.stopPropagation()}
@@ -410,6 +414,7 @@ export function AgentsPage() {
                         onChange={(e) => {
                           const delta = Number.isNaN(Number(e.target.value)) ? 0 : Number(e.target.value)
                           const { id: _id, ...rest } = agent
+                          void _id
                           updateAgent(agent.id, { ...rest, reprimandsDelta: delta })
                         }}
                         onClick={(e) => e.stopPropagation()}

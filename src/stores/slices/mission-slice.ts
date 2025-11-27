@@ -1,5 +1,6 @@
 import type { StateCreator } from 'zustand'
 import { createId } from '@/lib/utils'
+import { makeCrud } from './slice-helpers'
 import type { MissionLogEntry, MissionSummary } from '@/lib/types'
 
 export interface MissionSlice {
@@ -18,22 +19,21 @@ export const createMissionSlice: StateCreator<
   [],
   [],
   MissionSlice
-> = (set) => ({
+> = (set, get) => ({
   missions: [],
   logs: [],
-  createMission: (payload) =>
-    set((state) => ({
-      missions: [...state.missions, { ...payload, id: createId() }],
-    })),
-  updateMission: (id, payload) =>
-    set((state) => ({
-      missions: state.missions.map((mission) => (mission.id === id ? { ...payload, id } : mission)),
-    })),
-  deleteMission: (id) =>
-    set((state) => ({
-      missions: state.missions.filter((mission) => mission.id !== id),
-      logs: state.logs.filter((log) => log.missionId !== id),
-    })),
+  ...(() => {
+  const crud = makeCrud<MissionSummary>('missions', set, get, {
+      onDelete: (id) => {
+        set((state) => ({ logs: state.logs.filter((log) => log.missionId !== id) }))
+      },
+    })
+    return {
+  createMission: (payload: Omit<MissionSummary, 'id'>) => crud.create(payload),
+  updateMission: (id: string, payload: Omit<MissionSummary, 'id'>) => crud.update(id, payload),
+      deleteMission: (id: string) => crud.remove(id),
+    }
+  })(),
   adjustMissionChaos: (missionId, delta, note) =>
     set((state) => ({
       missions: state.missions.map((mission) =>

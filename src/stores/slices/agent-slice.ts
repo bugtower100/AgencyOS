@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand'
-import { createId } from '@/lib/utils'
 import type { AgentSummary } from '@/lib/types'
+import { makeCrud } from './slice-helpers'
 
 export interface AgentSlice {
   agents: AgentSummary[]
@@ -15,20 +15,16 @@ export const createAgentSlice: StateCreator<
   [],
   [],
   AgentSlice
-> = (set) => ({
+> = (set, get) => ({
   agents: [],
-  createAgent: (payload) =>
-    set((state) => ({
-      agents: [...state.agents, { ...payload, id: createId() }],
-    })),
-  updateAgent: (id, payload) =>
-    set((state) => ({
-      agents: state.agents.map((agent) => (agent.id === id ? { ...payload, id } : agent)),
-    })),
-  deleteAgent: (id) =>
-    set((state) => ({
-      agents: state.agents.filter((agent) => agent.id !== id),
-    })),
+  ...(() => {
+  const crud = makeCrud<AgentSummary>('agents', set, get)
+    return {
+  createAgent: (payload: Omit<AgentSummary, 'id'>) => crud.create(payload),
+  updateAgent: (id: string, payload: Omit<AgentSummary, 'id'>) => crud.update(id, payload),
+      deleteAgent: (id: string) => crud.remove(id),
+    }
+  })(),
   settleAgentDeltas: () =>
     set((state) => ({
       agents: state.agents.map((agent) => ({

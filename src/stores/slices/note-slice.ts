@@ -1,9 +1,11 @@
 import type { StateCreator } from 'zustand'
 import type { Note } from '@/lib/types'
+import { makeCrud } from './slice-helpers'
 
 export interface NoteSlice {
   notes: Note[]
-  addNote: (note: Note) => void
+  createNote?: (payload: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>) => Note
+  addNote?: (note: Note) => void
   updateNote: (id: string, patch: Partial<Note>) => void
   deleteNote: (id: string) => void
 }
@@ -13,22 +15,17 @@ export const createNoteSlice: StateCreator<
   [],
   [],
   NoteSlice
-> = (set) => ({
+> = (set, get) => ({
   notes: [],
-  addNote: (note) =>
-    set((state) => ({
-      notes: [note, ...state.notes],
-    })),
-  updateNote: (id, patch) =>
-    set((state) => ({
-      notes: state.notes.map((note) =>
-        note.id === id
-          ? { ...note, ...patch, updatedAt: new Date().toISOString() }
-          : note
-      ),
-    })),
-  deleteNote: (id) =>
-    set((state) => ({
-      notes: state.notes.filter((note) => note.id !== id),
-    })),
+  addNote: (note) => set((state) => ({ notes: [note, ...state.notes] })),
+  ...(() => {
+  const crud = makeCrud<Note>('notes', set, get, {
+      onCreate: (item) => ({ ...item, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }),
+    })
+    return {
+  createNote: (payload: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>) => crud.create(payload),
+  updateNote: (id: string, patch: Partial<Note>) => crud.update(id, { ...(patch as Partial<Note>), updatedAt: new Date().toISOString() }),
+      deleteNote: (id: string) => crud.remove(id),
+    }
+  })(),
 })

@@ -47,7 +47,8 @@ export function AnomaliesPage() {
     const anomaly = anomalies.find((item) => item.id === id)
     if (!anomaly) return
     setEditingAnomalyId(id)
-    const { id: _id, ...rest } = anomaly
+  const { id: _id, ...rest } = anomaly
+  void _id
     form.reset(rest)
   }
 

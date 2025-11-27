@@ -1,6 +1,6 @@
 import type { StateCreator } from 'zustand'
-import { createId } from '@/lib/utils'
 import type { AnomalySummary } from '@/lib/types'
+import { makeCrud } from './slice-helpers'
 
 export interface AnomalySlice {
   anomalies: AnomalySummary[]
@@ -14,18 +14,14 @@ export const createAnomalySlice: StateCreator<
   [],
   [],
   AnomalySlice
-> = (set) => ({
+> = (set, get) => ({
   anomalies: [],
-  createAnomaly: (payload) =>
-    set((state) => ({
-      anomalies: [...state.anomalies, { ...payload, id: createId() }],
-    })),
-  updateAnomaly: (id, payload) =>
-    set((state) => ({
-      anomalies: state.anomalies.map((anomaly) => (anomaly.id === id ? { ...payload, id } : anomaly)),
-    })),
-  deleteAnomaly: (id) =>
-    set((state) => ({
-      anomalies: state.anomalies.filter((anomaly) => anomaly.id !== id),
-    })),
+    ...(() => {
+  const crud = makeCrud<AnomalySummary>('anomalies', set, get)
+      return {
+    createAnomaly: (payload: Omit<AnomalySummary, 'id'>) => crud.create(payload),
+    updateAnomaly: (id: string, payload: Omit<AnomalySummary, 'id'>) => crud.update(id, payload),
+        deleteAnomaly: (id: string) => crud.remove(id),
+      }
+    })(),
 })

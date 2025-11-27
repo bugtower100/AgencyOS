@@ -10,8 +10,8 @@ export function useCampaignPersistence() {
     }
 
     let ready = false
-  let unsubCampaign: (() => void) | undefined
-  let unsubTracks: (() => void) | undefined
+    let unsubCampaign: (() => void) | undefined
+    let unsubTracks: (() => void) | undefined
     let pendingSnapshot: ReturnType<typeof selectAgencySnapshot> | null = null
     let saving = false
 
@@ -53,13 +53,15 @@ export function useCampaignPersistence() {
     void bootstrap()
 
     // 订阅战役主 store 的变化
-    unsubCampaign = useCampaignStore.subscribe((state) => {
+    const _unsubCampaign = useCampaignStore.subscribe((state) => {
+      unsubCampaign = _unsubCampaign
       if (!ready) return
       void persist(selectAgencySnapshot(state))
     })
 
     // 订阅轨道 store 的变化：轨道变化时也触发一次快照持久化
-    unsubTracks = useTracksStore.subscribe(() => {
+    const _unsubTracks = useTracksStore.subscribe(() => {
+      unsubTracks = _unsubTracks
       if (!ready) return
       const campaignState = useCampaignStore.getState()
       void persist(selectAgencySnapshot(campaignState))
