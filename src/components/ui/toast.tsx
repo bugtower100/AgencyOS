@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import { useIsTheme } from '@/lib/theme-utils'
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from 'lucide-react'
 
 type ToastType = 'success' | 'error' | 'warning' | 'info'
@@ -117,28 +117,29 @@ const colorMap: Record<ToastType, { border: string; text: string; bg: string }> 
 function ToastItem({ toast, onDismiss }: ToastItemProps) {
   const Icon = iconMap[toast.type]
   const colors = colorMap[toast.type]
+  const isWin98 = useIsTheme('win98')
+
+  // 构建 toast 容器的样式类
+  const containerClass = `
+    flex items-center gap-3 border px-4 py-3 shadow-lg backdrop-blur-sm
+    animate-slide-in-right
+    ${isWin98 ? 'rounded-none' : 'rounded-xl'}
+    ${colors.border}
+    ${colors.bg}
+    min-w-[280px] max-w-[400px]
+  `
 
   return (
     <div
-      className={cn(
-        'flex items-center gap-3 border px-4 py-3 shadow-lg backdrop-blur-sm',
-        'animate-slide-in-right',
-        'rounded-xl win98:rounded-none',
-        colors.border,
-        colors.bg,
-        'min-w-[280px] max-w-[400px]'
-      )}
+      className={containerClass}
       role="alert"
     >
-      <Icon className={cn('h-5 w-5 shrink-0', colors.text)} />
-      <p className={cn('flex-1 text-sm', colors.text)}>{toast.message}</p>
+      <Icon className={`h-5 w-5 shrink-0 ${colors.text}`} />
+      <p className={`flex-1 text-sm ${colors.text}`}>{toast.message}</p>
       <button
         type="button"
         onClick={() => onDismiss(toast.id)}
-        className={cn(
-          'shrink-0 p-1 transition-colors hover:opacity-70',
-          colors.text
-        )}
+        className={`shrink-0 p-1 transition-colors hover:opacity-70 ${colors.text}`}
         aria-label="关闭"
       >
         <X className="h-4 w-4" />
