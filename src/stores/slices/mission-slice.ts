@@ -57,7 +57,7 @@ export const createMissionSlice: StateCreator<
     set((state) => ({
       missions: state.missions.map((mission) =>
         mission.id === missionId
-          ? { ...mission, looseEnds: Math.max(0, mission.looseEnds + delta) }
+          ? { ...mission, looseEnds: mission.looseEnds + delta }
           : mission,
       ),
         logs: [
