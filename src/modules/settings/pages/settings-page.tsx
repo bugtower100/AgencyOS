@@ -11,6 +11,8 @@ export function SettingsPage() {
   const setThemeMode = useThemeStore((state) => state.setMode)
   const notesAllowHtml = useCampaignStore((state) => state.notesAllowHtml)
   const setNotesAllowHtml = useCampaignStore((state) => state.setNotesAllowHtml)
+  const dashboardReadOnlyStyle = useCampaignStore((state) => state.dashboardReadOnlyStyle)
+  const setDashboardReadOnlyStyle = useCampaignStore((state) => state.setDashboardReadOnlyStyle)
   const isWin98 = themeMode === 'win98'
   
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -25,6 +27,7 @@ export function SettingsPage() {
       theme: themeMode,
       settings: {
         notesAllowHtml,
+        dashboardReadOnlyStyle,
       },
       // Future settings can be added here
       version: '1.0.0'
@@ -57,6 +60,9 @@ export function SettingsPage() {
         }
         if (settings?.settings?.notesAllowHtml !== undefined) {
           setNotesAllowHtml(Boolean(settings.settings.notesAllowHtml))
+        }
+        if (settings?.settings?.dashboardReadOnlyStyle !== undefined) {
+          setDashboardReadOnlyStyle(Boolean(settings.settings.dashboardReadOnlyStyle))
         }
         
         setImportMessage(t('settings.importSuccess'))
@@ -211,6 +217,17 @@ export function SettingsPage() {
             <span className="text-sm">{t('settings.notes.allowHtml')}</span>
           </label>
         </div>
+          <div className="mt-3 flex items-center gap-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={dashboardReadOnlyStyle}
+                onChange={(e) => setDashboardReadOnlyStyle(e.target.checked)}
+                className={cn('w-4 h-4', isWin98 ? 'border-none' : 'rounded')}
+              />
+              <span className="text-sm">{t('settings.dashboard.readOnlyStyle')}</span>
+            </label>
+          </div>
       </section>
 
       {/* Instructions */}

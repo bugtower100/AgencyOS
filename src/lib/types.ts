@@ -129,5 +129,6 @@ export interface AgencySnapshot {
   tracks?: CustomTrackSnapshot[]
   settings?: {
     notesAllowHtml?: boolean
+    dashboardReadOnlyStyle?: boolean
   }
 }

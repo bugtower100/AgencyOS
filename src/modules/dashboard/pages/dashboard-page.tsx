@@ -31,6 +31,7 @@ export function DashboardPage() {
   const [gmValue, setGmValue] = useState<string>(campaign.generalManager ?? '')
   const [showStats, setShowStats] = useState(false)
   const defaultNote = t('missions.defaultNote')
+  const dashboardReadOnlyStyle = useCampaignStore((state) => state.dashboardReadOnlyStyle)
 
   useEffect(() => {
     // schedule the value update in a microtask so it does not cause synchronous setState in effect
@@ -47,8 +48,8 @@ export function DashboardPage() {
           icon={<ActivitySquare />}
           intent="warning"
           editable={!!activeMission}
-          onIncrement={() => { if(!activeMission) return; adjustMissionChaos(activeMission.id, 1, defaultNote)}}
-          onDecrement={() => { if(!activeMission) return; adjustMissionChaos(activeMission.id, -1, defaultNote)}}
+          onIncrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionChaos(activeMission!.id, 1, defaultNote) } : undefined}
+          onDecrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionChaos(activeMission!.id, -1, defaultNote) } : undefined}
           onSet={(value) => { if(!activeMission) return; const delta = Math.max(0, value) - (activeMission.chaos ?? 0); adjustMissionChaos(activeMission.id, delta, defaultNote)}}
         />
         <StatCard
@@ -58,8 +59,8 @@ export function DashboardPage() {
           icon={<AlertTriangle />}
           intent="critical"
           editable={!!activeMission}
-          onIncrement={() => { if(!activeMission) return; adjustMissionLooseEnds(activeMission.id, 1, defaultNote)}}
-          onDecrement={() => { if(!activeMission) return; adjustMissionLooseEnds(activeMission.id, -1, defaultNote)}}
+          onIncrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionLooseEnds(activeMission!.id, 1, defaultNote) } : undefined}
+          onDecrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionLooseEnds(activeMission!.id, -1, defaultNote) } : undefined}
           onSet={(value) => { if(!activeMission) return; const delta = (value ?? 0) - (activeMission.looseEnds ?? 0); adjustMissionLooseEnds(activeMission.id, delta, defaultNote)}}
         />
         <StatCard
@@ -68,8 +69,8 @@ export function DashboardPage() {
           hint={t('dashboard.realityRequestsFailedHint')}
           icon={<Zap />}
           editable={!!activeMission}
-          onIncrement={() => { if(!activeMission) return; adjustMissionRealityRequestsFailed(activeMission.id, 1, defaultNote)}}
-          onDecrement={() => { if(!activeMission) return; adjustMissionRealityRequestsFailed(activeMission.id, -1, defaultNote)}}
+          onIncrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionRealityRequestsFailed(activeMission!.id, 1, defaultNote) } : undefined}
+          onDecrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionRealityRequestsFailed(activeMission!.id, -1, defaultNote) } : undefined}
           onSet={(value) => { if(!activeMission) return; const delta = Math.max(0, value) - (activeMission.realityRequestsFailed ?? 0); adjustMissionRealityRequestsFailed(activeMission.id, delta, defaultNote)}}
         />
       </section>

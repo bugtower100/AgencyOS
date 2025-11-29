@@ -369,5 +369,10 @@
       "description": "Options for note editor behavior and rendering.",
       "allowHtml": "Enable HTML elements in notes"
     }
+    ,
+    "dashboard": {
+      "readOnlyStyle": "Dashboard Read-only Style",
+      "readOnlyStyleHint": "When enabled, remove +/- buttons on dashboard cards while keeping inline editing by clicking the number."
+    }
   }
 }

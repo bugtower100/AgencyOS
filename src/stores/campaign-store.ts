@@ -41,7 +41,8 @@ export const useCampaignStore = create<AgencyStore>()((...args) => ({
       missions: snapshot.missions,
       anomalies: snapshot.anomalies,
       notes: snapshot.notes || [],
-      notesAllowHtml: snapshot.settings?.notesAllowHtml ?? true,
+  notesAllowHtml: snapshot.settings?.notesAllowHtml ?? true,
+  dashboardReadOnlyStyle: snapshot.settings?.dashboardReadOnlyStyle ?? false,
       logs: snapshot.logs,
     })
 
@@ -72,6 +73,7 @@ useCampaignStore.setState({
   anomalies: mockAnomalies,
   notes: [],
   logs: [],
+  dashboardReadOnlyStyle: false,
 })
 
 // Selector for creating a snapshot
@@ -85,6 +87,7 @@ export const selectAgencySnapshot = (state: AgencyStore): AgencySnapshot => ({
   tracks: useTracksStore.getState().tracks,
   settings: {
     notesAllowHtml: state.notesAllowHtml,
+    dashboardReadOnlyStyle: state.dashboardReadOnlyStyle,
   },
 })
 

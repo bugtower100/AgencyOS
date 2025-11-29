@@ -102,7 +102,7 @@
     "currentMission": "当前任务",
     "noMission": "暂无任务",
     "standby": "待机",
-    "missionCode": "任务代号",
+    "missionCode": "任务代号", 
     "missionType": "类型",
     "scheduledDate": "计划日期",
     "optionalHint": "可选目标提示",
@@ -368,6 +368,11 @@
       "title": "笔记",
       "description": "配置笔记编辑器的行为和渲染方式。",
       "allowHtml": "在笔记中启用 HTML 元素"
+    }
+    ,
+    "dashboard": {
+      "readOnlyStyle": "仪表板只读样式",
+      "readOnlyStyleHint": "开启后，仪表板会隐藏卡片的加减按钮，但仍可点击数字进行编辑。"
     }
   }
 }

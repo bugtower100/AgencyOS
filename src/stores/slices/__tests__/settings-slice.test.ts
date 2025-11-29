@@ -16,6 +16,7 @@ describe('settings-slice', () => {
 
   // initial default exposed by slice return
   expect(slice.notesAllowHtml).toBe(true)
+  expect(slice.dashboardReadOnlyStyle).toBe(false)
 
     // toggle to false
     slice.setNotesAllowHtml(false)
@@ -24,5 +25,10 @@ describe('settings-slice', () => {
     // toggle back to true
     slice.setNotesAllowHtml(true)
     expect(state.notesAllowHtml).toBe(true)
+  // toggle dashboardReadOnlyStyle
+  slice.setDashboardReadOnlyStyle(true)
+  expect(state.dashboardReadOnlyStyle).toBe(true)
+  slice.setDashboardReadOnlyStyle(false)
+  expect(state.dashboardReadOnlyStyle).toBe(false)
   })
 })
