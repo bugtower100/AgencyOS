@@ -1,0 +1,7 @@
+{
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+  // Add Tailwind IntelliSense recommendations in extensions.json if you want editor intelligence
+  // This keeps VS Code's CSS validator from complaining about Tailwind's `@tailwind` at-rule.
+}

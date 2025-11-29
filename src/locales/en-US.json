@@ -30,6 +30,21 @@
       "session": "SESSION",
       "nextBriefing": "NEXT BRIEFING",
       "weather": "WEATHER",
+      "weatherRules": {
+        "startChaos": "Starting Chaos",
+        "weatherEvent": "Weather Event",
+        "restriction": "Division Restrictions (cumulative)",
+        "rules": {
+          "0": { "startChaos": "0", "weatherEvent": "0", "restriction": "Only the terms of employment required by the agency apply." },
+          "11": { "startChaos": "5", "weatherEvent": "1", "restriction": "Agents' interpersonal bonds will spontaneously remind them of their duty and the importance of reducing loose ends during otherwise normal conversation." },
+          "22": { "startChaos": "10", "weatherEvent": "2", "restriction": "To gain a triple ascension effect, agents must deliver a short speech reaffirming their commitment to clearing loose ends and stabilizing reality." },
+          "33": { "startChaos": "15", "weatherEvent": "3", "restriction": "Before any dice roll, agents must count to 3 (aloud or equivalently)." },
+          "44": { "startChaos": "20", "weatherEvent": "4", "restriction": "No agent is eligible for MVP until the loose ends count drops below 44." },
+          "55": { "startChaos": "25", "weatherEvent": "5", "restriction": "Read to agents: 'If the loose ends count reaches 66, all agents' contracts will be terminated. If you cannot reduce this by missions, you must work overtime: cross off one box from the end of each work/life balance track to clear 6 loose ends.'" },
+          "66": { "startChaos": "N/A", "weatherEvent": "N/A", "restriction": "At mission end, active field squads will be forced to retire. They must choose a retirement option if available; otherwise they are sent to Containment. For each agent using a retirement option, the region will reduce loose ends by 11." },
+          "77": { "startChaos": "N/A", "weatherEvent": "N/A", "restriction": "Cataclysm is imminent. To avoid this, the region will be erased from existence. [See: W7]" }
+        }
+      },
       "snapshot": "Data Snapshot",
       "divisionName": "Division Name",
       "divisionCode": "Session / Code",

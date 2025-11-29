@@ -8,6 +8,7 @@ import { getAgencySnapshot, useCampaignStore } from '@/stores/campaign-store'
 import { useCampaignPersistence } from '@/stores/hooks/use-campaign-persistence'
 import { createSnapshotEnvelope, parseSnapshotFile } from '@/services/db/repository'
 import { useThemeStore } from '@/stores/theme-store'
+import { getWeatherRuleForCount } from '@/lib/weather-utils'
 import { useNavTranslations, useCommonTranslations, useTrans } from '@/lib/i18n-utils'
 import type { MissionSummary } from '@/lib/types'
 
@@ -258,7 +259,31 @@ export function AppShell() {
           <div className="grid gap-3 md:grid-cols-3">
             <CommandStrip label={session} value={campaign.divisionCode} />
             <CommandStrip label={nextBriefing} value={activeMission?.code ?? '—'} />
-            <CommandStrip label={weather} value={`${looseEnds}×${looseEndsValue}`} />
+            <CommandStrip
+              label={weather}
+              value={`${looseEnds}×${looseEndsValue}`}
+              tooltip={(() => {
+                const rule = getWeatherRuleForCount(looseEndsValue)
+                const key = rule.key
+                const startChaos = t(`app.common.weatherRules.rules.${key}.startChaos`)
+                const weatherEvent = t(`app.common.weatherRules.rules.${key}.weatherEvent`)
+                const restriction = t(`app.common.weatherRules.rules.${key}.restriction`)
+                return (
+                  <div className="max-w-[260px]">
+                    <div className="mb-1 flex items-baseline justify-between gap-2">
+                      <div className="text-xs text-agency-muted">{t('app.common.weatherRules.startChaos')}</div>
+                      <div className="text-xs font-mono text-agency-cyan">{startChaos}</div>
+                    </div>
+                    <div className="mb-1 flex items-baseline justify-between gap-2">
+                      <div className="text-xs text-agency-muted">{t('app.common.weatherRules.weatherEvent')}</div>
+                      <div className="text-xs font-mono text-agency-cyan">{weatherEvent}</div>
+                    </div>
+                    <div className="text-xs text-agency-muted">{t('app.common.weatherRules.restriction')}</div>
+                    <div className="mt-1 text-xs text-white">{restriction}</div>
+                  </div>
+                )
+              })()}
+            />
           </div>
           <div
             className={`border border-agency-border/60 p-4 text-[0.65rem] uppercase tracking-[0.4em] text-agency-muted ${isSquare ? 'rounded-none bg-agency-panel' : 'rounded-3xl bg-agency-ink/40'}`}
