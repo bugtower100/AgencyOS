@@ -55,3 +55,23 @@ export function levenshtein(a: string, b: string): number {
   }
   return dp[n]
 }
+
+/**
+ * Normalize mission type values (both native Chinese values and internal keys) to translation keys.
+ * This keeps stored values unchanged while enabling proper i18n rendering.
+ */
+export function missionTypeKey(type?: string | null) {
+  if (!type) return 'other'
+  const map: Record<string, string> = {
+    '收容': 'containment',
+    '清扫': 'cleanup',
+    '市场破坏': 'disruption',
+    '其他': 'other',
+    // accept english keys as-is
+    containment: 'containment',
+    cleanup: 'cleanup',
+    disruption: 'disruption',
+    other: 'other',
+  }
+  return map[type] ?? 'other'
+}

@@ -1,6 +1,6 @@
 import { Panel } from '@/components/ui/panel'
 import { StatCard } from '@/components/ui/stat-card'
-import { formatDate } from '@/lib/utils'
+import { formatDate, missionTypeKey } from '@/lib/utils'
 import { useCampaignStore } from '@/stores/campaign-store'
 import { useMvpWatchlist } from '@/stores/hooks/use-mvp-watchlist'
 import { ActivitySquare, AlertTriangle, Trophy, ShieldAlert, Zap } from 'lucide-react'
@@ -119,7 +119,7 @@ export function DashboardPage() {
             </div>
             <div className="flex justify-between border-b border-agency-border/30 pb-2">
               <dt>{t('dashboard.missionType')}</dt>
-              <dd>{activeMission?.type ?? '-'}</dd>
+              <dd>{activeMission ? t(`missions.types.${missionTypeKey(activeMission.type)}`) : '-'}</dd>
             </div>
             <div className="flex justify-between border-b border-agency-border/30 pb-2">
               <dt>{t('dashboard.currentGeneralManager')}</dt>

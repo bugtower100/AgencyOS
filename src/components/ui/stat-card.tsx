@@ -58,16 +58,16 @@ export function StatCard({ label, value, hint, icon, intent = 'default', classNa
       <div className="min-w-0">
         <p className={getLabelClass()}>{label}</p>
         <div className="flex items-center gap-2">
-          {editable && typeof onIncrement === 'function' ? (
-            <button
-              type="button"
-              aria-label="increment"
-              className="inline-flex items-center justify-center rounded px-2 py-1 text-xs text-agency-cyan border border-agency-cyan/40"
-              onClick={onIncrement}
-            >
-              +
-            </button>
-          ) : null}
+            {editable && typeof onDecrement === 'function' ? (
+              <button
+                type="button"
+                aria-label="decrement"
+                className="inline-flex items-center justify-center rounded px-2 py-1 text-xs text-agency-muted border border-agency-border"
+                onClick={onDecrement}
+              >
+                -
+              </button>
+            ) : null}
 
           {isEditing ? (
             <input
@@ -104,14 +104,14 @@ export function StatCard({ label, value, hint, icon, intent = 'default', classNa
             </p>
           )}
 
-          {editable && typeof onDecrement === 'function' ? (
+          {editable && typeof onIncrement === 'function' ? (
             <button
               type="button"
-              aria-label="decrement"
-              className="inline-flex items-center justify-center rounded px-2 py-1 text-xs text-agency-muted border border-agency-border"
-              onClick={onDecrement}
+              aria-label="increment"
+              className="inline-flex items-center justify-center rounded px-2 py-1 text-xs text-agency-cyan border border-agency-cyan/40"
+              onClick={onIncrement}
             >
-              -
+              +
             </button>
           ) : null}
         </div>

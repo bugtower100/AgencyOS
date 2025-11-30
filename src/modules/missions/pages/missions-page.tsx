@@ -1,6 +1,6 @@
 import { Panel } from '@/components/ui/panel'
 import { useToast } from '@/components/ui/use-toast'
-import { formatDate } from '@/lib/utils'
+import { formatDate, missionTypeKey } from '@/lib/utils'
 import { useCampaignStore } from '@/stores/campaign-store'
 import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -140,7 +140,7 @@ export function MissionsPage() {
             <div>
               <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{t('missions.currentMission')}</p>
               <h2 className="text-2xl font-semibold text-white">{mission.name}</h2>
-              <p className="text-sm text-agency-muted">{mission.type} · {formatDate(mission.scheduledDate)}</p>
+              <p className="text-sm text-agency-muted">{t(`missions.types.${missionTypeKey(mission.type)}`)} · {formatDate(mission.scheduledDate)}</p>
             </div>
             <div className="flex gap-2 text-xs uppercase tracking-[0.3em] text-agency-muted">
                 <span className="border border-agency-border px-3 py-1 rounded-xl win98:rounded-none">{t('app.common.chaos')}：{mission.chaos}</span>
@@ -152,33 +152,33 @@ export function MissionsPage() {
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">{t('missions.chaosAdjust')}</p>
               <div className="flex gap-2">
-                <button type="button" className="border border-agency-cyan/40 px-4 py-2 text-sm text-agency-cyan rounded-2xl win98:rounded-none" onClick={() => adjustMissionChaos(mission.id, 1, note)}>
-                  +1
-                </button>
                 <button type="button" className="border border-agency-magenta/40 px-4 py-2 text-sm text-agency-magenta rounded-2xl win98:rounded-none" onClick={() => adjustMissionChaos(mission.id, -1, note)}>
                   -1
+                </button>
+                <button type="button" className="border border-agency-cyan/40 px-4 py-2 text-sm text-agency-cyan rounded-2xl win98:rounded-none" onClick={() => adjustMissionChaos(mission.id, 1, note)}>
+                  +1
                 </button>
               </div>
             </div>
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">{t('missions.looseEndsAdjust')}</p>
               <div className="flex gap-2">
-                <button type="button" className="border border-agency-amber/40 px-4 py-2 text-sm text-agency-amber rounded-2xl win98:rounded-none" onClick={() => adjustMissionLooseEnds(mission.id, 1, note)}>
-                  +1
-                </button>
                 <button type="button" className="border border-agency-border px-4 py-2 text-sm text-agency-muted rounded-2xl win98:rounded-none" onClick={() => adjustMissionLooseEnds(mission.id, -1, note)}>
                   -1
+                </button>
+                <button type="button" className="border border-agency-amber/40 px-4 py-2 text-sm text-agency-amber rounded-2xl win98:rounded-none" onClick={() => adjustMissionLooseEnds(mission.id, 1, note)}>
+                  +1
                 </button>
               </div>
             </div>
             <div className="space-y-3">
               <p className="text-xs uppercase tracking-[0.3em] text-agency-muted">{t('missions.realityRequestsFailedAdjust')}</p>
               <div className="flex gap-2">
-                <button type="button" className="border border-agency-amber/40 px-4 py-2 text-sm text-agency-amber rounded-2xl win98:rounded-none" onClick={() => adjustMissionRealityRequestsFailed(mission.id, 1, note)}>
-                  +1
-                </button>
                 <button type="button" className="border border-agency-border px-4 py-2 text-sm text-agency-muted rounded-2xl win98:rounded-none" onClick={() => adjustMissionRealityRequestsFailed(mission.id, -1, note)}>
                   -1
+                </button>
+                <button type="button" className="border border-agency-amber/40 px-4 py-2 text-sm text-agency-amber rounded-2xl win98:rounded-none" onClick={() => adjustMissionRealityRequestsFailed(mission.id, 1, note)}>
+                  +1
                 </button>
               </div>
             </div>
@@ -290,7 +290,7 @@ export function MissionsPage() {
               >
                 <td className="px-4 py-3 font-mono text-agency-cyan">{item.code}</td>
                 <td className="px-4 py-3">{item.name}</td>
-                <td className="px-4 py-3">{item.type}</td>
+                <td className="px-4 py-3">{t(`missions.types.${missionTypeKey(item.type)}`)}</td>
                 <td className="px-4 py-3 uppercase tracking-[0.3em] text-xs">{item.status}</td>
                 <td className="px-4 py-3">{item.chaos}</td>
                 <td className="px-4 py-3">{item.looseEnds}</td>

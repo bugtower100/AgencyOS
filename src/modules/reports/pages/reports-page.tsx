@@ -1,6 +1,6 @@
 import { Panel } from '@/components/ui/panel'
 import { useCampaignStore } from '@/stores/campaign-store'
-import { formatDate } from '@/lib/utils'
+import { formatDate, missionTypeKey } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
 
 export function ReportsPage() {
@@ -28,7 +28,7 @@ export function ReportsPage() {
           <div key={mission.id} className="flex flex-col gap-2 rounded-2xl border border-agency-border/40 bg-agency-ink/40 px-4 py-3 text-sm md:flex-row md:items-center md:justify-between">
             <div>
               <p className="font-semibold text-white">{mission.code} · {mission.name}</p>
-              <p className="text-xs text-agency-muted">{t('reports.type')}：{mission.type} · {t('reports.date')}：{formatDate(mission.scheduledDate)}</p>
+              <p className="text-xs text-agency-muted">{t('reports.type')}：{t(`missions.types.${missionTypeKey(mission.type)}`)} · {t('reports.date')}：{formatDate(mission.scheduledDate)}</p>
             </div>
               <div className="flex gap-3 text-xs uppercase tracking-[0.3em] text-agency-muted">
               <span className="rounded-xl border border-agency-border px-3 py-1">{t('app.common.chaos')}：{mission.chaos}</span>
