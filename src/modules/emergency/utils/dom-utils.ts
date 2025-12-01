@@ -118,6 +118,7 @@ export function revertDomAction(action: EmergencyAction): void {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function captureState(action: Omit<EmergencyAction, 'id' | 'timestamp'>): any {
   const { type, selector } = action
   const element = document.querySelector(selector)
@@ -130,6 +131,7 @@ export function captureState(action: Omit<EmergencyAction, 'id' | 'timestamp'>):
         const stylePayload = action.payload.style || {}
         const originalStyles: Record<string, string> = {}
         for (const key of Object.keys(stylePayload)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           originalStyles[key] = element.style[key as any] || ''
         }
         return { style: originalStyles }

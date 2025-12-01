@@ -391,8 +391,13 @@
         "title": "权限控制",
         "readDom": "读取页面内容",
         "writeDom": "修改界面 (样式与文本)",
-        "writeCampaign": "修改战役数据",
+        "writeCampaign": "修改战役数据（启用前请三思！）",
         "writeSettings": "修改系统设置"
+      },
+      "automation": {
+        "title": "自动化",
+        "pollingInterval": "轮询间隔（秒，0 为禁用）",
+        "description": "设置后，紧急事态将每隔 X 秒自动观察页面并采取行动。注意！这可能引起非常坏的后果！"
       },
       "save": "保存配置",
       "saved": "配置已保存"

@@ -391,8 +391,13 @@
         "title": "Permissions",
         "readDom": "Read Page Content",
         "writeDom": "Modify Interface (Styles & Text)",
-        "writeCampaign": "Modify Campaign Data",
+        "writeCampaign": "Modify Campaign Data (be sure before enabling!)",
         "writeSettings": "Modify Settings"
+      },
+      "automation": {
+        "title": "Automation",
+        "pollingInterval": "Polling Interval (Seconds, 0 to disable)",
+        "description": "When set, Urgency will automatically observe the page and act every X seconds. Attention! This may lead to very bad consequences!"
       },
       "save": "Save Configuration",
       "saved": "Configuration Saved"

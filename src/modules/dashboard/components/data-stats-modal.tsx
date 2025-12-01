@@ -109,6 +109,7 @@ const CustomPieChart: React.FC<CustomPieChartProps> = ({ data, title, total, t, 
             <Tooltip content={({ active, payload, label }) => (
               <CustomTooltip 
                 active={active} 
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 payload={payload as any} 
                 label={label} 
                 chartType="pie" 
@@ -244,6 +245,7 @@ export const DataStatsModal: React.FC<Props> = ({ onClose }) => {
                   <Tooltip content={({ active, payload, label }) => (
                     <CustomTooltip 
                       active={active} 
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       payload={payload as any} 
                       label={label} 
                       chartType="line" 

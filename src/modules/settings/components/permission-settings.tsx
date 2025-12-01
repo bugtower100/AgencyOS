@@ -26,10 +26,11 @@ export function PermissionSettings() {
 
   // Sync local state when store changes (initial load)
   useEffect(() => {
-    setLocalEnabled(emergency.isEnabled)
-    setLocalConfig(emergency.llmConfig)
-    setLocalPermissions(emergency.permissions)
-    setLocalPollingInterval(emergency.pollingInterval)
+    if (localEnabled !== emergency.isEnabled) setLocalEnabled(emergency.isEnabled)
+    if (JSON.stringify(localConfig) !== JSON.stringify(emergency.llmConfig)) setLocalConfig(emergency.llmConfig)
+    if (JSON.stringify(localPermissions) !== JSON.stringify(emergency.permissions)) setLocalPermissions(emergency.permissions)
+    if (localPollingInterval !== emergency.pollingInterval) setLocalPollingInterval(emergency.pollingInterval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emergency.isEnabled, emergency.llmConfig, emergency.permissions, emergency.pollingInterval])
 
   const handleSave = () => {
@@ -54,11 +55,11 @@ export function PermissionSettings() {
         isWin98 ? "font-mono" : ""
     )}>
       <div className="flex items-center justify-between">
-        <div>
+        <div className={cn(isWin98 ? "pl-2 pb-5" : "")}>
             <h3 className="text-lg font-medium text-[#0047BB]">{t('settings.emergency.title')}</h3>
             <p className="text-xs text-agency-muted">{t('settings.emergency.description')}</p>
         </div>
-        <label className="flex items-center gap-2 cursor-pointer select-none">
+        <label className="flex items-center gap-2 cursor-pointer select-none shrink-0">
             <span className="text-sm text-agency-muted font-mono">
                 {localEnabled ? t('settings.emergency.status.active') : t('settings.emergency.status.inactive')}
             </span>
@@ -68,7 +69,7 @@ export function PermissionSettings() {
                 onChange={e => handleChange(() => setLocalEnabled(e.target.checked))}
                 className={cn(
                     "accent-[#0047BB] w-5 h-5",
-                    isWin98 ? "border-2 border-gray-400" : ""
+                    isWin98 ? "border-2 border-gray-400 mr-5" : ""
                 )}
             />
         </label>
@@ -80,7 +81,7 @@ export function PermissionSettings() {
                 "space-y-4 border border-agency-border p-4",
                 isWin98 ? "bg-agency-ink" : "rounded-lg bg-agency-ink/50"
             )}>
-                <h4 className="text-sm font-mono uppercase tracking-wider text-agency-muted border-b border-agency-border pb-2">
+                <h4 className="text-sm font-mono uppercase tracking-wider text-agency-muted border-b border-agency-border pb-1 pl-2">
                     {t('settings.emergency.llmConfig.title')}
                 </h4>
                 <div className="grid gap-4">
@@ -128,7 +129,7 @@ export function PermissionSettings() {
                 "space-y-4 border border-agency-border p-4",
                 isWin98 ? "bg-agency-ink" : "rounded-lg bg-agency-ink/50"
             )}>
-                <h4 className="text-sm font-mono uppercase tracking-wider text-agency-muted border-b border-agency-border pb-2">
+                <h4 className="text-sm font-mono uppercase tracking-wider text-agency-muted border-b border-agency-border pb-1 pl-2">
                     {t('settings.emergency.permissions.title')}
                 </h4>
                 <div className="grid gap-3">
@@ -175,11 +176,11 @@ export function PermissionSettings() {
                 "space-y-4 border border-agency-border p-4",
                 isWin98 ? "bg-agency-ink" : "rounded-lg bg-agency-ink/50"
             )}>
-                <h4 className="text-sm font-mono uppercase tracking-wider text-agency-muted border-b border-agency-border pb-2">
-                    Automation
+                <h4 className="text-sm font-mono uppercase tracking-wider text-agency-muted border-b border-agency-border pb-1 pl-2">
+                    {t('settings.emergency.automation.title')}
                 </h4>
                 <div>
-                    <label className="text-xs text-agency-muted block mb-1">Polling Interval (Seconds, 0 to disable)</label>
+                    <label className="text-xs text-agency-muted block mb-1">{t('settings.emergency.automation.pollingInterval')}</label>
                     <input 
                         type="number"
                         className={cn(
@@ -191,7 +192,7 @@ export function PermissionSettings() {
                         placeholder="0"
                     />
                     <p className="text-[10px] text-agency-muted mt-1">
-                        When set, the agent will automatically observe the page and act every X seconds.
+                        {t('settings.emergency.automation.description')}
                     </p>
                 </div>
             </div>
