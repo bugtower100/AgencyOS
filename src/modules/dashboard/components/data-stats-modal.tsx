@@ -15,8 +15,144 @@ import {
 } from 'recharts'
 import { generatePalette } from './palette-utils'
 
+// Type definitions for chart data
+interface LineChartData {
+  name: string
+  looseEnds: number
+  realityRequestsFailed: number
+}
+
+interface PieChartSlice {
+  name: string
+  value: number
+  key?: string
+}
+
+// Custom tooltip props - simplified to avoid Recharts type constraints
+interface CustomTooltipProps {
+  active?: boolean
+  payload?: Array<{ 
+    value?: number | string 
+    payload?: LineChartData | PieChartSlice 
+  }>
+  label?: string
+  chartType?: 'line' | 'pie'
+  total?: number
+  t: (key: string) => string
+}
+
 interface Props {
   onClose: () => void
+}
+
+// Custom tooltip component with React.memo for performance optimization
+const CustomTooltip: React.FC<CustomTooltipProps> = React.memo(({
+  active,
+  payload,
+  label,
+  chartType,
+  total,
+  t
+}) => {
+  if (!active || !payload || payload.length === 0) return null
+  
+  const item = payload[0]
+  const rawValue = item.value ?? 0
+  const value = typeof rawValue === 'string' ? Number(rawValue) : rawValue
+  const percent = total && total > 0 ? Math.round((Number(value) / total) * 1000) / 10 : null
+  const itemPayload = item.payload as LineChartData | undefined
+  
+  return (
+    <div className="rounded-md border border-agency-border/60 bg-agency-ink/95 p-3 text-sm text-white shadow-lg">
+      <div className="flex items-baseline justify-between gap-4">
+        <div className="font-medium text-xs text-agency-muted">{label}</div>
+        <div className="text-xs font-mono text-agency-cyan">{value}</div>
+      </div>
+      {percent !== null && (
+        <div className="mt-1 text-xs text-agency-muted">{percent}%</div>
+      )}
+      {chartType === 'line' && itemPayload && (
+        <>
+          <div className="mt-2 text-xs text-agency-muted">{t('dashboard.dataStats.charts.looseEnds')}: {itemPayload.looseEnds}</div>
+          <div className="mt-1 text-xs text-agency-muted">{t('dashboard.realityRequestsFailed')}: {itemPayload.realityRequestsFailed}</div>
+        </>
+      )}
+    </div>
+  )
+})
+
+CustomTooltip.displayName = 'CustomTooltip'
+
+// Reusable PieChart component
+interface CustomPieChartProps {
+  data: PieChartSlice[]
+  title: string
+  total: number
+  t: (key: string) => string
+  colorOffset?: number
+}
+
+const CustomPieChart: React.FC<CustomPieChartProps> = ({ data, title, total, t, colorOffset = 0 }) => {
+  const colors = useMemo(() => generatePalette(data.length, colorOffset), [data.length, colorOffset])
+  
+  const makePieLabel = (total: number) => (entry: { value?: number }) => {
+    const percent = total > 0 ? Math.round(((entry.value ?? 0) / total) * 100) : 0
+    return `${percent}%`
+  }
+  
+  return (
+    <section className="rounded-lg border border-agency-border/40 bg-agency-ink/30 p-4">
+      <p className="text-xs text-agency-muted">{title}</p>
+      <div style={{ width: '100%', height: 230 }}>
+        <ResponsiveContainer>
+          <PieChart>
+            <Tooltip content={({ active, payload, label }) => (
+              <CustomTooltip 
+                active={active} 
+                payload={payload as any} 
+                label={label} 
+                chartType="pie" 
+                total={total} 
+                t={t}
+              />
+            )} />
+            {data.length > 0 ? (
+              <Pie 
+                data={data} 
+                dataKey="value" 
+                nameKey="name" 
+                outerRadius={80} 
+                label={makePieLabel(total)} 
+                labelLine={false}
+              >
+                {data.map((entry, i) => (
+                  <Cell 
+                    key={`${entry.key || entry.name}-${i}`} 
+                    fill={colors[i % colors.length]} 
+                  />
+                ))}
+              </Pie>
+            ) : (
+              <text x="50%" y="50%" textAnchor="middle" fill="#9ca3af">{t('dashboard.dataStats.noData')}</text>
+            )}
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      {data.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-3 text-xs text-agency-muted">
+          {data.map((entry, i) => (
+            <div key={`${entry.name}-legend`} className="inline-flex items-center gap-1">
+              <span
+                className="inline-block h-2 w-2 rounded-sm"
+                style={{ backgroundColor: colors[i % colors.length] }}
+              />
+              <span>{entry.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  )
 }
 
 export const DataStatsModal: React.FC<Props> = ({ onClose }) => {
@@ -25,8 +161,8 @@ export const DataStatsModal: React.FC<Props> = ({ onClose }) => {
   const agents = useCampaignStore((s) => s.agents)
   const anomalies = useCampaignStore((s) => s.anomalies)
 
-  // Line chart: missions ordered as in store
-  const lineData = useMemo(() => {
+  // Line chart data: missions ordered as in store
+  const lineData = useMemo<LineChartData[]>(() => {
     return missions.map((m, idx) => ({
       name: m.code || m.name || `#${idx + 1}`,
       looseEnds: m.looseEnds ?? 0,
@@ -34,24 +170,24 @@ export const DataStatsModal: React.FC<Props> = ({ onClose }) => {
     }))
   }, [missions])
 
-  // Pie chart: active agents and their awards (filter zero values)
-  const activeAgentSlices = useMemo(() => {
+  // Pie chart data: active agents and their awards (filter zero values)
+  const activeAgentSlices = useMemo<PieChartSlice[]>(() => {
     const actives = agents.filter((a) => a.status === 'active')
     return actives
       .map((a) => ({ name: a.codename || a.id, value: a.awards ?? 0 }))
-      .filter((s) => (s.value ?? 0) > 0)
+      .filter((s) => s.value > 0)
   }, [agents])
 
-  // Pie chart: active agents and their reprimands (申诫)
-  const activeAgentReprimandSlices = useMemo(() => {
+  // Pie chart data: active agents and their reprimands
+  const activeAgentReprimandSlices = useMemo<PieChartSlice[]>(() => {
     const actives = agents.filter((a) => a.status === 'active')
     return actives
       .map((a) => ({ name: a.codename || a.id, value: a.reprimands ?? 0 }))
-      .filter((s) => (s.value ?? 0) > 0)
+      .filter((s) => s.value > 0)
   }, [agents])
 
-  // Pie chart: anomalies status counts
-  const anomalySlices = useMemo(() => {
+  // Pie chart data: anomalies status counts
+  const anomalySlices = useMemo<PieChartSlice[]>(() => {
     const counts: Record<string, number> = {
       active: 0,
       contained: 0,
@@ -66,60 +202,21 @@ export const DataStatsModal: React.FC<Props> = ({ onClose }) => {
       { key: 'contained', name: t('anomalies.statusOptions.contained'), value: counts.contained },
       { key: 'neutralized', name: t('anomalies.statusOptions.neutralized'), value: counts.neutralized },
       { key: 'escaped', name: t('anomalies.statusOptions.escaped'), value: counts.escaped },
-    ].filter((s) => (s.value ?? 0) > 0)
+    ].filter((s) => s.value > 0)
   }, [anomalies, t])
 
-  // generatePalette moved to ./palette-utils
+  // Totals for pie charts
+  const totalAwards = useMemo(() => activeAgentSlices.reduce((sum, slice) => sum + slice.value, 0), [activeAgentSlices])
+  const totalReprimands = useMemo(() => activeAgentReprimandSlices.reduce((sum, slice) => sum + slice.value, 0), [activeAgentReprimandSlices])
+  const totalAnomalies = useMemo(() => anomalySlices.reduce((sum, slice) => sum + slice.value, 0), [anomalySlices])
 
-  // Custom tooltip for richer, themed hover cards
-  // Recharts typings are complex for custom content; use a lightweight handler and destructure.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const CustomTooltip = (rawProps: any & { chartType?: 'line' | 'pie'; total?: number }) => {
-    const { active, payload, label, chartType, total } = rawProps
-    // normalize payload to typed object if possible
-    if (!active || !payload) return null
-  const arr = Array.isArray(payload) ? payload as unknown as { value?: number | string; payload?: unknown }[] : []
-    if (arr.length === 0) return null
-  const item = arr[0]
-  const rawValue = item.value ?? 0
-  const itemPayload = item.payload as { looseEnds?: number, realityRequestsFailed?: number } | undefined
-  const looseEnds = itemPayload?.looseEnds
-  const realityRequestsFailed = itemPayload?.realityRequestsFailed
-    const value = typeof rawValue === 'string' ? Number(rawValue) : rawValue
-    const percent = total && total > 0 ? Math.round((Number(value) / total) * 1000) / 10 : null
-    return (
-      <div className="rounded-md border border-agency-border/60 bg-agency-ink/95 p-3 text-sm text-white shadow-lg">
-        <div className="flex items-baseline justify-between gap-4">
-          <div className="font-medium text-xs text-agency-muted">{label}</div>
-          <div className="text-xs font-mono text-agency-cyan">{value}</div>
-        </div>
-        {percent !== null && (
-          <div className="mt-1 text-xs text-agency-muted">{percent}%</div>
-        )}
-        {chartType === 'line' && looseEnds !== undefined && (
-          <div className="mt-2 text-xs text-agency-muted">{t('dashboard.dataStats.charts.looseEnds')}: {looseEnds}</div>
-        )}
-        {chartType === 'line' && realityRequestsFailed !== undefined && (
-          <div className="mt-2 text-xs text-agency-muted">{t('dashboard.realityRequestsFailed')}: {realityRequestsFailed}</div>
-        )}
-      </div>
-    )
-  }
-
-  // totals for pies
-  const totalAwards = activeAgentSlices.reduce((s, e) => s + (e.value ?? 0), 0)
-  const totalReprimands = activeAgentReprimandSlices.reduce((s, e) => s + (e.value ?? 0), 0)
-  const totalAnomalies = anomalySlices.reduce((s, e) => s + (e.value ?? 0), 0)
-
-  const makePieLabel = (total: number) => (entry: { value?: number }) => {
-    const percent = total > 0 ? Math.round(((entry.value ?? 0) / total) * 100) : 0
-    return `${percent}%`
-  }
+  // Colors cached with useMemo for performance
+  const lineChartColors = useMemo(() => generatePalette(2, 0), [])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-    {/* 保留点击关闭区域，但移除暗色遮罩以去掉背后的阴影效果 */}
-    <div className="absolute inset-0" onClick={onClose} />
+      {/* 保留点击关闭区域，但移除暗色遮罩以去掉背后的阴影效果 */}
+      <div className="absolute inset-0" onClick={onClose} />
       <div className="relative z-10 w-full max-w-5xl rounded-2xl border border-agency-border/60 shadow-panel bg-agency-panel/100 p-6">
         <header className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-white">{t('dashboard.dataStats.title')}</h3>
@@ -135,6 +232,7 @@ export const DataStatsModal: React.FC<Props> = ({ onClose }) => {
         </header>
 
         <div className="grid gap-6 lg:grid-cols-3">
+          {/* Line Chart Section */}
           <section className="col-span-3 rounded-lg border border-agency-border/40 bg-agency-ink/30 p-4">
             <p className="text-xs text-agency-muted">{t('dashboard.dataStats.charts.looseEnds')}</p>
             <div style={{ width: '100%', height: 240 }}>
@@ -143,135 +241,51 @@ export const DataStatsModal: React.FC<Props> = ({ onClose }) => {
                   <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                   <XAxis dataKey="name" tick={{ fill: '#9ca3af' }} />
                   <YAxis tick={{ fill: '#9ca3af' }} />
-                  <Tooltip content={(props) => <CustomTooltip {...props} chartType="line" />} />
-                  <Line type="monotone" dataKey="looseEnds" stroke="#ef4444" strokeWidth={2} dot={{ r: 3 }} />
+                  <Tooltip content={({ active, payload, label }) => (
+                    <CustomTooltip 
+                      active={active} 
+                      payload={payload as any} 
+                      label={label} 
+                      chartType="line" 
+                      t={t}
+                    />
+                  )} />
+                  <Line 
+                    type="monotone" 
+                    dataKey="looseEnds" 
+                    stroke={lineChartColors[0] || '#ef4444'} 
+                    strokeWidth={2} 
+                    dot={{ r: 3 }} 
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </section>
 
-          <section className="rounded-lg border border-agency-border/40 bg-agency-ink/30 p-4">
-            <p className="text-xs text-agency-muted">{t('dashboard.dataStats.charts.agentAwards')}</p>
-            <div style={{ width: '100%', height: 230 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Tooltip content={(props) => <CustomTooltip {...props} chartType="pie" total={totalAwards} />} />
-                  {activeAgentSlices.length > 0 ? (
-                    (() => {
-                      const colors = generatePalette(activeAgentSlices.length, 200)
-                      return (
-                        <Pie data={activeAgentSlices} dataKey="value" nameKey="name" outerRadius={80} label={makePieLabel(totalAwards)} labelLine={false}>
-                            {activeAgentSlices.map((entry, i) => (
-                            <Cell key={`${entry.name}-${i}`} fill={colors[i % colors.length]} />
-                          ))}
-                        </Pie>
-                      )
-                    })()
-                  ) : (
-                    <text x="50%" y="50%" textAnchor="middle" fill="#9ca3af">{t('dashboard.dataStats.noData')}</text>
-                  )}
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            {activeAgentReprimandSlices.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-3 text-xs text-agency-muted">
-                {activeAgentReprimandSlices.map((entry, i) => {
-                  const colors = generatePalette(activeAgentReprimandSlices.length, 20)
-                  return (
-                    <div key={`${entry.name}-legend`} className="inline-flex items-center gap-1">
-                      <span
-                        className="inline-block h-2 w-2 rounded-sm"
-                        style={{ backgroundColor: colors[i % colors.length] }}
-                      />
-                      <span>{entry.name}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </section>
-
-          <section className="rounded-lg border border-agency-border/40 bg-agency-ink/30 p-4">
-            <p className="text-xs text-agency-muted">{t('dashboard.dataStats.charts.agentReprimands')}</p>
-            <div style={{ width: '100%', height: 230 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Tooltip content={(props) => <CustomTooltip {...props} chartType="pie" total={totalReprimands} />} />
-                  {activeAgentReprimandSlices.length > 0 ? (
-                    (() => {
-                      const colors = generatePalette(activeAgentReprimandSlices.length, 20)
-                      return (
-                        <Pie data={activeAgentReprimandSlices} dataKey="value" nameKey="name" outerRadius={80} label={makePieLabel(totalReprimands)} labelLine={false}>
-                          {activeAgentReprimandSlices.map((entry, i) => (
-                            <Cell key={`${entry.name}-rep-${i}`} fill={colors[i % colors.length]} />
-                          ))}
-                        </Pie>
-                      )
-                    })()
-                  ) : (
-                    <text x="50%" y="50%" textAnchor="middle" fill="#9ca3af">{t('dashboard.dataStats.noData')}</text>
-                  )}
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            {activeAgentReprimandSlices.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-3 text-xs text-agency-muted">
-                {activeAgentReprimandSlices.map((entry, i) => {
-                  const colors = generatePalette(activeAgentReprimandSlices.length, 20)
-                  return (
-                    <div key={`${entry.name}-legend`} className="inline-flex items-center gap-1">
-                      <span
-                        className="inline-block h-2 w-2 rounded-sm"
-                        style={{ backgroundColor: colors[i % colors.length] }}
-                      />
-                      <span>{entry.name}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </section>
-
-          <section className="rounded-lg border border-agency-border/40 bg-agency-ink/30 p-4">
-            <p className="text-xs text-agency-muted">{t('dashboard.dataStats.charts.anomaliesStatus')}</p>
-            <div style={{ width: '100%', height: 230 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Tooltip content={(props) => <CustomTooltip {...props} chartType="pie" total={totalAnomalies} />} />
-                  {anomalySlices.length > 0 ? (
-                    (() => {
-                      const colors = generatePalette(anomalySlices.length, 10)
-                      return (
-                        <Pie data={anomalySlices} dataKey="value" nameKey="name" outerRadius={80} label={makePieLabel(totalAnomalies)} labelLine={false}>
-                          {anomalySlices.map((entry, i) => (
-                            <Cell key={`${entry.key}-${i}`} fill={colors[i % colors.length]} />
-                          ))}
-                        </Pie>
-                      )
-                    })()
-                  ) : (
-                    <text x="50%" y="50%" textAnchor="middle" fill="#9ca3af">{t('dashboard.dataStats.noData')}</text>
-                  )}
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            {activeAgentReprimandSlices.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-3 text-xs text-agency-muted">
-                {activeAgentReprimandSlices.map((entry, i) => {
-                  const colors = generatePalette(activeAgentReprimandSlices.length, 20)
-                  return (
-                    <div key={`${entry.name}-legend`} className="inline-flex items-center gap-1">
-                      <span
-                        className="inline-block h-2 w-2 rounded-sm"
-                        style={{ backgroundColor: colors[i % colors.length] }}
-                      />
-                      <span>{entry.name}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
-          </section>
+          {/* Pie Chart Sections using the reusable CustomPieChart component */}
+          <CustomPieChart 
+            data={activeAgentSlices} 
+            title={t('dashboard.dataStats.charts.agentAwards')} 
+            total={totalAwards} 
+            t={t} 
+            colorOffset={200} 
+          />
+          
+          <CustomPieChart 
+            data={activeAgentReprimandSlices} 
+            title={t('dashboard.dataStats.charts.agentReprimands')} 
+            total={totalReprimands} 
+            t={t} 
+            colorOffset={20} 
+          />
+          
+          <CustomPieChart 
+            data={anomalySlices} 
+            title={t('dashboard.dataStats.charts.anomaliesStatus')} 
+            total={totalAnomalies} 
+            t={t} 
+            colorOffset={10} 
+          />
         </div>
       </div>
     </div>
