@@ -66,7 +66,11 @@ export function PermissionSettings() {
             <input 
                 type="checkbox" 
                 checked={localEnabled} 
-                onChange={e => handleChange(() => setLocalEnabled(e.target.checked))}
+                onChange={e => {
+                    const newValue = e.target.checked
+                    setLocalEnabled(newValue)
+                    setEmergencyEnabled(newValue)
+                }}
                 className={cn(
                     "accent-[#0047BB] w-5 h-5",
                     isWin98 ? "border-2 border-gray-400 mr-5" : ""
