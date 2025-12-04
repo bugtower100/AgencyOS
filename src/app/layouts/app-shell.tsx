@@ -21,6 +21,12 @@ import { EmergencyInbox } from '@/modules/desktop/components/emergency-inbox'
 import { ChaosController } from '@/modules/desktop/components/chaos-controller'
 import { StartMenu } from '@/modules/desktop/components/start-menu'
 import { LoginScreen } from '@/modules/system/components/login-screen'
+import { IconWin98Manual } from '@/components/icons/win98/icon-manual'
+import { IconWin98Antivirus } from '@/components/icons/win98/icon-antivirus'
+import { IconWin98Emergency } from '@/components/icons/win98/icon-emergency'
+import { IconWin98Commendation } from '@/components/icons/win98/icon-commendation'
+import { IconWin98Chaos } from '@/components/icons/win98/icon-chaos'
+import { IconWin98Schedule } from '@/components/icons/win98/icon-schedule'
 
 interface DesktopItem {
   id: string
@@ -185,6 +191,19 @@ export function AppShell() {
       <div className="fixed left-4 top-4 z-0 flex flex-col gap-6">
         {DESKTOP_ITEMS.map((item) => {
           const isActive = item.id === 'antivirus' ? emergency.isChatOpen : openPrograms.includes(item.id)
+          
+          let Icon = item.icon
+          if (isWin98) {
+            switch (item.id) {
+              case 'manual': Icon = IconWin98Manual; break
+              case 'antivirus': Icon = IconWin98Antivirus; break
+              case 'emergency': Icon = IconWin98Emergency; break
+              case 'commendation': Icon = IconWin98Commendation; break
+              case 'chaos': Icon = IconWin98Chaos; break
+              case 'schedule': Icon = IconWin98Schedule; break
+            }
+          }
+
           return (
             <button
               key={item.id}
@@ -201,7 +220,7 @@ export function AppShell() {
                   ? "text-[#ffffff] drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]" 
                   : (isActive ? "text-agency-cyan" : "text-agency-muted group-hover:text-agency-cyan")
               )}>
-                <item.icon className="h-8 w-8" strokeWidth={1.5} />
+                <Icon className={isWin98 ? "h-10 w-10" : "h-8 w-8"} strokeWidth={1.5} />
               </div>
               <span className={cn(
                 "text-[10px] font-medium leading-tight transition-colors",
@@ -235,7 +254,7 @@ export function AppShell() {
             onClick={() => setIsStartMenuOpen(!isStartMenuOpen)}
             data-start-button
             className={cn(
-              "flex items-center gap-2 px-3 py-1 font-bold uppercase tracking-wider",
+              "flex items-center gap-2 px-3 pt-1.5 pb-0.5 font-bold uppercase tracking-wider",
               isWin98 
                 ? cn(
                     "border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#c0c0c0]",
@@ -267,7 +286,7 @@ export function AppShell() {
                   type="button"
                   onClick={toggleEmergencyChat}
                   className={cn(
-                    "flex w-32 items-center gap-2 px-2 py-1 text-xs text-left ghost",
+                    "flex w-32 items-center gap-2 px-2 pt-1.5 pb-0.5 text-xs text-left ghost",
                     isWin98
                       ? cn(
                           "border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#c0c0c0] font-bold",
@@ -279,7 +298,7 @@ export function AppShell() {
                         )
                   )}
                 >
-                  <Mail className="h-3 w-3 flex-shrink-0" />
+                  <Eye className="h-3 w-3 flex-shrink-0" />
                   <span className="truncate">{t('desktop.taskbar.emergency')}</span>
                 </button>
             )}
@@ -291,7 +310,7 @@ export function AppShell() {
                 <div
                   key={id}
                   className={cn(
-                    "flex w-32 items-center gap-2 px-2 py-1 text-xs",
+                    "flex w-32 items-center gap-2 px-2 pt-1.5 pb-0.5 text-xs",
                     isWin98
                       ? "border-2 border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] font-bold shadow-[inset_1px_1px_#000000]"
                       : "rounded bg-agency-cyan/10 text-agency-cyan"

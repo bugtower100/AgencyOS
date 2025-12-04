@@ -16,7 +16,7 @@ export function CommandStrip({ label, value, icon, className, tooltip }: Command
   // 构建基础样式类
   const baseClass = 'flex items-center justify-between border border-agency-border px-3 py-2 text-xs uppercase tracking-[0.4em]'
   const themeClass = isWin98 
-    ? 'rounded-none win98-inset' 
+    ? 'rounded-none win98-status-field' 
     : (isRetroStyle ? 'rounded-none bg-agency-ink/60' : 'rounded-xl bg-agency-ink/60')
 
   const safeId = `command-strip-tooltip-${String(label).replace(/[^a-zA-Z0-9_-]/g, '-')}`
