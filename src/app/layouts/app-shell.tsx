@@ -20,6 +20,7 @@ import { CommendationClicker } from '@/modules/desktop/components/commendation'
 import { EmergencyInbox } from '@/modules/desktop/components/emergency-inbox'
 import { ChaosController } from '@/modules/desktop/components/chaos-controller'
 import { StartMenu } from '@/modules/desktop/components/start-menu'
+import { LoginScreen } from '@/modules/system/components/login-screen'
 
 interface DesktopItem {
   id: string
@@ -68,12 +69,17 @@ export function AppShell() {
 
   const [openPrograms, setOpenPrograms] = useState<string[]>([])
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
 
   const toggleProgram = (id: string) => {
     if (id === 'antivirus') {
       if (emergency.isEnabled) {
         toggleEmergencyChat()
       }
+      return
+    }
+    if (id === 'logoff') {
+      setIsLoggedIn(false)
       return
     }
     setOpenPrograms(prev => {
@@ -167,6 +173,10 @@ export function AppShell() {
       styleTags,
     })
     setIsEditingHeader(false)
+  }
+
+  if (!isLoggedIn) {
+    return <LoginScreen onLogin={() => setIsLoggedIn(true)} />
   }
 
   return (

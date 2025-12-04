@@ -471,13 +471,21 @@
     },
     "taskbar": {
       "start": "工作",
-      "emergency": "紧急协议"
+      "emergency": "常规杀毒软件"
     },
     "startMenu": {
       "agencyOS": "Agency OS 98",
-      "shutdown": "关闭系统...",
+      "logoff": "注销...",
       "run": "运行...",
       "settings": "设置"
+    },
+    "login": {
+      "title": "Agency OS 安全登录",
+      "username": "用户名",
+      "password": "密码",
+      "submit": "登录",
+      "loggingOff": "正在注销...",
+      "loggingIn": "正在登录..."
     }
   }
 }

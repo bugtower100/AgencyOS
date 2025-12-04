@@ -471,13 +471,21 @@
     },
     "taskbar": {
       "start": "WORK",
-      "emergency": "Emergency Protocol"
+      "emergency": "Standard Antivirus"
     },
     "startMenu": {
       "agencyOS": "Agency OS 98",
-      "shutdown": "Shut Down...",
+      "logoff": "Log Off...",
       "run": "Run...",
       "settings": "Settings"
+    },
+    "login": {
+      "title": "Agency OS Secure Login",
+      "username": "Username",
+      "password": "Password",
+      "submit": "Log In",
+      "loggingOff": "Logging off...",
+      "loggingIn": "Logging in..."
     }
   }
 }

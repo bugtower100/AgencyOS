@@ -56,7 +56,7 @@ export function StartMenu({ isOpen, onClose, onOpenProgram }: StartMenuProps) {
     { id: 'antivirus', icon: Eye, label: 'desktop.icons.antivirus', action: () => onOpenProgram('antivirus') },
     { id: 'settings', icon: Settings, label: 'app.nav.settings', action: () => { navigate('/settings'); onClose(); } },
     { type: 'separator' },
-    { id: 'shutdown', icon: Power, label: 'desktop.startMenu.shutdown', action: () => window.location.reload() },
+    { id: 'logoff', icon: Power, label: 'desktop.startMenu.logoff', action: () => onOpenProgram('logoff') },
   ]
 
   return (

@@ -164,7 +164,7 @@ export function EmergencyChat() {
          onMouseDown={handleMouseDown}
        >
           <span className={cn("text-xs font-bold", isWin98 ? "text-white" : "text-agency-cyan")}>
-            Emergency Protocol
+            Standard Antivirus
           </span>
           <div className="flex gap-1">
              <button 
