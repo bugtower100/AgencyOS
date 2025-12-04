@@ -119,7 +119,7 @@ export function WindowFrame({
       className={cn(
         "fixed z-40 flex flex-col shadow-2xl",
         isWin98 
-          ? "border-2 border-b-[#404040] border-l-[#dfdfdf] border-r-[#404040] border-t-[#dfdfdf] bg-[#c0c0c0] p-[2px]" 
+          ? "win98-raised border-2 border-b-[#404040] border-l-[#dfdfdf] border-r-[#404040] border-t-[#dfdfdf] bg-[#c0c0c0] p-[2px]" 
           : "rounded-xl border border-agency-border bg-agency-panel/95 backdrop-blur overflow-hidden"
       )}
       style={{

@@ -125,13 +125,19 @@
   color: #ffffff;
 }
 
-/* Classic 3D Borders */
+/* Classic 3D Borders - Default to Sunken (Inset) for internal UI */
 :root[data-theme='win98'] .border,
 :root[data-theme='win98'] .border-2,
 :root[data-theme='win98'] .border-agency-border {
   border: none !important;
-  box-shadow: inset 1px 1px #dfdfdf, inset 2px 2px #ffffff, inset -1px -1px #808080, inset -2px -2px #404040;
+  box-shadow: inset 1px 1px #404040, inset 2px 2px #808080, inset -1px -1px #ffffff, inset -2px -2px #dfdfdf;
   background-color: rgb(var(--agency-panel));
+}
+
+/* Explicit Raised Border for Windows/Buttons */
+:root[data-theme='win98'] .win98-raised {
+  border: none !important;
+  box-shadow: inset 1px 1px #dfdfdf, inset 2px 2px #ffffff, inset -1px -1px #808080, inset -2px -2px #404040 !important;
 }
 
 /* Inset for inputs/panels */
@@ -303,4 +309,94 @@ body {
 :root[data-theme='fluent'] ::selection {
   background-color: rgb(var(--agency-cyan));
   color: #ffffff;
+}
+
+/* Custom Scrollbar Styling */
+
+/* Default AgencyOS Scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--agency-ink));
+  border-left: 1px solid rgb(var(--agency-border));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--agency-border));
+  border: 3px solid rgb(var(--agency-ink));
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--agency-cyan));
+  border-color: rgb(var(--agency-ink));
+}
+
+::-webkit-scrollbar-corner {
+  background: rgb(var(--agency-ink));
+}
+
+/* Win98 Theme Scrollbar */
+:root[data-theme='win98'] ::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+:root[data-theme='win98'] ::-webkit-scrollbar-track {
+  background: #dfdfdf;
+  border-left: none;
+}
+
+:root[data-theme='win98'] ::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  box-shadow: inset 1px 1px #dfdfdf, inset 2px 2px #ffffff, inset -1px -1px #808080, inset -2px -2px #404040;
+  border: none;
+}
+
+:root[data-theme='win98'] ::-webkit-scrollbar-button {
+  display: block;
+  height: 16px;
+  width: 16px;
+  background-color: #c0c0c0;
+  box-shadow: inset 1px 1px #dfdfdf, inset 2px 2px #ffffff, inset -1px -1px #808080, inset -2px -2px #404040;
+}
+
+/* Retro Theme Scrollbar */
+:root[data-theme='retro'] ::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+:root[data-theme='retro'] ::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+:root[data-theme='retro'] ::-webkit-scrollbar-thumb {
+  background-color: #c0c0c0;
+  border: 2px solid #e0e0e0;
+  border-radius: 0;
+}
+
+/* Fluent Theme Scrollbar */
+:root[data-theme='fluent'] ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+:root[data-theme='fluent'] ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:root[data-theme='fluent'] ::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 6px;
+}
+
+:root[data-theme='fluent'] ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
 }

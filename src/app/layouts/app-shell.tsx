@@ -74,6 +74,7 @@ export function AppShell() {
   const toggleEmergencyChat = useCampaignStore((state) => state.toggleEmergencyChat)
 
   const [openPrograms, setOpenPrograms] = useState<string[]>([])
+  const [minimizedPrograms, setMinimizedPrograms] = useState<string[]>([])
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(true)
 
@@ -88,12 +89,25 @@ export function AppShell() {
       setIsLoggedIn(false)
       return
     }
-    setOpenPrograms(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(p => p !== id)
-      }
-      return [...prev, id]
-    })
+    
+    // If program is not open, open it
+    if (!openPrograms.includes(id)) {
+      setOpenPrograms(prev => [...prev, id])
+      setMinimizedPrograms(prev => prev.filter(p => p !== id))
+      return
+    }
+
+    // If program is open, toggle minimize/restore
+    if (minimizedPrograms.includes(id)) {
+      setMinimizedPrograms(prev => prev.filter(p => p !== id))
+    } else {
+      setMinimizedPrograms(prev => [...prev, id])
+    }
+  }
+
+  const closeProgram = (id: string) => {
+    setOpenPrograms(prev => prev.filter(p => p !== id))
+    setMinimizedPrograms(prev => prev.filter(p => p !== id))
   }
 
   const navItems = [
@@ -210,8 +224,7 @@ export function AppShell() {
               type="button"
               onDoubleClick={() => toggleProgram(item.id)}
               className={cn(
-                "group flex w-24 flex-col items-center gap-1 text-center focus:outline-none",
-                isWin98 && "ghost"
+                "group flex w-24 flex-col items-center gap-1 text-center focus:outline-none ghost",
               )}
             >
               <div className={cn(
@@ -257,7 +270,7 @@ export function AppShell() {
               "flex items-center gap-2 px-3 pt-1.5 pb-0.5 font-bold uppercase tracking-wider",
               isWin98 
                 ? cn(
-                    "border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#c0c0c0]",
+                    "win98-raised border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#c0c0c0]",
                     isStartMenuOpen 
                       ? "border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] shadow-[inset_1px_1px_#000000]"
                       : "active:border-b-[#ffffff] active:border-l-[#404040] active:border-r-[#ffffff] active:border-t-[#404040]"
@@ -289,7 +302,7 @@ export function AppShell() {
                     "flex w-32 items-center gap-2 px-2 pt-1.5 pb-0.5 text-xs text-left ghost",
                     isWin98
                       ? cn(
-                          "border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#c0c0c0] font-bold",
+                          "win98-raised border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#c0c0c0] font-bold",
                           emergency.isChatOpen && "border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] shadow-[inset_1px_1px_#000000]"
                         )
                       : cn(
@@ -306,19 +319,30 @@ export function AppShell() {
             {openPrograms.map((id) => {
               const item = DESKTOP_ITEMS.find(i => i.id === id)
               if (!item) return null
+              const isMinimized = minimizedPrograms.includes(id)
               return (
-                <div
+                <button
                   key={id}
+                  type="button"
+                  onClick={() => toggleProgram(id)}
                   className={cn(
-                    "flex w-32 items-center gap-2 px-2 pt-1.5 pb-0.5 text-xs",
+                    "flex w-32 items-center gap-2 px-2 pt-1.5 pb-0.5 text-xs text-left ghost",
                     isWin98
-                      ? "border-2 border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] font-bold shadow-[inset_1px_1px_#000000]"
-                      : "rounded bg-agency-cyan/10 text-agency-cyan"
+                      ? cn(
+                          "border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#dfdfdf] font-bold",
+                          isMinimized 
+                            ? "win98-raised" // Minimized = Raised (Not pressed)
+                            : "border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] shadow-[inset_1px_1px_#000000]" // Active = Sunken (Pressed)
+                        )
+                      : cn(
+                          "rounded text-agency-cyan",
+                          isMinimized ? "bg-agency-cyan/10 hover:bg-agency-cyan/20" : "bg-agency-cyan/20"
+                        )
                   )}
                 >
-                  <item.icon className="h-3 w-3" />
+                  <item.icon className="h-3 w-3 flex-shrink-0" />
                   <span className="truncate">{t(`desktop.icons.${item.id}`)}</span>
-                </div>
+                </button>
               )
             })}
           </div>
@@ -339,7 +363,7 @@ export function AppShell() {
 
       <div className="mx-auto grid max-w-[1400px] gap-6 lg:grid-cols-[260px_1fr] relative z-10">
         <aside
-          className={`space-y-6 border border-agency-border bg-agency-panel/80 p-4 ${isSquare ? 'rounded-none' : 'rounded-3xl shadow-panel'}`}
+          className={`space-y-6 border border-agency-border bg-agency-panel/80 p-4 ${isSquare ? 'rounded-none' : 'rounded-3xl shadow-panel'} ${isWin98 ? 'win98-raised' : ''}`}
         >
           {isWin98 && (
             <div 
@@ -447,7 +471,7 @@ export function AppShell() {
                           isWin98 ? 'rounded-none shadow-none win98-active' : (isRetro ? 'rounded-none shadow-none' : 'rounded-2xl shadow-panel')
                         }`
                       : `border-agency-border/60 text-agency-muted hover:border-agency-cyan/40 hover:text-agency-cyan ${
-                          isSquare ? 'rounded-none' : 'rounded-2xl'
+                          isWin98 ? 'win98-raised' : (isSquare ? 'rounded-none' : 'rounded-2xl')
                         }`
                   }`
                 }
@@ -504,7 +528,7 @@ export function AppShell() {
             />
           </div>
           <div
-            className={`border border-agency-border/60 p-4 text-[0.65rem] uppercase tracking-[0.4em] text-agency-muted ${isSquare ? 'rounded-none bg-agency-panel' : 'rounded-3xl bg-agency-ink/40'}`}
+            className={`border border-agency-border/60 p-4 text-[0.65rem] uppercase tracking-[0.4em] text-agency-muted ${isSquare ? 'rounded-none bg-agency-panel' : 'rounded-3xl bg-agency-ink/40'} ${isWin98 ? 'win98-raised' : ''}`}
           >
             <div className="flex flex-wrap items-center gap-2">
               <span>{snapshot}</span>
@@ -512,14 +536,14 @@ export function AppShell() {
                 <button
                   type="button"
                   onClick={handleExportSnapshot}
-                  className={`border border-agency-cyan px-3 py-1 font-mono text-agency-cyan hover:border-agency-cyan ${isSquare ? 'rounded-none' : 'rounded-xl'}`}
+                  className={`border border-agency-cyan px-3 py-1 font-mono text-agency-cyan hover:border-agency-cyan ${isSquare ? 'rounded-none' : 'rounded-xl'} ${isWin98 ? 'win98-raised' : ''}`}
                 >
                   {exportText}
                 </button>
                 <button
                   type="button"
                   onClick={handleImportClick}
-                  className={`border border-agency-border px-3 py-1 font-mono text-agency-muted hover:border-agency-cyan hover:text-agency-cyan ${isSquare ? 'rounded-none' : 'rounded-xl'}`}
+                  className={`border border-agency-border px-3 py-1 font-mono text-agency-muted hover:border-agency-cyan hover:text-agency-cyan ${isSquare ? 'rounded-none' : 'rounded-xl'} ${isWin98 ? 'win98-raised' : ''}`}
                   disabled={importing}
                 >
                   {importing ? importingText : importText}
@@ -530,7 +554,7 @@ export function AppShell() {
             {importMessage ? <p className="mt-2 text-[0.65rem] normal-case text-agency-amber">{importMessage}</p> : null}
           </div>
           <div
-            className={`border border-agency-border/80 bg-agency-panel/70 p-6 backdrop-blur ${isSquare ? 'rounded-none' : 'rounded-3xl shadow-panel'}`}
+            className={`border border-agency-border/80 bg-agency-panel/70 p-6 backdrop-blur ${isSquare ? 'rounded-none' : 'rounded-3xl shadow-panel'} ${isWin98 ? 'win98-raised' : ''}`}
           >
             <Outlet />
           </div>
@@ -541,24 +565,24 @@ export function AppShell() {
       <EmergencyChat />
       
       <DesktopNotepad 
-        isOpen={openPrograms.includes('manual')} 
-        onClose={() => toggleProgram('manual')} 
+        isOpen={openPrograms.includes('manual') && !minimizedPrograms.includes('manual')} 
+        onClose={() => closeProgram('manual')} 
       />
       <VoidSchedule 
-        isOpen={openPrograms.includes('schedule')} 
-        onClose={() => toggleProgram('schedule')} 
+        isOpen={openPrograms.includes('schedule') && !minimizedPrograms.includes('schedule')} 
+        onClose={() => closeProgram('schedule')} 
       />
       <CommendationClicker 
-        isOpen={openPrograms.includes('commendation')} 
-        onClose={() => toggleProgram('commendation')} 
+        isOpen={openPrograms.includes('commendation') && !minimizedPrograms.includes('commendation')} 
+        onClose={() => closeProgram('commendation')} 
       />
       <EmergencyInbox 
-        isOpen={openPrograms.includes('emergency')} 
-        onClose={() => toggleProgram('emergency')} 
+        isOpen={openPrograms.includes('emergency') && !minimizedPrograms.includes('emergency')} 
+        onClose={() => closeProgram('emergency')} 
       />
       <ChaosController 
-        isOpen={openPrograms.includes('chaos')} 
-        onClose={() => toggleProgram('chaos')} 
+        isOpen={openPrograms.includes('chaos') && !minimizedPrograms.includes('chaos')} 
+        onClose={() => closeProgram('chaos')} 
       />
     </div>
   )

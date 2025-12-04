@@ -17,7 +17,9 @@ interface StartMenuProps {
 export function StartMenu({ isOpen, onClose, onOpenProgram }: StartMenuProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const isWin98 = useThemeStore((state) => state.mode === 'win98')
+  const themeMode = useThemeStore((state) => state.mode)
+  const win98TitleBarColor = useThemeStore((state) => state.win98TitleBarColor)
+  const isWin98 = themeMode === 'win98'
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -70,12 +72,15 @@ export function StartMenu({ isOpen, onClose, onOpenProgram }: StartMenuProps) {
       )}
     >
       {/* Side Strip */}
-      <div className={cn(
-        "w-8 flex items-end justify-center pb-2 relative overflow-hidden",
-        isWin98 
-          ? "bg-gradient-to-b from-[#000080] to-[#1084d0] text-white" 
-          : "bg-agency-cyan/10 text-agency-cyan"
-      )}>
+      <div 
+        className={cn(
+          "w-8 flex items-end justify-center pb-2 relative overflow-hidden",
+          isWin98 
+            ? "win98-title-bar text-white" 
+            : "bg-agency-cyan/10 text-agency-cyan"
+        )}
+        style={isWin98 && win98TitleBarColor === 'red' ? { background: 'linear-gradient(180deg, #800000, #d01010)' } : undefined}
+      >
         <span className="absolute bottom-4 left-1/2 -translate-x-1/2 -rotate-90 whitespace-nowrap font-bold text-lg tracking-widest origin-bottom-left">
           {t('desktop.startMenu.agencyOS')}
         </span>
