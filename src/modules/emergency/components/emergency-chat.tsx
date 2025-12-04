@@ -227,7 +227,7 @@ export function EmergencyChat() {
                  value={input}
                  onChange={e => setInput(e.target.value)}
                  onKeyDown={e => e.key === 'Enter' && handleSend()}
-                 placeholder="Speak to the anomaly..."
+                 placeholder="Speak to the urgency..."
                  disabled={isLoading}
                />
                <button 
