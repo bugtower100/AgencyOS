@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useCampaignStore } from '@/stores/campaign-store'
 import { useTranslation } from 'react-i18next'
 import { Save } from 'lucide-react'
@@ -7,6 +8,7 @@ import { useThemeStore } from '@/stores/theme-store'
 
 export function PermissionSettings() {
   const { t } = useTranslation()
+    const location = useLocation()
   const themeMode = useThemeStore((state) => state.mode)
   const isWin98 = themeMode === 'win98'
   
@@ -33,6 +35,13 @@ export function PermissionSettings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emergency.isEnabled, emergency.llmConfig, emergency.permissions, emergency.pollingInterval])
 
+    useEffect(() => {
+        if (location.hash === '#emergency') {
+            const el = document.getElementById('settings-emergency')
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+    }, [location.hash])
+
   const handleSave = () => {
     setEmergencyEnabled(localEnabled)
     setEmergencyLlmConfig(localConfig)
@@ -54,7 +63,7 @@ export function PermissionSettings() {
     )}>
       <div className="flex items-center justify-between">
         <div className={cn(isWin98 ? "pl-2" : "")}>
-            <h3 className="text-lg font-medium text-[#0047BB]">{t('settings.emergency.title')}</h3>
+            <h3 id="settings-emergency" className="text-lg font-medium text-[#0047BB]">{t('settings.emergency.title')}</h3>
             <p className="text-xs text-agency-muted">{t('settings.emergency.description')}</p>
         </div>
         <label className="flex items-center gap-2 cursor-pointer select-none shrink-0">

@@ -340,7 +340,7 @@
       "win98TitleBarColor": "Win98 标题栏颜色",
       "colors": {
         "blue": "经典蓝",
-        "red": "警报红"
+        "red": "机构红"
       }
     },
     "language": {
@@ -472,6 +472,11 @@
     "taskbar": {
       "start": "工作",
       "emergency": "常规杀毒软件"
+    },
+    "antivirusWarning": {
+      "title": "紧急事态协议未启用",
+      "description": "“{{protocol}}”目前未启用。要使常规杀毒软件发挥作用，请在紧急处理设置中启用“{{protocol}}”。",
+      "openSettings": "打开紧急处理设置"
     },
     "startMenu": {
       "agencyOS": "Agency OS 98",

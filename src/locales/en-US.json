@@ -340,7 +340,7 @@
       "win98TitleBarColor": "Win98 Title Bar Color",
       "colors": {
         "blue": "Classic Blue",
-        "red": "Alert Red"
+        "red": "Agency Red"
       }
     },
     "language": {
@@ -472,6 +472,11 @@
     "taskbar": {
       "start": "WORK",
       "emergency": "Standard Antivirus"
+    },
+    "antivirusWarning": {
+      "title": "Urgency Protocol Disabled",
+      "description": "The {{protocol}} Protocol is not enabled. To use Standard Antivirus's full functionality, enable {{protocol}} under Emergency Settings.",
+      "openSettings": "Open Emergency Settings"
     },
     "startMenu": {
       "agencyOS": "Agency OS 98",

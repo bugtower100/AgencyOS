@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, Users, BriefcaseBusiness, Atom, ScrollText, Orbit, Settings, Notebook, BookOpen, Book, Eye, Mail, CheckSquare, Tornado, Trash2, Volume2 } from 'lucide-react'
 import { CommandStrip } from '@/components/ui/command-strip'
 import { cn } from '@/lib/utils'
@@ -21,6 +21,7 @@ import { EmergencyInbox } from '@/modules/desktop/components/emergency-inbox'
 import { ChaosController } from '@/modules/desktop/components/chaos-controller'
 import { StartMenu } from '@/modules/desktop/components/start-menu'
 import { LoginScreen } from '@/modules/system/components/login-screen'
+import { WindowFrame } from '@/components/ui/window-frame'
 import { IconWin98Manual } from '@/components/icons/win98/icon-manual'
 import { IconWin98Antivirus } from '@/components/icons/win98/icon-antivirus'
 import { IconWin98Emergency } from '@/components/icons/win98/icon-emergency'
@@ -72,9 +73,11 @@ export function AppShell() {
 
   const emergency = useCampaignStore((state) => state.emergency)
   const toggleEmergencyChat = useCampaignStore((state) => state.toggleEmergencyChat)
+  const navigate = useNavigate()
 
   const [openPrograms, setOpenPrograms] = useState<string[]>([])
   const [minimizedPrograms, setMinimizedPrograms] = useState<string[]>([])
+  const [showUrgencyDisabledModal, setShowUrgencyDisabledModal] = useState(false)
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(true)
 
@@ -82,6 +85,9 @@ export function AppShell() {
     if (id === 'antivirus') {
       if (emergency.isEnabled) {
         toggleEmergencyChat()
+      } else {
+        // Show an immersive warning modal explaining Urgency must be enabled
+        setShowUrgencyDisabledModal(true)
       }
       return
     }
@@ -195,15 +201,85 @@ export function AppShell() {
     setIsEditingHeader(false)
   }
 
-  if (!isLoggedIn) {
-    return <LoginScreen onLogin={() => setIsLoggedIn(true)} />
+  // Track login animation state separately
+  const [showLoginAnimation, setShowLoginAnimation] = useState(false)
+
+  // Animation timing constants (in ms)
+  const TRIANGLE_REVEAL_DURATION = 500
+  const TRIANGLE_REVEAL_DELAY = 100
+  const TRIANGLE_REVEAL_TOTAL = TRIANGLE_REVEAL_DURATION + TRIANGLE_REVEAL_DELAY
+
+  if (!isLoggedIn && !showLoginAnimation) {
+    return <LoginScreen onLogin={() => {
+      // Start showing the main content, but keep animation overlay
+      setShowLoginAnimation(true)
+      setIsLoggedIn(true)
+      // Hide animation overlay after animation completes (reveal duration + extra delay)
+      setTimeout(() => {
+        setShowLoginAnimation(false)
+      }, TRIANGLE_REVEAL_TOTAL)
+    }} />
   }
+
+  // Show login animation overlay on top of main content during transition
+  const loginAnimationOverlay = showLoginAnimation ? (
+    <div className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden">
+      <style>{`
+        @keyframes triangle-mask-expand {
+          0% { transform: scale(0); }
+          100% { transform: scale(1); }
+        }
+        @keyframes triangle-fade-in {
+          0% { opacity: 0; }
+          100% { opacity: 1; }
+        }
+      `}</style>
+      <svg 
+        className="absolute"
+        style={{ 
+          overflow: 'visible',
+          width: '300vmax',
+          height: '300vmax',
+          left: '50%',
+          top: '50%',
+          marginLeft: '-150vmax',
+          marginTop: '-150vmax'
+        }}
+        viewBox="0 0 100 100" 
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <defs>
+          <mask id="login-reveal-mask">
+            <rect x="-500" y="-500" width="1100" height="1100" fill="white" />
+            <polygon 
+              points="50,-100 -86.6,150 186.6,150" 
+              fill="black"
+              style={{
+                transformOrigin: '50px 50px',
+                  // Add a slight delay so the main UI has time to render before revealing
+                  animation: `triangle-mask-expand ${TRIANGLE_REVEAL_DURATION}ms ease-out ${TRIANGLE_REVEAL_DELAY}ms forwards, triangle-fade-in 120ms ease-out ${TRIANGLE_REVEAL_DELAY}ms forwards`,
+                transform: 'scale(0)'
+              }}
+            />
+          </mask>
+        </defs>
+        <polygon 
+          points="50,-100 -86.6,150 186.6,150" 
+          fill="#dc2626"
+          mask="url(#login-reveal-mask)"
+        />
+      </svg>
+    </div>
+  ) : null
 
   // Note: CSS vars are now provided by the `.app-shell` class in CSS; they can be overridden
   // via CSS or by adding inline style on this wrapper if needed for special cases.
 
   return (
     <div className="app-shell min-h-screen overflow-hidden bg-agency-ink/95 px-4 py-6 text-agency-cyan pb-16">
+      {/* Login animation overlay */}
+      {loginAnimationOverlay}
+      
       {/* Desktop Icons */}
       <div className="fixed left-4 top-4 z-0 flex flex-col gap-6">
         {DESKTOP_ITEMS.map((item) => {
@@ -363,6 +439,35 @@ export function AppShell() {
           <span className="ml-1 font-mono text-xs">{chaosValue}</span>
         </div>
       </div>
+
+      {/* Urgency Disabled Window (program window style) */}
+      {showUrgencyDisabledModal && (
+        <WindowFrame
+          title={t('desktop.antivirusWarning.title')}
+          isOpen={showUrgencyDisabledModal}
+          onClose={() => setShowUrgencyDisabledModal(false)}
+          initialSize={{ width: 520, height: 200 }}
+        >
+          <div className={cn(
+            "flex flex-col h-full justify-between",
+            isWin98 ? "bg-[#dfdfdf] text-black" : "bg-agency-ink/80 text-agency-cyan"
+          )}>
+            <div className="text-sm text-agency-muted p-4">{t('desktop.antivirusWarning.description', { protocol: t('settings.emergency.title') })}</div>
+            <div className="flex items-center justify-end gap-3 p-4">
+              <button
+                type="button"
+                className="rounded bg-agency-cyan/10 px-3 py-1.5 text-sm font-medium text-agency-cyan hover:bg-agency-cyan/20"
+                onClick={() => {
+                  navigate('/settings#emergency')
+                  setShowUrgencyDisabledModal(false)
+                }}
+              >
+                {t('desktop.antivirusWarning.openSettings')}
+              </button>
+            </div>
+          </div>
+        </WindowFrame>
+      )}
 
       {/*
         Set a fixed content area height and prevent grid items from stretching.

@@ -185,10 +185,16 @@
 /* Classic Title Bar */
 :root[data-theme='win98'] .win98-title-bar {
   background: linear-gradient(90deg, #000080, #1084d0);
-  color: #ffffff;
+  color: #ffffff !important; /* Ensure title bar text is white even if .text-white was overridden */
   padding: 2px 4px;
   font-weight: bold;
   letter-spacing: 1px;
+}
+
+/* Ensure any children inside a Win98 title bar inherit white color */
+:root[data-theme='win98'] .win98-title-bar > span,
+:root[data-theme='win98'] .win98-title-bar span {
+  color: #ffffff !important;
 }
 
 body {
