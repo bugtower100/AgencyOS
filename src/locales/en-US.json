@@ -463,7 +463,7 @@
     },
     "icons": {
       "manual": "My Manual 1998: Pro",
-      "antivirus": "Standard Antivirus",
+      "antivirus": "Common Antivirus",
       "emergency": "Emergency",
       "commendation": "Commendation",
       "chaos": "Chaos Controller",
@@ -471,11 +471,11 @@
     },
     "taskbar": {
       "start": "WORK",
-      "emergency": "Standard Antivirus"
+      "emergency": "Common Antivirus"
     },
     "antivirusWarning": {
       "title": "Urgency Protocol Disabled",
-      "description": "This function is not enabled. To use Standard Antivirus's full functionality, enable {{protocol}} under Settings.",
+      "description": "This function is not enabled. To use Common Antivirus's full functionality, enable {{protocol}} under Settings.",
       "openSettings": "Open Settings"
     },
     "startMenu": {
