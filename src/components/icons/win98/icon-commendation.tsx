@@ -2,7 +2,7 @@ import type { SVGProps } from 'react'
 
 export function IconWin98Commendation(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg viewBox="150 238 45 40" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg viewBox="145 238 45 40" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <g id="layer1">
          <path style={{fill:'#ff0000'}} d="m 152.45465,273.90744 -0.71115,-0.71115 v -6.15182 -6.15182 h 2.81226 2.81226 v 4.03147 4.03147 l 4.13051,0.099 4.13051,0.099 v 2.63649 2.6365 l -6.23162,0.096 -6.23163,0.096 z" id="path56616-1" />
          <path style={{fill:'#ff0000'}} d="m 173.53853,271.79016 v -2.81226 h 4.21839 4.21839 v -4.05741 -4.05741 l 2.72438,0.10267 2.72438,0.10267 v 6.26855 6.26856 l -0.68237,0.49845 -0.68237,0.49844 h -6.2604 -6.2604 z" id="path56616-2" />
