@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
 import { useThemeStore } from '@/stores/theme-store'
+import { useCampaignStore } from '@/stores/campaign-store'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
 import { Activity, Zap } from 'lucide-react'
@@ -13,25 +14,52 @@ interface ChaosControllerProps {
 export function ChaosController({ isOpen, onClose }: ChaosControllerProps) {
   const { t } = useTranslation()
   const isWin98 = useThemeStore((state) => state.mode === 'win98')
-  const [stability, setStability] = useState(85)
+  const missions = useCampaignStore((state) => state.missions)
+  const looseEnds = useMemo(() => missions.reduce((sum, m) => sum + (m.looseEnds ?? 0), 0), [missions])
+
+  // Map looseEnds to a base stability value: looseEnds = 0 -> 100, looseEnds >= 77 -> 0
+  const baseStability = useMemo(() => Math.max(0, 100 * (1 - looseEnds / 77)), [looseEnds])
+
+  // Jitter range around base stability (fluctuation amplitude)
+  const jitter = Math.min(12, Math.max(4, Math.round(baseStability * 0.08)))
+
+  const [stability, setStability] = useState(() => {
+    if (looseEnds >= 77) return 0
+    // initialize near base
+    return Math.max(0, Math.min(100, baseStability + (Math.random() - 0.5) * jitter))
+  })
   const [isStabilizing, setIsStabilizing] = useState(false)
 
   useEffect(() => {
     if (!isOpen) return
     const interval = setInterval(() => {
       setStability(prev => {
-        const change = (Math.random() - 0.5) * 5
-        return Math.min(100, Math.max(0, prev + change))
+        // If catastrophe threshold reached, always zero
+        if (looseEnds >= 77) return 0
+
+        // Determine target based on whether we are stabilizing
+        const highTarget = Math.min(100, baseStability + jitter)
+        const lowTarget = Math.max(0, baseStability - jitter)
+        const target = isStabilizing ? highTarget : (lowTarget + Math.random() * (highTarget - lowTarget))
+
+        // Smooth transition: step towards target a little each tick
+        const smoothing = 0.25
+        const next = prev + (target - prev) * smoothing
+        return Math.max(0, Math.min(100, next))
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [isOpen])
+  }, [isOpen, baseStability, looseEnds, isStabilizing, jitter])
 
   const handleStabilize = () => {
+    if (looseEnds >= 77) return // impossible to stabilize
     setIsStabilizing(true)
+    // Immediately boost stability to upper part of range
+    const boosted = Math.min(100, baseStability + jitter)
+    setStability(boosted)
     setTimeout(() => {
-      setStability(100)
       setIsStabilizing(false)
+      // leave interval to return to normal fluctuations
     }, 2000)
   }
 
@@ -54,12 +82,14 @@ export function ChaosController({ isOpen, onClose }: ChaosControllerProps) {
             <Activity className="h-4 w-4 animate-pulse" />
             <span className="text-xs font-bold uppercase">{t('desktop.chaos.status')}</span>
           </div>
-          <span className={cn(
+          <div className="flex items-center gap-3">
+            <span className={cn(
             "font-mono text-sm font-bold",
-            stability < 50 ? "text-red-500" : "text-green-500"
+            stability < 50 ? "text-blue-500" : "text-red-500"
           )}>
             {stability.toFixed(2)}%
           </span>
+          </div>
         </div>
 
         <div className="flex-1 flex flex-col justify-center gap-6">
@@ -72,7 +102,7 @@ export function ChaosController({ isOpen, onClose }: ChaosControllerProps) {
                             style={{ height: `${stability}%` }}
                         />
                     </div>
-                    <span className="text-[10px] uppercase">Agency</span>
+                    <span className="text-[10px] uppercase">Stable</span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
                     <div className={cn("h-16 w-4 rounded-full overflow-hidden relative", isWin98 ? "bg-gray-300" : "bg-agency-ink")}>
@@ -81,14 +111,14 @@ export function ChaosController({ isOpen, onClose }: ChaosControllerProps) {
                             style={{ height: `${Math.max(0, 100 - stability)}%` }}
                         />
                     </div>
-                    <span className="text-[10px] uppercase">Urgency</span>
+                    <span className="text-[10px] uppercase">Disintegrative</span>
                 </div>
             </div>
         </div>
 
         <button
           onClick={handleStabilize}
-          disabled={isStabilizing}
+            disabled={isStabilizing || looseEnds >= 77}
           className={cn(
             "w-full py-2 px-4 text-xs font-bold uppercase transition-all flex items-center justify-center gap-2",
             isWin98
