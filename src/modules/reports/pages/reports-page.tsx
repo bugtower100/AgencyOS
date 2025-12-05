@@ -58,7 +58,7 @@ export function ReportsPage() {
         {lastLogs.length === 0 && <p className="text-sm text-agency-muted">{t('reports.noLogs')}</p>}
         <ul className="space-y-2 text-sm">
           {lastLogs.map((log) => (
-            <li key={log.id} className="rounded-2xl border border-agency-border/40 bg-agency-ink/40 px-4 py-2 font-mono">
+            <li key={log.id} className="rounded-2xl border border-agency-border/60 bg-agency-ink/50 p-4">
               <span className="text-agency-muted">{formatDate(log.timestamp)}</span> · [{log.type}] {log.detail}{' '}
               {typeof log.delta === 'number' ? <span className="text-agency-amber">({log.delta >= 0 ? '+' : ''}{log.delta})</span> : null}
             </li>

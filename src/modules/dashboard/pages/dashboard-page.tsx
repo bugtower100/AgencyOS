@@ -1,4 +1,5 @@
 import { Panel } from '@/components/ui/panel'
+import AnomalyCard from '@/components/ui/anomaly-card'
 import { StatCard } from '@/components/ui/stat-card'
 import { formatDate, missionTypeKey } from '@/lib/utils'
 import { useCampaignStore } from '@/stores/campaign-store'
@@ -231,12 +232,7 @@ export function DashboardPage() {
         </header>
         <div className="grid gap-4 md:grid-cols-2">
           {anomalies.map((item) => (
-            <div key={item.id} className="rounded-2xl border border-agency-border/60 bg-agency-ink/50 p-4">
-              <p className="text-sm text-agency-muted">{item.focus}</p>
-              <h3 className="text-lg font-semibold text-white">{item.codename}</h3>
-              <p className="text-xs text-agency-muted">{t('dashboard.domain')}：{item.domain}</p>
-              <p className="text-xs uppercase tracking-[0.4em] text-agency-cyan">{item.status}</p>
-            </div>
+            <AnomalyCard key={item.id} anomaly={item} />
           ))}
         </div>
       </Panel>

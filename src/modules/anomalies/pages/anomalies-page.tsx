@@ -1,4 +1,6 @@
 import { Panel } from '@/components/ui/panel'
+import { cn } from '@/lib/utils'
+import AnomalyCard from '@/components/ui/anomaly-card'
 import { useCampaignStore } from '@/stores/campaign-store'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -113,28 +115,29 @@ export function AnomaliesPage() {
 
       <div className="grid gap-4 md:grid-cols-2">
         {anomalies.map((anomaly) => (
-          <Panel key={anomaly.id} className={editingAnomalyId === anomaly.id ? 'border-agency-cyan/60' : undefined}>
-            <p className="text-xs uppercase tracking-[0.4em] text-agency-muted">{anomaly.status}</p>
-            <h2 className="text-xl font-semibold text-white">{anomaly.codename}</h2>
-            <p className="text-sm text-agency-muted">{t('anomalies.card.focus')}：{anomaly.focus}</p>
-            <p className="text-sm text-agency-muted">{t('anomalies.card.domain')}：{anomaly.domain}</p>
-            <div className="mt-4 flex gap-2">
-              <button
-                type="button"
-                className="border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan rounded-xl win98:rounded-none"
-                onClick={() => startEdit(anomaly.id)}
-              >
-                {editingAnomalyId === anomaly.id ? t('app.common.editing') : t('app.common.edit')}
-              </button>
-              <button
-                type="button"
-                className="border border-agency-border/70 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta rounded-xl win98:rounded-none"
-                onClick={() => handleDelete(anomaly.id)}
-              >
-                {t('app.common.delete')}
-              </button>
-            </div>
-          </Panel>
+          <AnomalyCard
+            key={anomaly.id}
+            anomaly={anomaly}
+            isEditing={editingAnomalyId === anomaly.id}
+            actions={(
+              <>
+                <button
+                  type="button"
+                  className="border border-agency-border px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-cyan hover:text-agency-cyan rounded-xl win98:rounded-none"
+                  onClick={() => startEdit(anomaly.id)}
+                >
+                  {editingAnomalyId === anomaly.id ? t('app.common.editing') : t('app.common.edit')}
+                </button>
+                <button
+                  type="button"
+                  className="border border-agency-border/70 px-3 py-1 text-[0.65rem] uppercase tracking-[0.3em] text-agency-muted hover:border-agency-magenta hover:text-agency-magenta rounded-xl win98:rounded-none"
+                  onClick={() => handleDelete(anomaly.id)}
+                >
+                  {t('app.common.delete')}
+                </button>
+              </>
+            )}
+          />
         ))}
       </div>
     </div>
