@@ -381,8 +381,10 @@ export function AppShell() {
                     "flex w-32 items-center gap-2 px-2 pt-1.5 pb-0.5 text-xs text-left ghost",
                     isWin98
                       ? cn(
-                          "win98-raised border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#c0c0c0] font-bold",
-                          emergency.isChatOpen && "border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] shadow-[inset_1px_1px_#000000]"
+                          "border-2 border-b-[#404040] border-l-[#ffffff] border-r-[#404040] border-t-[#ffffff] bg-[#dfdfdf] font-bold",
+                          emergency.isChatOpen 
+                            ? "border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] shadow-[inset_1px_1px_#000000]" // Open = Sunken (Pressed)
+                            : "win98-raised" // Closed = Raised (Not pressed)
                         )
                       : cn(
                           "rounded text-agency-cyan",
@@ -390,7 +392,7 @@ export function AppShell() {
                         )
                   )}
                 >
-                  <Eye className="h-3 w-3 flex-shrink-0" />
+                  {isWin98 ? <IconWin98Antivirus className="h-3 w-3 flex-shrink-0" /> : <Eye className="h-3 w-3 flex-shrink-0" />}
                   <span className="truncate">{t('desktop.taskbar.emergency')}</span>
                 </button>
             )}
@@ -399,6 +401,17 @@ export function AppShell() {
               const item = DESKTOP_ITEMS.find(i => i.id === id)
               if (!item) return null
               const isMinimized = minimizedPrograms.includes(id)
+              let Icon = item.icon
+              if (isWin98) {
+                switch (item.id) {
+                  case 'manual': Icon = IconWin98Manual; break
+                  case 'antivirus': Icon = IconWin98Antivirus; break
+                  case 'emergency': Icon = IconWin98Emergency; break
+                  case 'commendation': Icon = IconWin98Commendation; break
+                  case 'chaos': Icon = IconWin98Chaos; break
+                  case 'schedule': Icon = IconWin98Schedule; break
+                }
+              }
               return (
                 <button
                   key={id}
@@ -419,7 +432,7 @@ export function AppShell() {
                         )
                   )}
                 >
-                  <item.icon className="h-3 w-3 flex-shrink-0" />
+                  <Icon className="h-3 w-3 flex-shrink-0" />
                   <span className="truncate">{t(`desktop.icons.${item.id}`)}</span>
                 </button>
               )
