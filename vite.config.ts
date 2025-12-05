@@ -13,4 +13,8 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
+  build: {
+    // 设置更兼容的构建目标以支持更多移动浏览器
+    target: ['es2020', 'chrome80', 'safari14', 'firefox78'],
+  },
 })

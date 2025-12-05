@@ -238,12 +238,12 @@ export function AppShell() {
         className="absolute"
         style={{ 
           overflow: 'visible',
-          width: '300vmax',
-          height: '300vmax',
+          // Use max(100vw, 100vh) * 3 as fallback for browsers that don't support vmax
+          width: 'max(300vw, 300vh)',
+          height: 'max(300vw, 300vh)',
           left: '50%',
           top: '50%',
-          marginLeft: '-150vmax',
-          marginTop: '-150vmax'
+          transform: 'translate(-50%, -50%)'
         }}
         viewBox="0 0 100 100" 
         preserveAspectRatio="xMidYMid slice"
@@ -276,7 +276,7 @@ export function AppShell() {
   // via CSS or by adding inline style on this wrapper if needed for special cases.
 
   return (
-    <div className="app-shell min-h-screen overflow-hidden bg-agency-ink/95 px-4 py-6 text-agency-cyan pb-16">
+    <div className="app-shell min-h-screen lg:min-h-[100dvh] lg:overflow-hidden overflow-auto bg-agency-ink/95 px-4 py-6 text-agency-cyan pb-16">
       {/* Login animation overlay */}
       {loginAnimationOverlay}
       
@@ -486,8 +486,9 @@ export function AppShell() {
         Set a fixed content area height and prevent grid items from stretching.
         The page scrollbar is disabled; instead the right-side `main` will scroll internally.
         We subtract the explicit top/bottom padding (24px top from py-6 and 64px bottom from pb-16 = 88px) as a simple approximation.
+        On mobile, we use auto height to allow natural scrolling.
       */}
-      <div className="mx-auto grid max-w-[1400px] gap-6 lg:grid-cols-[260px_1fr] relative z-10" style={{ height: 'calc(100vh - var(--app-vertical-offset))' }}>
+      <div className="mx-auto grid max-w-[1400px] gap-6 lg:grid-cols-[260px_1fr] relative z-10 lg:h-[calc(var(--app-viewport-height,100vh)-var(--app-vertical-offset))]">
         <aside
           className={`space-y-6 border border-agency-border bg-agency-panel/80 p-4 max-h-full overflow-y-auto ${isSquare ? 'rounded-none' : 'rounded-3xl shadow-panel'} ${isWin98 ? 'win98-raised' : ''}`}
         >

@@ -53,6 +53,19 @@
   --app-vertical-offset: calc(var(--app-top-padding) + var(--app-bottom-padding));
 }
 
+/* Mobile-friendly height variables using dynamic viewport units with fallbacks */
+@supports (min-height: 100dvh) {
+  .app-shell {
+    --app-viewport-height: 100dvh;
+  }
+}
+
+@supports not (min-height: 100dvh) {
+  .app-shell {
+    --app-viewport-height: 100vh;
+  }
+}
+
 :root[data-theme='day'] {
   --agency-ink: 248 246 244;
   --agency-panel: 255 255 255;
@@ -214,8 +227,17 @@ body {
   html {
     background-color: rgb(var(--agency-ink) / 1);
     color: rgb(var(--agency-cyan) / 1);
-    /* Remove the page-level scrollbar so we can render a local scrollbar on the app "desktop" area */
+    /* On desktop, remove the page-level scrollbar so we can render a local scrollbar on the app "desktop" area */
+    /* On mobile, allow normal scrolling to prevent content cutoff */
     overflow: hidden;
+  }
+
+  /* Mobile-friendly: allow scrolling on smaller screens */
+  @media (max-width: 1023px) {
+    html {
+      overflow: auto;
+      overflow-x: hidden;
+    }
   }
 
   body {
