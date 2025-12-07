@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
+import type { WindowManager } from '@/components/ui/use-window-manager'
 import { useThemeStore } from '@/stores/theme-store'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
@@ -8,9 +9,10 @@ import { Mail, AlertTriangle, FileWarning } from 'lucide-react'
 interface EmergencyInboxProps {
   isOpen: boolean
   onClose: () => void
+  windowManager?: WindowManager
 }
 
-export function EmergencyInbox({ isOpen, onClose }: EmergencyInboxProps) {
+export function EmergencyInbox({ isOpen, onClose, windowManager }: EmergencyInboxProps) {
   const { t } = useTranslation()
   const isWin98 = useThemeStore((state) => state.mode === 'win98')
   const [selectedMail, setSelectedMail] = useState<number | null>(null)
@@ -27,6 +29,8 @@ export function EmergencyInbox({ isOpen, onClose }: EmergencyInboxProps) {
       isOpen={isOpen}
       onClose={onClose}
       initialSize={{ width: 600, height: 400 }}
+      windowId="emergency"
+      windowManager={windowManager}
     >
       <div className={cn(
         "flex h-full",

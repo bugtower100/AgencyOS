@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
+import type { WindowManager } from '@/components/ui/use-window-manager'
 import { useThemeStore } from '@/stores/theme-store'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
@@ -7,9 +8,10 @@ import { useTranslation } from 'react-i18next'
 interface DesktopNotepadProps {
   isOpen: boolean
   onClose: () => void
+  windowManager?: WindowManager
 }
 
-export function DesktopNotepad({ isOpen, onClose }: DesktopNotepadProps) {
+export function DesktopNotepad({ isOpen, onClose, windowManager }: DesktopNotepadProps) {
   const { t } = useTranslation()
   const [content, setContent] = useState<string>(() => {
     try {
@@ -33,6 +35,8 @@ export function DesktopNotepad({ isOpen, onClose }: DesktopNotepadProps) {
       isOpen={isOpen}
       onClose={onClose}
       initialSize={{ width: 500, height: 400 }}
+      windowId="manual"
+      windowManager={windowManager}
     >
       <textarea
         className={cn(

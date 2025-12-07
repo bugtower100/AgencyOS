@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useThemeStore } from '@/stores/theme-store'
+import type { WindowManager } from './use-window-manager'
 
 interface WindowFrameProps {
   title: string
@@ -12,6 +13,8 @@ interface WindowFrameProps {
   initialSize?: { width: number; height: number }
   minSize?: { width: number; height: number }
   titleBarColor?: 'blue' | 'red'
+  windowId?: string
+  windowManager?: WindowManager
 }
 
 export function WindowFrame({
@@ -22,7 +25,9 @@ export function WindowFrame({
   initialPosition,
   initialSize = { width: 400, height: 300 },
   minSize = { width: 200, height: 150 },
-  titleBarColor = 'blue'
+  titleBarColor = 'blue',
+  windowId,
+  windowManager
 }: WindowFrameProps) {
   const themeMode = useThemeStore((state) => state.mode)
   const win98TitleBarColor = useThemeStore((state) => state.win98TitleBarColor)
@@ -37,6 +42,24 @@ export function WindowFrame({
   const posStartRef = useRef({ x: 0, y: 0 })
   const sizeStartRef = useRef({ width: 0, height: 0 })
   const initializedRef = useRef(false)
+
+  // Extract stable functions from windowManager to avoid unnecessary effect re-runs
+  const registerWindow = windowManager?.registerWindow
+  const unregisterWindow = windowManager?.unregisterWindow
+  const bringToFront = windowManager?.bringToFront
+
+  // Register/unregister window with manager
+  useEffect(() => {
+    if (isOpen && windowId && registerWindow && unregisterWindow) {
+      registerWindow(windowId)
+      return () => {
+        unregisterWindow(windowId)
+      }
+    }
+  }, [isOpen, windowId, registerWindow, unregisterWindow])
+
+  // Get current z-index from manager
+  const zIndex = windowId && windowManager ? windowManager.getZIndex(windowId) : 40
 
   // Center window on first open if no position provided
   useEffect(() => {
@@ -97,6 +120,12 @@ export function WindowFrame({
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.target !== e.currentTarget && (e.target as HTMLElement).closest('button')) return
+    
+    // Bring window to front when clicking title bar
+    if (windowId && bringToFront) {
+      bringToFront(windowId)
+    }
+    
     setIsDragging(true)
     dragStartRef.current = { x: e.clientX, y: e.clientY }
     posStartRef.current = { ...position }
@@ -114,10 +143,17 @@ export function WindowFrame({
   // Determine effective title bar color (prop overrides store if provided explicitly, otherwise use store for win98)
   const effectiveTitleBarColor = isWin98 ? win98TitleBarColor : titleBarColor
 
+  // Bring window to front when clicking anywhere on it
+  const handleWindowClick = () => {
+    if (windowId && bringToFront) {
+      bringToFront(windowId)
+    }
+  }
+
   return (
     <div 
       className={cn(
-        "fixed z-40 flex flex-col shadow-2xl",
+        "fixed flex flex-col shadow-2xl",
         isWin98 
           ? "win98-raised border-2 border-b-[#404040] border-l-[#dfdfdf] border-r-[#404040] border-t-[#dfdfdf] bg-[#c0c0c0] p-[2px]" 
           : "rounded-xl border border-agency-border bg-agency-panel/95 backdrop-blur overflow-hidden"
@@ -126,8 +162,10 @@ export function WindowFrame({
         left: position.x,
         top: position.y,
         width: size.width,
-        height: size.height
+        height: size.height,
+        zIndex
       }}
+      onClick={handleWindowClick}
     >
        {/* Window Title Bar */}
        <div 

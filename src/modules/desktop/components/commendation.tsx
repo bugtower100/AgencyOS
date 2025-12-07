@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
+import type { WindowManager } from '@/components/ui/use-window-manager'
 import { useThemeStore } from '@/stores/theme-store'
 import { cn } from '@/lib/utils'
 import { Award } from 'lucide-react'
@@ -8,9 +9,10 @@ import { useTranslation } from 'react-i18next'
 interface CommendationClickerProps {
   isOpen: boolean
   onClose: () => void
+  windowManager?: WindowManager
 }
 
-export function CommendationClicker({ isOpen, onClose }: CommendationClickerProps) {
+export function CommendationClicker({ isOpen, onClose, windowManager }: CommendationClickerProps) {
   const { t } = useTranslation()
   const [count, setCount] = useState(0)
   const [feedback, setFeedback] = useState('')
@@ -29,6 +31,8 @@ export function CommendationClicker({ isOpen, onClose }: CommendationClickerProp
       isOpen={isOpen}
       onClose={onClose}
       initialSize={{ width: 350, height: 250 }}
+      windowId="commendation"
+      windowManager={windowManager}
     >
       <div className={cn(
         "flex h-full flex-col items-center justify-center p-6 gap-6 text-center",

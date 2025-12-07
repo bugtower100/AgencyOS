@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
+import type { WindowManager } from '@/components/ui/use-window-manager'
 import { useThemeStore } from '@/stores/theme-store'
 import { useCampaignStore } from '@/stores/campaign-store'
 import { cn } from '@/lib/utils'
@@ -9,9 +10,10 @@ import { Activity, Zap } from 'lucide-react'
 interface ChaosControllerProps {
   isOpen: boolean
   onClose: () => void
+  windowManager?: WindowManager
 }
 
-export function ChaosController({ isOpen, onClose }: ChaosControllerProps) {
+export function ChaosController({ isOpen, onClose, windowManager }: ChaosControllerProps) {
   const { t } = useTranslation()
   const isWin98 = useThemeStore((state) => state.mode === 'win98')
   const missions = useCampaignStore((state) => state.missions)
@@ -69,6 +71,8 @@ export function ChaosController({ isOpen, onClose }: ChaosControllerProps) {
       isOpen={isOpen}
       onClose={onClose}
       initialSize={{ width: 400, height: 300 }}
+      windowId="chaos"
+      windowManager={windowManager}
     >
       <div className={cn(
         "flex h-full flex-col p-4 gap-4",

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
+import type { WindowManager } from '@/components/ui/use-window-manager'
 import { useThemeStore } from '@/stores/theme-store'
 import { cn } from '@/lib/utils'
 import { Trash2 } from 'lucide-react'
@@ -8,9 +9,10 @@ import { useTranslation } from 'react-i18next'
 interface VoidScheduleProps {
   isOpen: boolean
   onClose: () => void
+  windowManager?: WindowManager
 }
 
-export function VoidSchedule({ isOpen, onClose }: VoidScheduleProps) {
+export function VoidSchedule({ isOpen, onClose, windowManager }: VoidScheduleProps) {
   const { t } = useTranslation()
   const [input, setInput] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -38,6 +40,8 @@ export function VoidSchedule({ isOpen, onClose }: VoidScheduleProps) {
       title={t('desktop.schedule.title')}
       isOpen={isOpen}
       onClose={onClose}
+      windowId="schedule"
+      windowManager={windowManager}
       initialSize={{ width: 300, height: 200 }}
     >
       <div className={cn(

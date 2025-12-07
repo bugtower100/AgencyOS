@@ -22,6 +22,7 @@ import { ChaosController } from '@/modules/desktop/components/chaos-controller'
 import { StartMenu } from '@/modules/desktop/components/start-menu'
 import { LoginScreen } from '@/modules/system/components/login-screen'
 import { WindowFrame } from '@/components/ui/window-frame'
+import { useWindowManager } from '@/components/ui/use-window-manager'
 import { IconWin98Manual } from '@/components/icons/win98/icon-manual'
 import { IconWin98Antivirus } from '@/components/icons/win98/icon-antivirus'
 import { IconWin98Emergency } from '@/components/icons/win98/icon-emergency'
@@ -48,6 +49,9 @@ export function AppShell() {
   const t = useTrans()
   const { dashboard, agents, missions: navMissions, anomalies, reports, notes, tracks, settings, rules } = useNavTranslations()
   const { edit, divisionName, divisionCode, status, tags, cancel, save, current, chaos, looseEnds, session, nextBriefing, weather, snapshot, export: exportText, import: importText, importing: importingText, importSuccess, importError } = useCommonTranslations()
+  
+  // Initialize window manager for desktop windows
+  const windowManager = useWindowManager(50)
   
   const campaign = useCampaignStore((state) => state.campaign)
   const missionsStore = useCampaignStore((state) => state.missions)
@@ -122,7 +126,7 @@ export function AppShell() {
     { label: navMissions, path: '/missions', icon: BriefcaseBusiness },
     { label: anomalies, path: '/anomalies', icon: Atom },
     { label: reports, path: '/reports', icon: ScrollText },
-    { label: rules, path: '/rules', icon: BookOpen },
+      { label: rules, path: '/rules', icon: BookOpen },
     { label: notes, path: '/notes', icon: Notebook },
     { label: tracks, path: '/tracks', icon: Orbit },
     { label: settings, path: '/settings', icon: Settings },
@@ -460,6 +464,8 @@ export function AppShell() {
           isOpen={showUrgencyDisabledModal}
           onClose={() => setShowUrgencyDisabledModal(false)}
           initialSize={{ width: 520, height: 200 }}
+          windowId="urgency-warning"
+          windowManager={windowManager}
         >
           <div className={cn(
             "flex flex-col h-full justify-between",
@@ -692,27 +698,32 @@ export function AppShell() {
       </div>
       <DomController />
       <EmergencyManager />
-      <EmergencyChat />
+      <EmergencyChat windowManager={windowManager} />
       
       <DesktopNotepad 
         isOpen={openPrograms.includes('manual') && !minimizedPrograms.includes('manual')} 
-        onClose={() => closeProgram('manual')} 
+        onClose={() => closeProgram('manual')}
+        windowManager={windowManager}
       />
       <VoidSchedule 
         isOpen={openPrograms.includes('schedule') && !minimizedPrograms.includes('schedule')} 
-        onClose={() => closeProgram('schedule')} 
+        onClose={() => closeProgram('schedule')}
+        windowManager={windowManager}
       />
       <CommendationClicker 
         isOpen={openPrograms.includes('commendation') && !minimizedPrograms.includes('commendation')} 
-        onClose={() => closeProgram('commendation')} 
+        onClose={() => closeProgram('commendation')}
+        windowManager={windowManager}
       />
       <EmergencyInbox 
         isOpen={openPrograms.includes('emergency') && !minimizedPrograms.includes('emergency')} 
-        onClose={() => closeProgram('emergency')} 
+        onClose={() => closeProgram('emergency')}
+        windowManager={windowManager}
       />
       <ChaosController 
         isOpen={openPrograms.includes('chaos') && !minimizedPrograms.includes('chaos')} 
-        onClose={() => closeProgram('chaos')} 
+        onClose={() => closeProgram('chaos')}
+        windowManager={windowManager}
       />
     </div>
   )
