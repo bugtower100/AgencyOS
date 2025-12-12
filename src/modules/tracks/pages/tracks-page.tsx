@@ -35,7 +35,7 @@ export function TracksPage() {
           <label className="text-xs uppercase tracking-[0.3em] text-agency-muted">
             {t('tracks.form.name')}
             <input
-              className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
+              className="mt-1 w-full border border-agency-border bg-agency-ink/60 win98:bg-transparent px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder={t('tracks.form.namePlaceholder')}
@@ -45,7 +45,7 @@ export function TracksPage() {
             {t('tracks.form.color')}
             <input
               type="color"
-              className="mt-1 h-[42px] w-full cursor-pointer border border-agency-border bg-agency-ink/60 rounded-xl win98:rounded-none"
+              className="mt-1 h-[42px] w-full cursor-pointer border border-agency-border bg-agency-ink/60 win98:bg-transparent rounded-xl win98:rounded-none"
               value={color}
               onChange={(event) => setColor(event.target.value)}
             />
@@ -55,8 +55,8 @@ export function TracksPage() {
             <input
               type="number"
               min={1}
-              max={32}
-              className="mt-1 w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
+              max={42}
+              className="mt-1 w-full border border-agency-border bg-agency-ink/60 win98:bg-transparent px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
               value={itemCount}
               onChange={(event) => setItemCount(Number(event.target.value) || 1)}
             />
@@ -78,15 +78,15 @@ export function TracksPage() {
           {tracks.map((track, index) => (
             <Panel
               key={track.id}
-              className="space-y-4 border border-agency-border/60 bg-agency-ink/70 shadow-[0_0_0_1px_rgba(15,23,42,0.5)]"
+              className="space-y-4 border border-agency-border/60 bg-agency-ink/70 win98:bg-transparent shadow-[0_0_0_1px_rgba(15,23,42,0.5)]"
             >
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="flex h-7 w-7 items-center justify-center bg-agency-ink/80 text-xs text-agency-muted rounded-xl win98:rounded-none">
+                  <span className="flex h-7 w-7 items-center justify-center bg-agency-ink/80 win98:bg-transparent text-xs text-agency-muted rounded-xl win98:rounded-none">
                     #{index + 1}
                   </span>
                   <input
-                    className="min-w-[160px] border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm font-medium text-agency-cyan shadow-inner rounded-xl win98:rounded-none"
+                    className="min-w-[160px] border border-agency-border bg-agency-ink/60 win98:bg-transparent px-3 py-2 text-sm font-medium text-agency-cyan shadow-inner rounded-xl win98:rounded-none"
                     value={track.name}
                     onChange={(event) =>
                       updateTrackMeta(track.id, {
@@ -94,7 +94,7 @@ export function TracksPage() {
                       })
                     }
                   />
-                  <div className="flex items-center gap-2 bg-agency-ink/60 px-2 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted rounded-full win98:rounded-none">
+                  <div className="flex items-center gap-2 bg-agency-ink/60 win98:bg-transparent px-2 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted rounded-full win98:rounded-none">
                     <span
                       className="h-3 w-3 shadow-[0_0_0_1px_rgba(15,23,42,0.8)] rounded-full win98:rounded-none"
                       style={{ backgroundColor: track.color }}
@@ -102,7 +102,7 @@ export function TracksPage() {
                     <span>{t('tracks.item.colorLabel')}</span>
                     <input
                       type="color"
-                      className="h-6 w-10 cursor-pointer border border-agency-border bg-agency-ink/60 rounded win98:rounded-none"
+                      className="h-6 w-10 cursor-pointer border border-agency-border bg-agency-ink/60 win98:bg-transparent rounded win98:rounded-none"
                       value={track.color}
                       onChange={(event) =>
                         updateTrackMeta(track.id, {
@@ -111,13 +111,13 @@ export function TracksPage() {
                       }
                     />
                   </div>
-                  <div className="flex items-center gap-2 bg-agency-ink/60 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted rounded-full win98:rounded-none">
+                  <div className="flex items-center gap-2 bg-agency-ink/60 win98:bg-transparent px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-agency-muted rounded-full win98:rounded-none">
                     <span>{t('tracks.item.checkboxCount')}</span>
                     <input
                       type="number"
                       min={1}
-                      max={32}
-                      className="h-7 w-16 border border-agency-border bg-agency-ink/80 px-2 text-xs text-agency-cyan rounded-lg win98:rounded-none"
+                      max={42}
+                      className="h-7 w-16 border border-agency-border bg-agency-ink/80 win98:bg-transparent px-2 text-xs text-agency-cyan rounded-lg win98:rounded-none"
                       value={track.items.length}
                       onChange={(event) =>
                         updateTrackItemCount(track.id, Number(event.target.value) || 1)
@@ -134,17 +134,17 @@ export function TracksPage() {
                 </button>
               </div>
 
-              <div className="border border-dashed border-agency-border/70 bg-gradient-to-r from-agency-ink/60 via-agency-ink/40 to-agency-ink/60 p-3 rounded-2xl win98:rounded-none">
+              <div className="border border-dashed border-agency-border/70 bg-gradient-to-r from-agency-ink/60 via-agency-ink/40 to-agency-ink/60 win98:bg-transparent p-3 rounded-2xl win98:rounded-none">
                 <div className="flex flex-wrap gap-3">
                   {track.items.map((item) => (
                     <label
                       key={item.id}
-                      className="group flex flex-col items-center gap-1 border border-transparent bg-agency-ink/60 px-3 py-2 text-center text-xs text-agency-muted shadow-sm transition hover:border-agency-cyan/60 hover:bg-agency-ink/80 rounded-xl win98:rounded-none"
+                      className="group flex flex-col items-center gap-1 border border-transparent bg-agency-ink/60 win98:bg-transparent px-3 py-2 text-center text-xs text-agency-muted shadow-sm transition hover:border-agency-cyan/60 hover:bg-agency-ink/80 win98:hover:bg-transparent rounded-xl win98:rounded-none"
                       style={{ color: track.color }}
                     >
                       <input
                         type="checkbox"
-                        className="h-5 w-5 cursor-pointer border border-agency-border bg-agency-ink/80 shadow-inner outline-none ring-0 focus-visible:outline-none rounded win98:rounded-none"
+                        className="h-5 w-5 cursor-pointer border border-agency-border bg-agency-ink/80 win98:bg-transparent shadow-inner outline-none ring-0 focus-visible:outline-none rounded win98:rounded-none"
                         checked={item.checked}
                         onChange={(event) =>
                           updateTrackItem(track.id, item.id, {
@@ -153,7 +153,7 @@ export function TracksPage() {
                         }
                       />
                       <input
-                        className="w-24 border border-agency-border bg-agency-ink/60 px-1 py-0.5 text-[0.65rem] text-agency-cyan placeholder:text-agency-muted/60 rounded win98:rounded-none"
+                        className="w-24 border border-agency-border bg-agency-ink/60 win98:bg-transparent px-1 py-0.5 text-[0.65rem] text-agency-cyan placeholder:text-agency-muted/60 rounded win98:rounded-none"
                         value={item.label}
                         onChange={(event) =>
                           updateTrackItem(track.id, item.id, {

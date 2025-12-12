@@ -53,7 +53,7 @@ export const useTracksStore = create<TracksStore>((set) => ({
       tracks: state.tracks.map((track) => {
         if (track.id !== id) return track
 
-        const count = Math.max(1, Math.min(32, nextCount || 1))
+        const count = Math.max(1, Math.min(42, nextCount || 1))
 
         if (count === track.items.length) return track
 
