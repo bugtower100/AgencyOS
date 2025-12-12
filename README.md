@@ -112,6 +112,10 @@ src/
    npm run preview
    ```
 
+## 傻瓜式一键部署指南
+
+https://koishi.icemoe.moe/agencyos/deploy
+
 ## 💾 数据存储与快照
 
 - 所有战役数据（特工、任务、异常体等）存储在浏览器的 IndexedDB 中，通过 Dexie.js 进行读写。
