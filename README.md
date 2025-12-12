@@ -112,7 +112,7 @@ src/
    npm run preview
    ```
 
-## 傻瓜式一键部署指南
+### 傻瓜式部署指南
 
 https://koishi.icemoe.moe/agencyos/deploy
 
