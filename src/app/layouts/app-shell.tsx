@@ -517,9 +517,18 @@ export function AppShell() {
               </div>
             </div>
           )}
-          <header className="space-y-2">
-            <div className="flex items-center justify-between gap-2">
-              <p className={cn("text-xs uppercase tracking-[0.4em]", isWin98 ? "text-black" : "text-red-500")}>Agency OS</p>
+          <header className={"space-y-2"}>
+            <div className={cn("flex items-center gap-2 justify-between")}>
+              {!isWin98 ? (
+                <p className="text-xs uppercase tracking-[0.4em] text-red-500">Agency OS</p>
+              ) : (
+                !isEditingHeader && (
+                  <div className="flex flex-col space-y-2">
+                    <p className="text-xl font-semibold text-white">{campaign.name}</p>
+                    <p className="text-xs text-agency-muted">{status}：{campaign.status} · {campaign.styleTags.join(' / ')}</p>
+                  </div>
+                )
+              )}
               <button
                 type="button"
                 onClick={openHeaderEditor}
@@ -582,12 +591,14 @@ export function AppShell() {
                 </div>
               </div>
             ) : (
-              <>
-                <p className="text-xl font-semibold text-white">{campaign.name}</p>
-                <p className="text-xs text-agency-muted">
-                  {status}：{campaign.status} · {campaign.styleTags.join(' / ')}
-                </p>
-              </>
+              !isWin98 ? (
+                <>
+                  <p className="text-xl font-semibold text-white">{campaign.name}</p>
+                  <p className="text-xs text-agency-muted">
+                    {status}：{campaign.status} · {campaign.styleTags.join(' / ')}
+                  </p>
+                </>
+              ) : null
             )}
           </header>
 
