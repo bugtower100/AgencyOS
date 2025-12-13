@@ -97,5 +97,5 @@ export function useMvpWatchlist(): MvpWatchlistResult {
       mvpLabel,
       watchlistLabel,
     }
-  }, [agents])
+  }, [agents, missions, t])
 }
