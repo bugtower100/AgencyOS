@@ -200,7 +200,8 @@
 /* Explicit Raised Border for Windows/Buttons */
 :root[data-theme='win98'] .win98-raised {
   border: none !important;
-  box-shadow: inset 1px 1px #dfdfdf, inset 2px 2px #ffffff, inset -1px -1px #808080, inset -2px -2px #404040 !important;
+  /* Raised (outward) 3D effect: light on top-left, dark on bottom-right */
+  box-shadow: -2px -2px 0 #ffffff, 2px 2px 0 #404040 !important;
 }
 
 /* Inset for inputs/panels */

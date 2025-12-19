@@ -104,7 +104,7 @@ function ToastItem({ toast, onDismiss }: ToastItemProps) {
   const containerClass = `
     flex items-center gap-3 border px-4 py-3 shadow-lg backdrop-blur-sm
     animate-slide-in-right
-    ${isWin98 ? 'rounded-none' : 'rounded-xl'}
+    ${isWin98 ? 'rounded-none win98-raised' : 'rounded-xl'}
     ${colors.border}
     ${colors.bg}
     min-w-[280px] max-w-[400px]
