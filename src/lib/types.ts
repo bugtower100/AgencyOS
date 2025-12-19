@@ -60,6 +60,43 @@ export interface AgentClaimRecord {
   reason: string
   claimedAt: string
   status: 'pending' | 'approved' | 'rejected'
+  /** 关联的申领物库ID（可选） */
+  requisitionId?: ID
+}
+
+// ============ 申领物 Requisitions ============
+export type RequisitionSource = 'hq' | 'branch' | 'siphon'
+
+export interface RequisitionPrice {
+  label: string
+  cost: number
+}
+
+export interface Requisition {
+  id: ID
+  name: string
+  /** 来源归属：hq=总部, branch=分部, siphon=Siphon的商店 */
+  source: RequisitionSource
+  /** 分部名称（当 source 为 branch 时使用） */
+  branchName?: string
+  /** 多价格支持 */
+  prices: RequisitionPrice[]
+  /** 效果描述 */
+  description: string
+  /** 获取条件 */
+  condition?: string
+  /** 已购买特工 */
+  purchasedBy?: string
+  /** 图片（Base64或URL） */
+  image?: string
+  /** 是否为新物品 */
+  isNew?: boolean
+  /** 是否星标 */
+  starred?: boolean
+  /** 排序权重 */
+  order?: number
+  createdAt: string
+  updatedAt: string
 }
 
 export interface AgentSummary {
@@ -152,6 +189,7 @@ export interface AgencySnapshot {
   anomalies: AnomalySummary[]
   notes: Note[]
   logs: MissionLogEntry[]
+  requisitions?: Requisition[]
   tracks?: CustomTrackSnapshot[]
   settings?: {
     notesAllowHtml?: boolean

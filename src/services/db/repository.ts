@@ -15,13 +15,14 @@ export async function loadAgencySnapshot(): Promise<AgencySnapshot | null> {
     return null
   }
 
-  const [agents, missions, anomalies, logs, tracks, notes, emergencySettings, emergencyActions, emergencyMessages] = await Promise.all([
+  const [agents, missions, anomalies, logs, tracks, notes, requisitions, emergencySettings, emergencyActions, emergencyMessages] = await Promise.all([
     db.agents.toArray(),
     db.missions.toArray(),
     db.anomalies.toArray(),
     db.logs?.toArray() ?? [],
     db.tracks?.toArray() ?? [],
     db.notes.toArray(),
+    db.requisitions?.toArray() ?? [],
     db.table('emergencySettings').get('config'),
     db.emergencyActions?.toArray() ?? [],
     db.emergencyMessages?.toArray() ?? [],
@@ -41,6 +42,7 @@ export async function loadAgencySnapshot(): Promise<AgencySnapshot | null> {
     logs,
     tracks,
     notes: notes,
+    requisitions,
     emergency,
   }
 }
@@ -54,6 +56,7 @@ export async function saveAgencySnapshot(snapshot: AgencySnapshot) {
     db.logs ?? 'logs',
     db.tracks ?? 'tracks',
     db.notes,
+    db.requisitions ?? 'requisitions',
     db.table('emergencySettings'),
     db.emergencyActions ?? 'emergencyActions',
     db.emergencyMessages ?? 'emergencyMessages',
@@ -95,6 +98,13 @@ export async function saveAgencySnapshot(snapshot: AgencySnapshot) {
       await db.notes.bulkPut(snapshot.notes)
     }
 
+    if (db.requisitions) {
+      await db.requisitions.clear()
+      if (snapshot.requisitions?.length) {
+        await db.requisitions.bulkPut(snapshot.requisitions)
+      }
+    }
+
     if (snapshot.emergency) {
         const { actionHistory, chatHistory, ...settings } = snapshot.emergency
         await db.table('emergencySettings').put({ ...settings, id: 'config' })
@@ -126,6 +136,9 @@ interface SnapshotLike {
   logs?: unknown
   tracks?: unknown
   notes?: unknown
+  requisitions?: unknown
+  settings?: unknown
+  emergency?: unknown
 }
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -145,6 +158,15 @@ const normalizeSnapshot = (candidate: SnapshotLike): AgencySnapshot => {
     logs: Array.isArray(candidate.logs) ? (candidate.logs as unknown as AgencySnapshot['logs']) : [],
     tracks: Array.isArray(candidate.tracks) ? (candidate.tracks as unknown as AgencySnapshot['tracks']) : [],
     notes: Array.isArray(candidate.notes) ? (candidate.notes as unknown as AgencySnapshot['notes']) : [],
+    requisitions: Array.isArray(candidate.requisitions)
+      ? (candidate.requisitions as unknown as AgencySnapshot['requisitions'])
+      : undefined,
+    settings: isRecord(candidate.settings)
+      ? (candidate.settings as unknown as AgencySnapshot['settings'])
+      : undefined,
+    emergency: isRecord(candidate.emergency)
+      ? (candidate.emergency as unknown as AgencySnapshot['emergency'])
+      : undefined,
   }
 }
 

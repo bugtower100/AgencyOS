@@ -6,6 +6,7 @@
       "agents": "Agents",
       "missions": "Mission Control",
       "anomalies": "Anomalies",
+      "requisitions": "Requisitions",
       "reports": "Reports",
       "tracks": "Custom Tracks",
       "settings": "Settings",
@@ -56,6 +57,14 @@
       "recordLog": "Record Log",
       "submit": "Submit",
       "update": "Update" 
+    },
+    "import": {
+      "requisitionsTitle": "Import Requisitions Data",
+      "requisitionsDescription": "The snapshot contains {{count}} requisition(s). Do you want to import them as well?",
+      "includeRequisitions": "Include Requisitions",
+      "includeRequisitionsOverwrite": "Include & Overwrite Requisitions",
+      "includeRequisitionsAppend": "Include & Append Requisitions",
+      "skipRequisitions": "Skip, Import Campaign Only"
     }
   },
   "notes": {
@@ -196,7 +205,9 @@
       "status": "Status",
       "pending": "Pending",
       "approved": "Approved",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "selectFromLibrary": "Select from Library",
+      "selectPlaceholder": "-- Or enter manually --"
     },
     "editing": "Editing",
     "toast": {
@@ -338,7 +349,9 @@
       "win98": "Win98",
       "retro": "Retro",
       "fluent": "Modern",
+      "siphon": "Siphon",
       "win98TitleBarColor": "Win98 Title Bar Color",
+      "dayFlatStyle": "Flat Style (remove shadows and rounded corners)",
       "colors": {
         "blue": "Classic Blue",
         "red": "Agency Red"
@@ -492,6 +505,78 @@
       "submit": "Log In",
       "loggingOff": "Logging off...",
       "loggingIn": "Logging in..."
+    }
+  },
+  "requisitions": {
+    "title": "Requisitions",
+    "subtitle": "Resource Management Terminal",
+    "create": "Add New Requisition",
+    "editing": "Edit Requisition",
+    "deleteConfirm": "Delete requisition \"{{name}}\"?",
+    "empty": "No requisitions recorded",
+    "emptyHq": "No HQ requisitions",
+    "emptyBranch": "No branch requisitions",
+    "searchPlaceholder": "Search name, description, conditions...",
+    "showImages": "Show Images",
+    "dataCenter": "Data Center",
+    "export": "Export",
+    "loadDefaults": "Load Defaults",
+    "loadDefaultsConfirm": "Load official default requisitions? This will append to existing data.",
+    "factoryReset": "Factory Reset",
+    "factoryResetConfirm": "⚠️ Warning: This will delete all requisition data! Continue?",
+    "exportJson": "Export Current List (JSON)",
+    "copyToClipboard": "Copy to Clipboard",
+    "importJson": "Import Data",
+    "importPlaceholder": "Paste JSON data here...",
+    "importAppend": "Append Import",
+    "importOverwrite": "Overwrite Import",
+    "importOverwriteConfirm": "Overwrite all current data?",
+    "currency": {
+      "awards": "Awards",
+      "reprimands": "Reprimands"
+    },
+    "source": {
+      "hq": "Tripoint City HQ",
+      "branch": "Branch Office",
+      "siphon": "Siphon's Shop"
+    },
+    "sections": {
+      "hq": "Tripoint City HQ Requisitions",
+      "branch": "Branch Office Requisitions",
+      "siphon": "Siphon's Shop"
+    },
+    "card": {
+      "condition": "Condition",
+      "purchasedBy": "Purchased By"
+    },
+    "form": {
+      "name": "Requisition Name",
+      "namePlaceholder": "Enter name",
+      "source": "Source",
+      "branchName": "Branch Name",
+      "branchNamePlaceholder": "e.g., Coconut City Branch",
+      "prices": "Cost",
+      "addPrice": "Add Price",
+      "priceLabelPlaceholder": "Label (e.g., Rent/Buy)",
+      "image": "Image",
+      "uploadImage": "Upload Image",
+      "description": "Effect Description",
+      "descriptionPlaceholder": "Enter the requisition effect description...",
+      "condition": "Acquisition Condition",
+      "conditionPlaceholder": "Optional: Special conditions",
+      "purchasedBy": "Purchased By",
+      "purchasedByPlaceholder": "Optional: Record purchaser"
+    },
+    "toast": {
+      "created": "Requisition \"{{name}}\" created",
+      "updated": "Requisition \"{{name}}\" updated",
+      "deleted": "Requisition \"{{name}}\" deleted",
+      "exported": "Data exported",
+      "imported": "Data imported successfully",
+      "importError": "Import failed: Invalid JSON data",
+      "copied": "Copied to clipboard",
+      "defaultsLoaded": "Default requisitions loaded",
+      "factoryReset": "Factory reset complete"
     }
   }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { ChangeEvent } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Users, BriefcaseBusiness, Atom, ScrollText, Orbit, Settings, Notebook, BookOpen, Book, Eye, Mail, CheckSquare, Tornado, Trash2, Volume2 } from 'lucide-react'
+import { LayoutDashboard, Users, BriefcaseBusiness, Atom, ScrollText, Orbit, Settings, Notebook, BookOpen, Book, Eye, Mail, CheckSquare, Tornado, Trash2, Volume2, ShoppingCart } from 'lucide-react'
 import { CommandStrip } from '@/components/ui/command-strip'
 import { cn } from '@/lib/utils'
 import { getAgencySnapshot, useCampaignStore } from '@/stores/campaign-store'
@@ -48,7 +48,7 @@ export function AppShell() {
   useCampaignPersistence()
   const t = useTrans()
   const { dashboard, agents, missions: navMissions, anomalies, reports, notes, tracks, settings, rules } = useNavTranslations()
-  const { edit, divisionName, divisionCode, status, tags, cancel, save, current, chaos, looseEnds, session, nextBriefing, weather, snapshot, export: exportText, import: importText, importing: importingText, importSuccess, importError } = useCommonTranslations()
+  const { edit, divisionName, divisionCode, status, tags, cancel, save, current, chaos, looseEnds, session, nextBriefing, weather, snapshot, export: exportText, import: importText, importing: importingText, importError } = useCommonTranslations()
   
   // Initialize window manager for desktop windows
   const windowManager = useWindowManager(50)
@@ -71,6 +71,7 @@ export function AppShell() {
   })
   const themeMode = useThemeStore((state) => state.mode)
   const win98TitleBarColor = useThemeStore((state) => state.win98TitleBarColor)
+  const dayFlatStyle = useThemeStore((state) => state.dayFlatStyle)
   const isWin98 = themeMode === 'win98'
   const isRetro = themeMode === 'retro'
   const isSquare = isWin98 || isRetro
@@ -84,6 +85,7 @@ export function AppShell() {
   const [showUrgencyDisabledModal, setShowUrgencyDisabledModal] = useState(false)
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [pendingImport, setPendingImport] = useState<{ snapshot: ReturnType<typeof parseSnapshotFile>, hasRequisitions: boolean } | null>(null)
 
   const toggleProgram = (id: string) => {
     if (id === 'antivirus') {
@@ -125,6 +127,7 @@ export function AppShell() {
     { label: agents, path: '/agents', icon: Users },
     { label: navMissions, path: '/missions', icon: BriefcaseBusiness },
     { label: anomalies, path: '/anomalies', icon: Atom },
+    { label: t('app.nav.requisitions'), path: '/requisitions', icon: ShoppingCart },
     { label: reports, path: '/reports', icon: ScrollText },
       { label: rules, path: '/rules', icon: BookOpen },
     { label: notes, path: '/notes', icon: Notebook },
@@ -135,7 +138,13 @@ export function AppShell() {
   useEffect(() => {
     if (typeof document === 'undefined') return
     document.documentElement.dataset.theme = themeMode
-  }, [themeMode])
+    // 应用机构主题扁平化风格
+    if (themeMode === 'day' && dayFlatStyle) {
+      document.documentElement.dataset.dayFlat = 'true'
+    } else {
+      delete document.documentElement.dataset.dayFlat
+    }
+  }, [themeMode, dayFlatStyle])
 
   const handleExportSnapshot = () => {
     const snapshot = getAgencySnapshot()
@@ -150,7 +159,7 @@ export function AppShell() {
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    setImportMessage(importSuccess)
+    setImportMessage(t('app.common.exportSuccess'))
   }
 
   const handleImportClick = () => {
@@ -166,6 +175,17 @@ export function AppShell() {
       const text = await file.text()
       const parsed = JSON.parse(text)
       const snapshot = parseSnapshotFile(parsed)
+      const hasRequisitions = !!(snapshot.requisitions && snapshot.requisitions.length > 0)
+      
+      if (hasRequisitions) {
+        // 如果快照中包含申领物数据，显示确认对话框
+        setPendingImport({ snapshot, hasRequisitions })
+        setImporting(false)
+        event.target.value = ''
+        return
+      }
+      
+      // 没有申领物数据，直接导入
       useCampaignStore.getState().hydrate(snapshot)
       setImportMessage(t('app.common.importSuccess'))
     } catch (error) {
@@ -175,6 +195,48 @@ export function AppShell() {
       setImporting(false)
       event.target.value = ''
     }
+  }
+
+  const handleConfirmImport = (mode: 'overwrite' | 'append' | 'skip') => {
+    if (!pendingImport) return
+    const { snapshot } = pendingImport
+
+    if (mode === 'skip') {
+      // 不导入申领物 — 保留当前 store 中已有的申领物，避免被 hydrate 覆盖为空
+      const currentRequisitions = useCampaignStore.getState().requisitions
+      const snapshotWithoutRequisitions = { ...snapshot, requisitions: currentRequisitions }
+      useCampaignStore.getState().hydrate(snapshotWithoutRequisitions)
+    } else if (mode === 'overwrite') {
+      // 覆盖导入：直接用快照中的申领物覆盖当前数据
+      useCampaignStore.getState().hydrate(snapshot)
+    } else if (mode === 'append') {
+      // 补充导入：先导入快照的其它数据（不包含申领物），再把申领物追加到现有库
+      const snapshotWithoutRequisitions = { ...snapshot, requisitions: undefined }
+      useCampaignStore.getState().hydrate(snapshotWithoutRequisitions)
+      if (Array.isArray(snapshot.requisitions) && snapshot.requisitions.length) {
+        // 将快照中的申领物追加至当前 store（去除 id/时间戳字段）
+        const itemsToImport = snapshot.requisitions.map((r) => ({
+          name: r.name,
+          source: r.source,
+          branchName: r.branchName,
+          prices: r.prices,
+          description: r.description,
+          condition: r.condition,
+          purchasedBy: r.purchasedBy,
+          image: r.image,
+          isNew: r.isNew,
+          starred: r.starred,
+        }))
+        useCampaignStore.getState().importRequisitions(itemsToImport, 'append')
+      }
+    }
+
+    setImportMessage(t('app.common.importSuccess'))
+    setPendingImport(null)
+  }
+
+  const handleCancelImport = () => {
+    setPendingImport(null)
   }
 
   const openHeaderEditor = () => {
@@ -486,6 +548,73 @@ export function AppShell() {
             </div>
           </div>
         </WindowFrame>
+      )}
+
+      {/* 导入确认对话框 - 询问是否导入申领物数据 */}
+      {pendingImport && (
+        <div 
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={handleCancelImport}
+        >
+          <div 
+            className={cn(
+              'w-full max-w-md border border-agency-border bg-agency-panel p-6',
+              isSquare ? 'rounded-none' : 'rounded-2xl'
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="mb-4 text-lg font-bold text-white">{t('app.import.requisitionsTitle')}</h3>
+            <p className="mb-6 text-sm text-agency-muted">
+              {t('app.import.requisitionsDescription', { count: pendingImport.snapshot.requisitions?.length || 0 })}
+            </p>
+              <div className="flex flex-col gap-3">
+              <button
+                type="button"
+                className={cn(
+                  'flex items-center justify-center gap-2 border px-4 py-2 transition',
+                  isSquare ? 'rounded-none' : 'rounded-xl',
+                  'border-agency-cyan/60 text-agency-cyan hover:border-agency-cyan hover:bg-agency-cyan/10'
+                )}
+                onClick={() => handleConfirmImport('overwrite')}
+              >
+                {t('app.import.includeRequisitionsOverwrite')}
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  'flex items-center justify-center gap-2 border px-4 py-2 transition',
+                  isSquare ? 'rounded-none' : 'rounded-xl',
+                  'border-agency-amber/60 text-agency-amber hover:border-agency-amber hover:bg-agency-amber/10'
+                )}
+                onClick={() => handleConfirmImport('append')}
+              >
+                {t('app.import.includeRequisitionsAppend')}
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  'flex items-center justify-center gap-2 border px-4 py-2 transition',
+                  isSquare ? 'rounded-none' : 'rounded-xl',
+                  'border-agency-border text-agency-muted hover:border-agency-muted'
+                )}
+                onClick={() => handleConfirmImport('skip')}
+              >
+                {t('app.import.skipRequisitions')}
+              </button>
+              <button
+                type="button"
+                className={cn(
+                  'flex items-center justify-center gap-2 border px-4 py-2 transition',
+                  isSquare ? 'rounded-none' : 'rounded-xl',
+                  'border-agency-border text-agency-muted hover:border-agency-muted'
+                )}
+                onClick={handleCancelImport}
+              >
+                {t('app.common.cancel')}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/*

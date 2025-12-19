@@ -1,5 +1,5 @@
 import { useState, useRef, type ChangeEvent } from 'react'
-import { Github, Download, Upload, Monitor, Moon, Sun, Laptop, Languages, Layout } from 'lucide-react'
+import { Github, Download, Upload, Monitor, Moon, Sun, Laptop, Languages, Layout, Eye } from 'lucide-react'
 import { useThemeStore } from '@/stores/theme-store'
 import { useCampaignStore } from '@/stores/campaign-store'
 import { cn } from '@/lib/utils'
@@ -12,6 +12,8 @@ export function SettingsPage() {
   const setThemeMode = useThemeStore((state) => state.setMode)
   const win98TitleBarColor = useThemeStore((state) => state.win98TitleBarColor)
   const setWin98TitleBarColor = useThemeStore((state) => state.setWin98TitleBarColor)
+  const dayFlatStyle = useThemeStore((state) => state.dayFlatStyle)
+  const setDayFlatStyle = useThemeStore((state) => state.setDayFlatStyle)
   const notesAllowHtml = useCampaignStore((state) => state.notesAllowHtml)
   const setNotesAllowHtml = useCampaignStore((state) => state.setNotesAllowHtml)
   const dashboardReadOnlyStyle = useCampaignStore((state) => state.dashboardReadOnlyStyle)
@@ -199,6 +201,19 @@ export function SettingsPage() {
             <Layout className="h-6 w-6" />
             <span className="text-sm font-medium">{t('settings.theme.fluent')}</span>
           </button>
+          <button
+            onClick={() => setThemeMode('siphon')}
+            className={cn(
+              "flex flex-col items-center justify-center gap-3 border p-4 transition-all hover:border-agency-cyan hover:bg-agency-cyan/5",
+              themeMode === 'siphon' 
+                ? "border-agency-cyan bg-agency-cyan/10 text-agency-cyan" 
+                : "border-agency-border text-agency-muted",
+              isWin98 ? "rounded-none" : "rounded-xl"
+            )}
+          >
+            <Eye className="h-6 w-6" />
+            <span className="text-sm font-medium">{t('settings.theme.siphon')}</span>
+          </button>
         </div>
 
         {isWin98 && (
@@ -232,6 +247,20 @@ export function SettingsPage() {
                 <span className="text-sm">{t('settings.theme.colors.red')}</span>
               </button>
             </div>
+          </div>
+        )}
+
+        {themeMode === 'day' && (
+          <div className="mt-4 border-t border-agency-border/40 pt-4">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={dayFlatStyle}
+                onChange={(e) => setDayFlatStyle(e.target.checked)}
+                className="h-4 w-4 rounded border-agency-border accent-agency-cyan"
+              />
+              <span className="text-sm text-agency-muted">{t('settings.theme.dayFlatStyle')}</span>
+            </label>
           </div>
         )}
       </section>

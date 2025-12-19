@@ -2,6 +2,7 @@ import { FormFieldError } from '@/components/ui/form-field'
 import { useCommonTranslations, useTrans } from '@/lib/i18n-utils'
 import { QA_CATEGORIES, type AgentSummary, type AgentClaimRecord } from '@/lib/types'
 import { createId } from '@/lib/utils'
+import { useCampaignStore } from '@/stores/campaign-store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -58,11 +59,15 @@ export function AgentForm({ initialData, onSubmit, onCancel, isEditing }: AgentF
   const t = useTrans()
   const { delete: deleteText, cancel: cancelText, update: updateText, submit: submitText } = useCommonTranslations()
   
+  // 从申领物库获取可选物品
+  const requisitions = useCampaignStore((state) => state.requisitions)
+  
   const [claims, setClaims] = useState<AgentClaimRecord[]>(initialData?.claims || [])
   const [claimDraft, setClaimDraft] = useState({
     itemName: '',
     category: '',
     reason: '',
+    requisitionId: '',
   })
 
   const form = useForm<AgentFormValues>({
@@ -85,24 +90,52 @@ export function AgentForm({ initialData, onSubmit, onCancel, isEditing }: AgentF
       form.reset(createEmptyAgentForm())
       setClaims([])
     }
-    setClaimDraft({ itemName: '', category: '', reason: '' })
+    setClaimDraft({ itemName: '', category: '', reason: '', requisitionId: '' })
   }
 
   const handleAddClaim = () => {
     if (!claimDraft.itemName.trim()) return
+    
+    // 如果选择了申领物库中的物品，使用其信息
+    const selectedReq = requisitions.find(r => r.id === claimDraft.requisitionId)
+    
     const next: AgentClaimRecord[] = [
       ...claims,
       {
         id: createId(),
         itemName: claimDraft.itemName.trim(),
-        category: claimDraft.category.trim() || t('agents.claims.uncategorized'),
+        category: claimDraft.category.trim() || (selectedReq ? getSourceLabel(selectedReq.source, selectedReq.branchName) : t('agents.claims.uncategorized')),
         reason: claimDraft.reason.trim() || t('agents.claims.reasonDefault'),
         claimedAt: new Date().toISOString(),
         status: 'pending',
+        requisitionId: claimDraft.requisitionId || undefined,
       },
     ]
     setClaims(next)
-    setClaimDraft({ itemName: '', category: '', reason: '' })
+    setClaimDraft({ itemName: '', category: '', reason: '', requisitionId: '' })
+  }
+  
+  // 辅助函数：获取来源标签
+  const getSourceLabel = (source: string, branchName?: string): string => {
+    switch (source) {
+      case 'hq': return t('requisitions.source.hq')
+      case 'siphon': return t('requisitions.source.siphon')
+      case 'branch': return branchName || t('requisitions.source.branch')
+      default: return source
+    }
+  }
+  
+  // 从申领物库选择物品
+  const handleSelectRequisition = (requisitionId: string) => {
+    const req = requisitions.find(r => r.id === requisitionId)
+    if (req) {
+      setClaimDraft(prev => ({
+        ...prev,
+        itemName: req.name,
+        category: getSourceLabel(req.source, req.branchName),
+        requisitionId: req.id,
+      }))
+    }
   }
 
   const handleDeleteClaim = (claimId: string) => {
@@ -187,13 +220,35 @@ export function AgentForm({ initialData, onSubmit, onCancel, isEditing }: AgentF
           <span>{t('agents.claims.title')}</span>
           <span className="text-[0.65rem] text-agency-muted normal-case">{t('agents.claims.count', { count: claims.length })}</span>
         </div>
+        
+        {/* 从申领物库选择 */}
+        {requisitions.length > 0 && (
+          <div className="mb-2">
+            <label className="space-y-1">
+              <span className="text-[0.65rem] tracking-[0.3em]">{t('agents.claims.selectFromLibrary')}</span>
+              <select
+                className="w-full border border-agency-amber/60 bg-agency-ink/60 px-3 py-2 text-sm text-agency-amber rounded-xl win98:rounded-none"
+                value={claimDraft.requisitionId}
+                onChange={(e) => handleSelectRequisition(e.target.value)}
+              >
+                <option value="">{t('agents.claims.selectPlaceholder')}</option>
+                {requisitions.map((req) => (
+                  <option key={req.id} value={req.id}>
+                    {req.name} ({getSourceLabel(req.source, req.branchName)})
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        )}
+        
         <div className="grid gap-3 md:grid-cols-[2fr_1.5fr_3fr_auto] items-start">
           <label className="space-y-1">
             <span className="text-[0.65rem] tracking-[0.3em]">{t('agents.claims.itemName')}</span>
             <input
               className="w-full border border-agency-border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none"
               value={claimDraft.itemName}
-              onChange={(e) => setClaimDraft((prev) => ({ ...prev, itemName: e.target.value }))}
+              onChange={(e) => setClaimDraft((prev) => ({ ...prev, itemName: e.target.value, requisitionId: '' }))}
               placeholder={t('agents.claims.itemNamePlaceholder')}
             />
           </label>

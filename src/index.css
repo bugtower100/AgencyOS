@@ -20,9 +20,35 @@
   :root[data-theme='retro'] .rounded-xl,
   :root[data-theme='retro'] .rounded-2xl,
   :root[data-theme='retro'] .rounded-3xl,
-  :root[data-theme='retro'] .rounded-full {
+  :root[data-theme='retro'] .rounded-full,
+  :root[data-theme='day'][data-day-flat='true'] .rounded-sm,
+  :root[data-theme='day'][data-day-flat='true'] .rounded,
+  :root[data-theme='day'][data-day-flat='true'] .rounded-md,
+  :root[data-theme='day'][data-day-flat='true'] .rounded-lg,
+  :root[data-theme='day'][data-day-flat='true'] .rounded-xl,
+  :root[data-theme='day'][data-day-flat='true'] .rounded-2xl,
+  :root[data-theme='day'][data-day-flat='true'] .rounded-3xl,
+  :root[data-theme='day'][data-day-flat='true'] .rounded-full {
     border-radius: 0 !important;
   }
+}
+
+/* 机构扁平化风格 - 移除阴影（使用更强的选择器）*/
+:root[data-theme='day'][data-day-flat='true'] *[class*='shadow'] {
+  box-shadow: none !important;
+}
+
+:root[data-theme='day'][data-day-flat='true'] .shadow,
+:root[data-theme='day'][data-day-flat='true'] .shadow-sm,
+:root[data-theme='day'][data-day-flat='true'] .shadow-md,
+:root[data-theme='day'][data-day-flat='true'] .shadow-lg,
+:root[data-theme='day'][data-day-flat='true'] .shadow-xl,
+:root[data-theme='day'][data-day-flat='true'] .shadow-2xl,
+:root[data-theme='day'][data-day-flat='true'] [class*='hover:shadow'],
+:root[data-theme='day'][data-day-flat='true'] [class*='hover:-translate'] {
+  box-shadow: none !important;
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
 }
 
 :root {
@@ -63,6 +89,20 @@
   --agency-muted: 130 110 120;
   --agency-glow-top: 215 38 61;
   --agency-glow-bottom: 255 255 255;
+}
+
+/* 机构主题扁平化风格 - 类似 Requisitions.html 的简洁风格 */
+:root[data-theme='day'][data-day-flat='true'] {
+  --agency-ink: 247 247 245;       /* #F7F7F5 - 更清爽的背景 */
+  --agency-panel: 255 255 255;     /* 纯白卡片 */
+  --agency-border: 221 221 221;    /* #dddddd - 柔和边框 */
+  --agency-cyan: 217 43 58;        /* #D92B3A - 机构红 */
+  --agency-magenta: 29 53 87;      /* #1D3557 - 深蓝次要色 */
+  --agency-amber: 212 175 55;      /* #D4AF37 - 金色强调 */
+  --agency-muted: 68 68 68;        /* #444444 - 深灰次要文字 */
+  --agency-glow-top: 247 247 245;
+  --agency-glow-bottom: 247 247 245;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", sans-serif;
 }
 
 :root[data-theme='win98'] {
@@ -107,6 +147,20 @@
   --agency-glow-top: 243 243 243;
   --agency-glow-bottom: 243 243 243;
   font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, sans-serif;
+}
+
+/* Siphon 主题 - 深海蓝色风格 */
+:root[data-theme='siphon'] {
+  --agency-ink: 10 21 37;          /* 深海蓝背景 #0A1525 */
+  --agency-panel: 13 30 56;        /* 深蓝面板 */
+  --agency-border: 39 82 162;      /* Siphon 蓝边框 #2752A2 */
+  --agency-cyan: 76 201 240;       /* 亮蓝强调 #4CC9F0 */
+  --agency-magenta: 255 0 85;      /* Siphon 红 #FF0055 */
+  --agency-amber: 255 215 0;       /* 金色 */
+  --agency-muted: 144 224 239;     /* 浅蓝说明文字 #90E0EF */
+  --agency-glow-top: 39 82 162;
+  --agency-glow-bottom: 76 201 240;
+  font-family: 'Verdana', 'Microsoft YaHei', sans-serif;
 }
 
 :root[data-theme='day'] .text-white,
@@ -416,3 +470,66 @@ body {
 :root[data-theme='fluent'] ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0.4);
 }
+
+/* Siphon Theme Specific Styles */
+@keyframes siphonOceanWave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes siphonRipple {
+  from { transform: rotate(0deg) scale(1.5); }
+  to { transform: rotate(360deg) scale(1.5); }
+}
+
+:root[data-theme='siphon'] body {
+  background: linear-gradient(-45deg, #021b3d, #0d2b5c, #2752A2, #1b3a6e);
+  background-size: 400% 400%;
+  animation: siphonOceanWave 15s ease infinite;
+}
+
+:root[data-theme='siphon'] body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-radial-gradient(
+    circle at 50% 50%,
+    transparent 0,
+    transparent 20px,
+    rgba(76, 201, 240, 0.03) 21px,
+    transparent 40px
+  );
+  animation: siphonRipple 60s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+:root[data-theme='siphon'] .text-white {
+  color: #E0F7FA !important;
+}
+
+/* Siphon Theme Scrollbar */
+:root[data-theme='siphon'] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+:root[data-theme='siphon'] ::-webkit-scrollbar-track {
+  background: rgba(39, 82, 162, 0.2);
+}
+
+:root[data-theme='siphon'] ::-webkit-scrollbar-thumb {
+  background-color: #4CC9F0;
+  border: 2px solid rgba(39, 82, 162, 0.5);
+  border-radius: 5px;
+}
+
+:root[data-theme='siphon'] ::-webkit-scrollbar-thumb:hover {
+  background-color: #76D7E8;
+  box-shadow: 0 0 8px rgba(76, 201, 240, 0.6);
+}
+

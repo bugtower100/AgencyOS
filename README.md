@@ -132,3 +132,7 @@ https://koishi.icemoe.moe/agencyos/deploy
 ## 说明的说明
 
 - 本项目说明由AI创建，如有错误请反馈。
+
+## 致谢
+
+- 感谢社区项目 [Sandrizzle/triangle-agency-tool](https://github.com/Sandrizzle/triangle-agency-tool) 提供的 Requisitions 页面实现与设计灵感。该项目的实现帮助我们快速集成并改进申领物库功能，部分实现参考并遵循其许可约定。

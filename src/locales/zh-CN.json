@@ -6,6 +6,7 @@
       "agents": "特工档案",
       "missions": "任务控制",
       "anomalies": "异常体库",
+      "requisitions": "申领物库",
       "reports": "任务报告",
       "tracks": "自定义轨道",
       "settings": "系统设置",
@@ -56,6 +57,14 @@
       "recordLog": "记录日志",
       "submit": "提交",
       "update": "更新"
+    },
+    "import": {
+      "requisitionsTitle": "导入申领物数据",
+      "requisitionsDescription": "检测到快照中包含 {{count}} 条申领物数据。是否同时导入？",
+      "includeRequisitions": "导入申领物数据",
+      "includeRequisitionsOverwrite": "导入并覆盖申领物",
+      "includeRequisitionsAppend": "导入并补充申领物",
+      "skipRequisitions": "跳过，仅导入战役数据"
     }
   },
   "notes": {
@@ -196,7 +205,9 @@
       "status": "状态",
       "pending": "待审核",
       "approved": "已批准",
-      "rejected": "已拒绝"
+      "rejected": "已拒绝",
+      "selectFromLibrary": "从申领物库选择",
+      "selectPlaceholder": "-- 或手动输入 --"
     },
     "editing": "编辑中",
     "toast": {
@@ -338,7 +349,9 @@
       "win98": "Win98",
       "retro": "复古",
       "fluent": "现代",
+      "siphon": "赛风",
       "win98TitleBarColor": "Win98 标题栏颜色",
+      "dayFlatStyle": "扁平化风格（移除阴影和圆角）",
       "colors": {
         "blue": "经典蓝",
         "red": "机构红"
@@ -492,6 +505,78 @@
       "submit": "登录",
       "loggingOff": "正在注销...",
       "loggingIn": "正在登录..."
+    }
+  },
+  "requisitions": {
+    "title": "申领物库",
+    "subtitle": "物资管理终端",
+    "create": "录入新申领物",
+    "editing": "编辑申领物",
+    "deleteConfirm": "确认删除申领物「{{name}}」？",
+    "empty": "暂无申领物记录",
+    "emptyHq": "暂无总部申领物",
+    "emptyBranch": "暂无分部申领物",
+    "searchPlaceholder": "搜索名称、描述、条件...",
+    "showImages": "显示图片",
+    "dataCenter": "数据中心",
+    "export": "导出",
+    "loadDefaults": "加载默认数据",
+    "loadDefaultsConfirm": "确认加载官方默认申领物数据？这会追加到现有数据中。",
+    "factoryReset": "恢复出厂设置",
+    "factoryResetConfirm": "⚠️ 警告：这将删除所有申领物数据！确定继续吗？",
+    "exportJson": "导出当前列表 (JSON)",
+    "copyToClipboard": "复制到剪贴板",
+    "importJson": "导入数据",
+    "importPlaceholder": "在此粘贴 JSON 数据...",
+    "importAppend": "补充导入",
+    "importOverwrite": "覆盖导入",
+    "importOverwriteConfirm": "确定覆盖当前所有数据？",
+    "currency": {
+      "awards": "嘉奖",
+      "reprimands": "申诫"
+    },
+    "source": {
+      "hq": "三联城总部",
+      "branch": "分部提供",
+      "siphon": "Siphon的商店"
+    },
+    "sections": {
+      "hq": "三联城总部申领物",
+      "branch": "分部提供申领物",
+      "siphon": "Siphon的商店"
+    },
+    "card": {
+      "condition": "获取条件",
+      "purchasedBy": "已购买特工"
+    },
+    "form": {
+      "name": "申领物名称",
+      "namePlaceholder": "输入名称",
+      "source": "来源归属",
+      "branchName": "分部名称",
+      "branchNamePlaceholder": "例如：椰汁城分部",
+      "prices": "花费",
+      "addPrice": "添加价格",
+      "priceLabelPlaceholder": "标签（如：租赁/购买）",
+      "image": "图片",
+      "uploadImage": "上传图片",
+      "description": "效果描述",
+      "descriptionPlaceholder": "输入申领物的效果描述...",
+      "condition": "获取条件",
+      "conditionPlaceholder": "可选：特殊获取条件",
+      "purchasedBy": "已购买特工",
+      "purchasedByPlaceholder": "可选：记录购买者"
+    },
+    "toast": {
+      "created": "申领物「{{name}}」已创建",
+      "updated": "申领物「{{name}}」已更新",
+      "deleted": "申领物「{{name}}」已删除",
+      "exported": "数据已导出",
+      "imported": "数据导入成功",
+      "importError": "导入失败：无效的 JSON 数据",
+      "copied": "已复制到剪贴板",
+      "defaultsLoaded": "已加载默认申领物数据",
+      "factoryReset": "已恢复出厂设置"
     }
   }
 }

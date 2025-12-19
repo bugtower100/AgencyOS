@@ -22,16 +22,10 @@ export function useIsTheme(mode: ThemeMode) {
  * 根据当前主题模式应用不同的样式类
  */
 export function useThemeClassnames(
-  styles: {
-    default: string;
-    win98: string;
-    retro: string;
-    night?: string;
-    day?: string;
-    fluent?: string;
-  }
+  styles: Record<string, string | undefined> & { default: string }
 ) {
   const themeMode = useThemeStore((state) => state.mode);
+  // styles may not contain every ThemeMode key (e.g. siphon), so safely fallback to default
   return cn(styles[themeMode] || styles.default);
 }
 
