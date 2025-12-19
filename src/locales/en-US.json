@@ -536,12 +536,12 @@
       "reprimands": "Reprimands"
     },
     "source": {
-      "hq": "Tripoint City HQ",
+      "hq": "Ternion City HQ",
       "branch": "Branch Office",
       "siphon": "Siphon's Shop"
     },
     "sections": {
-      "hq": "Tripoint City HQ Requisitions",
+      "hq": "Ternion City HQ Requisitions",
       "branch": "Branch Office Requisitions",
       "siphon": "Siphon's Shop"
     },
