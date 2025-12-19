@@ -181,7 +181,7 @@
       "pending": "Pending"
     },
     "claims": {
-      "title": "Claimed Items",
+      "title": "Requisitions",
       "count": "{{count}} records for current agent",
       "itemName": "Item Name",
       "itemNamePlaceholder": "e.g., Information Disclosure Agreement",
@@ -190,7 +190,7 @@
       "reason": "Usage",
       "reasonPlaceholder": "Brief mission and usage",
       "reasonDefault": "No usage provided",
-      "addClaim": "Add Claim",
+      "addClaim": "Add Requisitions",
       "history": "History",
       "uncategorized": "Uncategorized",
       "status": "Status",
