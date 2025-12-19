@@ -46,9 +46,9 @@ export function DashboardPage() {
           label={t('dashboard.chaosPool')}
           value={activeMission?.chaos ?? 0}
           hint={t('dashboard.chaosHint')}
-          icon={<ActivitySquare />}
-          intent="warning"
+          icon={<ActivitySquare className="text-blue-500" />}
           editable={!!activeMission}
+          className="text-blue-500 [&>div>div:last-child>p:nth-child(2)]:text-blue-500 border-blue-500/50"
           onIncrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionChaos(activeMission!.id, 1, defaultNote) } : undefined}
           onDecrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionChaos(activeMission!.id, -1, defaultNote) } : undefined}
           onSet={(value) => { if(!activeMission) return; const delta = Math.max(0, value) - (activeMission.chaos ?? 0); adjustMissionChaos(activeMission.id, delta, defaultNote)}}
@@ -57,9 +57,9 @@ export function DashboardPage() {
           label={t('dashboard.looseEnds')}
           value={activeMission?.looseEnds ?? 0}
           hint={t('dashboard.weatherHint')}
-          icon={<AlertTriangle />}
-          intent="critical"
+          icon={<AlertTriangle className="text-purple-500" />}
           editable={!!activeMission}
+          className="text-purple-500 [&>div>div:last-child>p:nth-child(2)]:text-purple-500 border-purple-500/50"
           onIncrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionLooseEnds(activeMission!.id, 1, defaultNote) } : undefined}
           onDecrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionLooseEnds(activeMission!.id, -1, defaultNote) } : undefined}
           onSet={(value) => { if(!activeMission) return; const delta = (value ?? 0) - (activeMission.looseEnds ?? 0); adjustMissionLooseEnds(activeMission.id, delta, defaultNote)}}
@@ -68,8 +68,9 @@ export function DashboardPage() {
           label={t('dashboard.realityRequestsFailed')}
           value={activeMission?.realityRequestsFailed ?? 0}
           hint={t('dashboard.realityRequestsFailedHint')}
-          icon={<Zap />}
+          icon={<Zap className="text-red-500" />}
           editable={!!activeMission}
+          className="text-red-500 [&>div>div:last-child>p:nth-child(2)]:text-red-500 border-red-500/50"
           onIncrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionRealityRequestsFailed(activeMission!.id, 1, defaultNote) } : undefined}
           onDecrement={!dashboardReadOnlyStyle && !!activeMission ? () => { adjustMissionRealityRequestsFailed(activeMission!.id, -1, defaultNote) } : undefined}
           onSet={(value) => { if(!activeMission) return; const delta = Math.max(0, value) - (activeMission.realityRequestsFailed ?? 0); adjustMissionRealityRequestsFailed(activeMission.id, delta, defaultNote)}}

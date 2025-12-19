@@ -275,7 +275,7 @@ export function RequisitionForm({
               />
               <button
                 type="button"
-                className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-agency-magenta text-white hover:bg-agency-magenta/80"
+                className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white hover:bg-red-600"
                 onClick={removeImage}
               >
                 <Trash2 className="h-3 w-3" />
