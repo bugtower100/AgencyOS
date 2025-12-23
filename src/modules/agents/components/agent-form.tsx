@@ -93,9 +93,9 @@ export function AgentForm({ initialData, onSubmit, onCancel, isEditing }: AgentF
   const [anomalyOpen, setAnomalyOpen] = useState(false)
   const [realityOpen, setRealityOpen] = useState(false)
   const [roleOpen, setRoleOpen] = useState(false)
-  const anomalyRef = useRef<HTMLDivElement | null>(null)
-  const realityRef = useRef<HTMLDivElement | null>(null)
-  const roleRef = useRef<HTMLDivElement | null>(null)
+  const anomalyRef = useRef<HTMLLabelElement | null>(null)
+  const realityRef = useRef<HTMLLabelElement | null>(null)
+  const roleRef = useRef<HTMLLabelElement | null>(null)
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
