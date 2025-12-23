@@ -4,7 +4,7 @@ import { QA_CATEGORIES, type AgentSummary, type AgentClaimRecord } from '@/lib/t
 import { createId } from '@/lib/utils'
 import { useCampaignStore } from '@/stores/campaign-store'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -48,6 +48,11 @@ const createEmptyAgentForm = (): AgentFormValues => ({
   status: 'active',
 })
 
+// 下拉选项（允许自定义输入，也可从下拉选择）
+const ANOMALY_OPTIONS = ['低语', '目录', '汲取', '时计', '生长', '枪械', '梦境', '流形', '缺位']
+const REALITY_OPTIONS = ['看护者', '卷王', '被追捕者', '明星', '底层草根', '新生儿', '海王', '顶梁柱', '异类']
+const ROLE_OPTIONS = ['公关', '研发', '咖啡师', '首席执行官', '实习生', '掘墓人', '接待处', '热线', '小丑']
+
 interface AgentFormProps {
   initialData?: AgentSummary
   onSubmit: (values: AgentFormValues, claims: AgentClaimRecord[]) => void
@@ -83,6 +88,36 @@ export function AgentForm({ initialData, onSubmit, onCancel, isEditing }: AgentF
       status: initialData.status,
     } : createEmptyAgentForm(),
   })
+
+  // 控制自定义下拉展开状态和外部点击收起
+  const [anomalyOpen, setAnomalyOpen] = useState(false)
+  const [realityOpen, setRealityOpen] = useState(false)
+  const [roleOpen, setRoleOpen] = useState(false)
+  const anomalyRef = useRef<HTMLDivElement | null>(null)
+  const realityRef = useRef<HTMLDivElement | null>(null)
+  const roleRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (anomalyRef.current && !anomalyRef.current.contains(target)) setAnomalyOpen(false)
+      if (realityRef.current && !realityRef.current.contains(target)) setRealityOpen(false)
+      if (roleRef.current && !roleRef.current.contains(target)) setRoleOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setAnomalyOpen(false)
+        setRealityOpen(false)
+        setRoleOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onClick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onClick)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [])
 
   const handleSubmit = (values: AgentFormValues) => {
     onSubmit(values, claims)
@@ -152,29 +187,119 @@ export function AgentForm({ initialData, onSubmit, onCancel, isEditing }: AgentF
         />
         <FormFieldError error={form.formState.errors.codename} />
       </label>
-      <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
+      <label ref={anomalyRef} className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted relative">
         {t('agents.form.arcAnomalyf')}
-        <input
-          className={`w-full border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none ${form.formState.errors.arcAnomaly ? "border-agency-magenta" : "border-agency-border"}`}
-          {...form.register('arcAnomaly')}
-        />
+        <div className="flex items-center gap-2">
+          <input
+            className={`w-full border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none ${form.formState.errors.arcAnomaly ? "border-agency-magenta" : "border-agency-border"}`}
+            {...form.register('arcAnomaly')}
+            onFocus={() => setAnomalyOpen(false)}
+            onKeyDown={(e) => { if (e.key === 'Escape') setAnomalyOpen(false) }}
+          />
+          <button
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={anomalyOpen}
+            onClick={() => setAnomalyOpen((v) => !v)}
+            className="border border-agency-border px-2 py-2 rounded-xl win98:rounded-none"
+          >
+            ▾
+          </button>
+        </div>
         <FormFieldError error={form.formState.errors.arcAnomaly} />
+        {anomalyOpen && (
+          <ul className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md border border-agency-border bg-agency-ink/80 p-1 text-sm shadow-lg">
+            {ANOMALY_OPTIONS.map((opt) => (
+              <li
+                key={opt}
+                role="option"
+                onClick={() => {
+                  form.setValue('arcAnomaly', opt, { shouldDirty: true, shouldTouch: true })
+                  setAnomalyOpen(false)
+                }}
+                className="cursor-pointer rounded px-2 py-1 hover:bg-agency-amber/10"
+              >
+                {opt}
+              </li>
+            ))}
+          </ul>
+        )}
       </label>
-      <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
+      <label ref={realityRef} className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted relative">
         {t('agents.form.arcRealityf')}
-        <input
-          className={`w-full border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none ${form.formState.errors.arcReality ? "border-agency-magenta" : "border-agency-border"}`}
-          {...form.register('arcReality')}
-        />
+        <div className="flex items-center gap-2">
+          <input
+            className={`w-full border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none ${form.formState.errors.arcReality ? "border-agency-magenta" : "border-agency-border"}`}
+            {...form.register('arcReality')}
+            onFocus={() => setRealityOpen(false)}
+            onKeyDown={(e) => { if (e.key === 'Escape') setRealityOpen(false) }}
+          />
+          <button
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={realityOpen}
+            onClick={() => setRealityOpen((v) => !v)}
+            className="border border-agency-border px-2 py-2 rounded-xl win98:rounded-none"
+          >
+            ▾
+          </button>
+        </div>
         <FormFieldError error={form.formState.errors.arcReality} />
+        {realityOpen && (
+          <ul className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md border border-agency-border bg-agency-ink/80 p-1 text-sm shadow-lg">
+            {REALITY_OPTIONS.map((opt) => (
+              <li
+                key={opt}
+                role="option"
+                onClick={() => {
+                  form.setValue('arcReality', opt, { shouldDirty: true, shouldTouch: true })
+                  setRealityOpen(false)
+                }}
+                className="cursor-pointer rounded px-2 py-1 hover:bg-agency-amber/10"
+              >
+                {opt}
+              </li>
+            ))}
+          </ul>
+        )}
       </label>
-      <label className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted">
+      <label ref={roleRef} className="space-y-1 text-xs uppercase tracking-[0.3em] text-agency-muted relative">
         {t('agents.form.arcRolef')}
-        <input
-          className={`w-full border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none ${form.formState.errors.arcRole ? "border-agency-magenta" : "border-agency-border"}`}
-          {...form.register('arcRole')}
-        />
+        <div className="flex items-center gap-2">
+          <input
+            className={`w-full border bg-agency-ink/60 px-3 py-2 text-sm text-agency-cyan rounded-xl win98:rounded-none ${form.formState.errors.arcRole ? "border-agency-magenta" : "border-agency-border"}`}
+            {...form.register('arcRole')}
+            onFocus={() => setRoleOpen(false)}
+            onKeyDown={(e) => { if (e.key === 'Escape') setRoleOpen(false) }}
+          />
+          <button
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded={roleOpen}
+            onClick={() => setRoleOpen((v) => !v)}
+            className="border border-agency-border px-2 py-2 rounded-xl win98:rounded-none"
+          >
+            ▾
+          </button>
+        </div>
         <FormFieldError error={form.formState.errors.arcRole} />
+        {roleOpen && (
+          <ul className="absolute z-10 mt-1 max-h-40 w-full overflow-auto rounded-md border border-agency-border bg-agency-ink/80 p-1 text-sm shadow-lg">
+            {ROLE_OPTIONS.map((opt) => (
+              <li
+                key={opt}
+                role="option"
+                onClick={() => {
+                  form.setValue('arcRole', opt, { shouldDirty: true, shouldTouch: true })
+                  setRoleOpen(false)
+                }}
+                className="cursor-pointer rounded px-2 py-1 hover:bg-agency-amber/10"
+              >
+                {opt}
+              </li>
+            ))}
+          </ul>
+        )}
       </label>
       <div className="space-y-2 text-xs uppercase tracking-[0.3em] text-agency-muted md:col-span-3">
         <p>{t('agents.form.qaLabel')}</p>
