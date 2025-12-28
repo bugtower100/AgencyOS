@@ -82,6 +82,7 @@ export function AppShell() {
 
   const [openPrograms, setOpenPrograms] = useState<string[]>([])
   const [minimizedPrograms, setMinimizedPrograms] = useState<string[]>([])
+  const [selectedDesktopItem, setSelectedDesktopItem] = useState<string | null>(null)
   const [showUrgencyDisabledModal, setShowUrgencyDisabledModal] = useState(false)
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(true)
@@ -116,6 +117,15 @@ export function AppShell() {
       setMinimizedPrograms(prev => [...prev, id])
     }
   }
+
+  // Clear desktop selection when clicking anywhere outside (global handler)
+  useEffect(() => {
+    const handleDocumentClick = () => {
+      setSelectedDesktopItem(null)
+    }
+    document.addEventListener('click', handleDocumentClick)
+    return () => document.removeEventListener('click', handleDocumentClick)
+  }, [])
 
   const closeProgram = (id: string) => {
     setOpenPrograms(prev => prev.filter(p => p !== id))
@@ -347,7 +357,7 @@ export function AppShell() {
       {loginAnimationOverlay}
       
       {/* Desktop Icons */}
-      <div className="fixed left-4 top-4 z-0 flex flex-col gap-6">
+      <div className="fixed left-4 top-4 z-0 flex flex-col gap-6" onClick={() => setSelectedDesktopItem(null)}>
         {DESKTOP_ITEMS.map((item) => {
           const isActive = item.id === 'antivirus' ? emergency.isChatOpen : openPrograms.includes(item.id)
           
@@ -363,27 +373,40 @@ export function AppShell() {
             }
           }
 
+          const isSelected = selectedDesktopItem === item.id
+
           return (
             <button
               key={item.id}
               type="button"
+              onClick={(e) => { e.stopPropagation(); setSelectedDesktopItem(item.id) }}
               onDoubleClick={() => toggleProgram(item.id)}
               className={cn(
                 "group flex w-24 flex-col items-center gap-1 text-center focus:outline-none ghost",
+                // Non-win98 selected background / Win98 selected (sunken) visual
+                isSelected && (isWin98
+                  ? "border-b-[#ffffff] border-l-[#404040] border-r-[#ffffff] border-t-[#404040] bg-[#dfdfdf] shadow-[inset_2px_2px_#000000] translate-y-[1px]"
+                  : "bg-agency-cyan/10 rounded")
               )}
             >
               <div className={cn(
                 "flex h-12 w-12 items-center justify-center transition-colors",
                 isWin98 
                   ? "text-[#ffffff] drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]" 
-                  : (isActive ? "text-agency-cyan" : "text-agency-muted group-hover:text-agency-cyan")
+                  : (isActive ? "text-agency-cyan" : "text-agency-muted group-hover:text-agency-cyan"),
+                // Win98 selected -> pressed look with black text (sunken)
+                isSelected && isWin98 && "text-black drop-shadow-none",
+                // Make icon more visible when selected on non-win98 themes
+                isSelected && !isWin98 && "text-white"
               )}>
                 <Icon className={isWin98 ? "h-10 w-10" : "h-8 w-8"} strokeWidth={1.5} />
               </div>
               <span className={cn(
                 "text-[10px] font-medium leading-tight transition-colors",
                 isWin98 ? "text-[#ffffff] drop-shadow-[1px_1px_1px_rgba(0,0,0,0.8)]" : "text-agency-muted group-hover:text-agency-cyan",
-                isActive && !isWin98 && "text-agency-cyan"
+                isActive && !isWin98 && "text-agency-cyan",
+                isSelected && !isWin98 && "text-white",
+                isSelected && isWin98 && "text-black drop-shadow-none"
               )}>
                 {t(`desktop.icons.${item.id}`)}
               </span>
