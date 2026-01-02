@@ -56,7 +56,8 @@
       "note": "Note",
       "recordLog": "Record Log",
       "submit": "Submit",
-      "update": "Update" 
+      "update": "Update",
+      "clickToEdit": "Click to edit"
     },
     "import": {
       "requisitionsTitle": "Import Requisitions Data",

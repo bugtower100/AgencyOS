@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
 import type { WindowManager } from '@/components/ui/use-window-manager'
 import { useThemeStore } from '@/stores/theme-store'
@@ -55,6 +55,31 @@ export function ChaosController({ isOpen, onClose, onMinimize, windowManager }: 
       case 'realityFailed':
         adjustMissionRealityRequestsFailed(currentMission.id, delta, note)
         break
+    }
+  }
+
+  const handleSetValue = (type: 'chaos' | 'looseEnds' | 'realityFailed', newValue: number) => {
+    if (!currentMission) return
+    
+    const note = t('desktop.chaos.adjustNote')
+    const safeValue = Math.max(0, newValue)
+    
+    switch (type) {
+      case 'chaos': {
+        const delta = safeValue - (currentMission.chaos ?? 0)
+        adjustMissionChaos(currentMission.id, delta, note)
+        break
+      }
+      case 'looseEnds': {
+        const delta = safeValue - (currentMission.looseEnds ?? 0)
+        adjustMissionLooseEnds(currentMission.id, delta, note)
+        break
+      }
+      case 'realityFailed': {
+        const delta = safeValue - (currentMission.realityRequestsFailed ?? 0)
+        adjustMissionRealityRequestsFailed(currentMission.id, delta, note)
+        break
+      }
     }
   }
 
@@ -115,6 +140,7 @@ export function ChaosController({ isOpen, onClose, onMinimize, windowManager }: 
                 value={currentMission.chaos}
                 onDecrease={() => handleAdjust('chaos', -1)}
                 onIncrease={() => handleAdjust('chaos', 1)}
+                onSet={(v) => handleSetValue('chaos', v)}
                 icon={<Zap className="h-4 w-4" />}
                 isWin98={isWin98}
                 color="text-blue-500"
@@ -126,6 +152,7 @@ export function ChaosController({ isOpen, onClose, onMinimize, windowManager }: 
                 value={currentMission.looseEnds}
                 onDecrease={() => handleAdjust('looseEnds', -1)}
                 onIncrease={() => handleAdjust('looseEnds', 1)}
+                onSet={(v) => handleSetValue('looseEnds', v)}
                 icon={<AlertTriangle className="h-4 w-4" />}
                 isWin98={isWin98}
                 color="text-purple-500"
@@ -137,6 +164,7 @@ export function ChaosController({ isOpen, onClose, onMinimize, windowManager }: 
                 value={currentMission.realityRequestsFailed ?? 0}
                 onDecrease={() => handleAdjust('realityFailed', -1)}
                 onIncrease={() => handleAdjust('realityFailed', 1)}
+                onSet={(v) => handleSetValue('realityFailed', v)}
                 icon={<Activity className="h-4 w-4" />}
                 isWin98={isWin98}
                 color="text-red-500"
@@ -177,12 +205,32 @@ interface StatRowProps {
   value: number
   onDecrease: () => void
   onIncrease: () => void
+  onSet: (value: number) => void
   icon: React.ReactNode
   isWin98: boolean
   color: string
 }
 
-function StatRow({ label, value, onDecrease, onIncrease, icon, isWin98, color }: StatRowProps) {
+function StatRow({ label, value, onDecrease, onIncrease, onSet, icon, isWin98, color }: StatRowProps) {
+  const { t } = useTranslation()
+  const [isEditing, setIsEditing] = useState(false)
+  const [inputValue, setInputValue] = useState(value)
+
+  const handleStartEdit = () => {
+    setInputValue(value)
+    setIsEditing(true)
+  }
+
+  const handleConfirm = () => {
+    onSet(inputValue)
+    setIsEditing(false)
+  }
+
+  const handleCancel = () => {
+    setInputValue(value)
+    setIsEditing(false)
+  }
+
   return (
     <div className={cn(
       "flex items-center justify-between p-2 border",
@@ -204,9 +252,37 @@ function StatRow({ label, value, onDecrease, onIncrease, icon, isWin98, color }:
         >
           <Minus className="w-3 h-3" />
         </button>
-        <span className={cn("w-8 text-center font-mono font-bold", color)}>
-          {value}
-        </span>
+        {isEditing ? (
+          <input
+            type="number"
+            value={inputValue}
+            onChange={(e) => setInputValue(Number(e.target.value))}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleConfirm()
+              } else if (e.key === 'Escape') {
+                handleCancel()
+              }
+            }}
+            onBlur={handleConfirm}
+            className={cn(
+              "w-12 text-center text-sm font-mono font-bold",
+              isWin98
+                ? "border border-[#808080] shadow-[inset_1px_1px_#000000] bg-white px-1"
+                : "bg-agency-ink/50 border border-agency-border rounded px-1",
+              color
+            )}
+            autoFocus
+          />
+        ) : (
+          <span 
+            className={cn("w-8 text-center font-mono font-bold cursor-pointer hover:underline", color)}
+            onClick={handleStartEdit}
+            title={t('app.common.clickToEdit')}
+          >
+            {value}
+          </span>
+        )}
         <button
           onClick={onIncrease}
           className={cn(

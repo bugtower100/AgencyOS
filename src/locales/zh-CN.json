@@ -56,7 +56,8 @@
       "note": "备注",
       "recordLog": "记录日志",
       "submit": "提交",
-      "update": "更新"
+      "update": "更新",
+      "clickToEdit": "点击编辑"
     },
     "import": {
       "requisitionsTitle": "导入申领物数据",

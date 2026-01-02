@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { WindowFrame } from '@/components/ui/window-frame'
 import type { WindowManager } from '@/components/ui/use-window-manager'
 import { useThemeStore } from '@/stores/theme-store'
@@ -24,6 +25,10 @@ export function CommendationClicker({ isOpen, onClose, onMinimize, windowManager
   // Filter for active agents only
   const activeAgents = agents.filter(agent => agent.status === 'active')
 
+  // State for inline editing
+  const [editingCell, setEditingCell] = useState<{ agentId: string; field: 'awardsDelta' | 'reprimandsDelta' } | null>(null)
+  const [inputValue, setInputValue] = useState('')
+
   const handleDeltaChange = (agentId: string, field: 'awardsDelta' | 'reprimandsDelta', delta: number) => {
     const agent = agents.find(a => a.id === agentId)
     if (!agent) return
@@ -44,6 +49,54 @@ export function CommendationClicker({ isOpen, onClose, onMinimize, windowManager
       awardsDelta: field === 'awardsDelta' ? newValue : agent.awardsDelta,
       reprimandsDelta: field === 'reprimandsDelta' ? newValue : agent.reprimandsDelta,
     })
+  }
+
+  const handleSetValue = (agentId: string, field: 'awardsDelta' | 'reprimandsDelta', newValue: number) => {
+    const agent = agents.find(a => a.id === agentId)
+    if (!agent) return
+    
+    const safeValue = Math.max(0, newValue)
+    
+    updateAgent(agentId, {
+      codename: agent.codename,
+      arcAnomaly: agent.arcAnomaly,
+      arcReality: agent.arcReality,
+      arcRole: agent.arcRole,
+      qa: agent.qa,
+      awards: agent.awards,
+      reprimands: agent.reprimands,
+      status: agent.status,
+      claims: agent.claims,
+      awardsDelta: field === 'awardsDelta' ? safeValue : agent.awardsDelta,
+      reprimandsDelta: field === 'reprimandsDelta' ? safeValue : agent.reprimandsDelta,
+    })
+  }
+
+  const startEditing = (agentId: string, field: 'awardsDelta' | 'reprimandsDelta', currentValue: number) => {
+    setEditingCell({ agentId, field })
+    setInputValue(String(currentValue))
+  }
+
+  const commitEdit = () => {
+    if (editingCell) {
+      const parsed = parseInt(inputValue, 10)
+      if (!isNaN(parsed)) {
+        handleSetValue(editingCell.agentId, editingCell.field, parsed)
+      }
+      setEditingCell(null)
+    }
+  }
+
+  const cancelEdit = () => {
+    setEditingCell(null)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      commitEdit()
+    } else if (e.key === 'Escape') {
+      cancelEdit()
+    }
   }
 
   return (
@@ -107,7 +160,30 @@ export function CommendationClicker({ isOpen, onClose, onMinimize, windowManager
                   >
                     <Minus className="w-3 h-3" />
                   </button>
-                  <span className="w-6 text-center text-sm font-mono">{agent.awardsDelta ?? 0}</span>
+                  {editingCell?.agentId === agent.id && editingCell?.field === 'awardsDelta' ? (
+                    <input
+                      type="number"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onBlur={commitEdit}
+                      onKeyDown={handleKeyDown}
+                      autoFocus
+                      className={cn(
+                        "w-8 text-center text-sm font-mono",
+                        isWin98 
+                          ? "bg-white border border-[#808080] text-black" 
+                          : "bg-agency-ink border border-agency-cyan/50 text-agency-cyan"
+                      )}
+                    />
+                  ) : (
+                    <span 
+                      className="w-6 text-center text-sm font-mono cursor-pointer hover:underline"
+                      onClick={() => startEditing(agent.id, 'awardsDelta', agent.awardsDelta ?? 0)}
+                      title={t('app.common.clickToEdit')}
+                    >
+                      {agent.awardsDelta ?? 0}
+                    </span>
+                  )}
                   <button
                     onClick={() => handleDeltaChange(agent.id, 'awardsDelta', 1)}
                     className={cn(
@@ -134,7 +210,30 @@ export function CommendationClicker({ isOpen, onClose, onMinimize, windowManager
                   >
                     <Minus className="w-3 h-3" />
                   </button>
-                  <span className="w-6 text-center text-sm font-mono">{agent.reprimandsDelta ?? 0}</span>
+                  {editingCell?.agentId === agent.id && editingCell?.field === 'reprimandsDelta' ? (
+                    <input
+                      type="number"
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onBlur={commitEdit}
+                      onKeyDown={handleKeyDown}
+                      autoFocus
+                      className={cn(
+                        "w-8 text-center text-sm font-mono",
+                        isWin98 
+                          ? "bg-white border border-[#808080] text-black" 
+                          : "bg-agency-ink border border-agency-cyan/50 text-agency-cyan"
+                      )}
+                    />
+                  ) : (
+                    <span 
+                      className="w-6 text-center text-sm font-mono cursor-pointer hover:underline"
+                      onClick={() => startEditing(agent.id, 'reprimandsDelta', agent.reprimandsDelta ?? 0)}
+                      title={t('app.common.clickToEdit')}
+                    >
+                      {agent.reprimandsDelta ?? 0}
+                    </span>
+                  )}
                   <button
                     onClick={() => handleDeltaChange(agent.id, 'reprimandsDelta', 1)}
                     className={cn(
