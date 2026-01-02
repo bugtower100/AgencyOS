@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { X } from 'lucide-react'
+import { X, Minus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useThemeStore } from '@/stores/theme-store'
 import type { WindowManager } from './use-window-manager'
@@ -8,6 +8,7 @@ interface WindowFrameProps {
   title: string
   isOpen: boolean
   onClose: () => void
+  onMinimize?: () => void
   children: React.ReactNode
   initialPosition?: { x: number; y: number }
   initialSize?: { width: number; height: number }
@@ -21,6 +22,7 @@ export function WindowFrame({
   title,
   isOpen,
   onClose,
+  onMinimize,
   children,
   initialPosition,
   initialSize = { width: 400, height: 300 },
@@ -182,6 +184,19 @@ export function WindowFrame({
             {title}
           </span>
           <div className="flex gap-1">
+             {onMinimize && (
+               <button 
+                 onClick={onMinimize}
+                 className={cn(
+                   "flex h-4 w-4 items-center justify-center",
+                   isWin98 
+                     ? "bg-[#c0c0c0] text-black shadow-[inset_-1px_-1px_#000000,inset_1px_1px_#ffffff,inset_-2px_-2px_#808080,inset_2px_2px_#dfdfdf] active:shadow-[inset_1px_1px_#000000,inset_-1px_-1px_#ffffff,inset_2px_2px_#808080,inset_-2px_-2px_#dfdfdf]" 
+                     : "hover:text-agency-cyan"
+                 )}
+               >
+                 <Minus className="h-3 w-3" />
+               </button>
+             )}
              <button 
                onClick={onClose}
                className={cn(

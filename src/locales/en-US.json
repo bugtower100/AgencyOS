@@ -438,6 +438,10 @@
     },
     "commendation": {
       "title": "Commendation Application System v1.0",
+      "editorTitle": "Active Agent Commendations/Demerits",
+      "agent": "Agent Codename",
+      "noActiveAgents": "No active agents",
+      "hint": "Auto-saved · Settle via Agents page",
       "count": "Applications Submitted:",
       "submit": "Submit Application",
       "feedbacks": {
@@ -456,6 +460,27 @@
     "emergency": {
       "title": "Secure Inbox (Level 5)",
       "noSelection": "Select a mail to read...",
+      "noMails": "Inbox is empty",
+      "addMail": "New Mail",
+      "resetDefaults": "Reset to Defaults",
+      "editMode": "Edit Mode",
+      "newMail": {
+        "subject": "New Mail",
+        "body": "Enter mail content here..."
+      },
+      "form": {
+        "subject": "Subject",
+        "from": "From",
+        "to": "To",
+        "date": "Date",
+        "icon": "Icon",
+        "body": "Body"
+      },
+      "icons": {
+        "mail": "Normal Mail",
+        "alert": "Alert",
+        "warning": "Warning"
+      },
       "mail1": {
         "subject": "WARNING: CONTAINMENT BREACH",
         "body": "Containment breach detected in Sector [DATA EXPUNGED].\n\nAll personnel must proceed to Shelter [REDACTED] immediately.\n\nThis is not a drill.\nRepeat, this is not a drill."
@@ -471,9 +496,12 @@
     },
     "chaos": {
       "title": "Chaos Controller",
-      "status": "Reality Stability",
-      "stabilize": "Stabilize Reality",
-      "stabilizing": "Stabilizing..."
+      "currentMission": "Current Mission",
+      "noMission": "No Mission",
+      "noMissionHint": "Create a mission in Mission Control first",
+      "realityFailed": "Reality Alteration Failed",
+      "adjustNote": "Quick Adjust",
+      "hint": "Adjustments are auto-saved and logged"
     },
     "icons": {
       "manual": "My Manual 1998: Pro",

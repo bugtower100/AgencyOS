@@ -866,26 +866,31 @@ export function AppShell() {
       <DesktopNotepad 
         isOpen={openPrograms.includes('manual') && !minimizedPrograms.includes('manual')} 
         onClose={() => closeProgram('manual')}
+        onMinimize={() => setMinimizedPrograms(prev => [...prev, 'manual'])}
         windowManager={windowManager}
       />
       <VoidSchedule 
         isOpen={openPrograms.includes('schedule') && !minimizedPrograms.includes('schedule')} 
         onClose={() => closeProgram('schedule')}
+        onMinimize={() => setMinimizedPrograms(prev => [...prev, 'schedule'])}
         windowManager={windowManager}
       />
       <CommendationClicker 
         isOpen={openPrograms.includes('commendation') && !minimizedPrograms.includes('commendation')} 
         onClose={() => closeProgram('commendation')}
+        onMinimize={() => setMinimizedPrograms(prev => [...prev, 'commendation'])}
         windowManager={windowManager}
       />
       <EmergencyInbox 
         isOpen={openPrograms.includes('emergency') && !minimizedPrograms.includes('emergency')} 
         onClose={() => closeProgram('emergency')}
+        onMinimize={() => setMinimizedPrograms(prev => [...prev, 'emergency'])}
         windowManager={windowManager}
       />
       <ChaosController 
         isOpen={openPrograms.includes('chaos') && !minimizedPrograms.includes('chaos')} 
         onClose={() => closeProgram('chaos')}
+        onMinimize={() => setMinimizedPrograms(prev => [...prev, 'chaos'])}
         windowManager={windowManager}
       />
     </div>

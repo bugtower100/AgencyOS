@@ -9,10 +9,11 @@ import { useTranslation } from 'react-i18next'
 interface VoidScheduleProps {
   isOpen: boolean
   onClose: () => void
+  onMinimize?: () => void
   windowManager?: WindowManager
 }
 
-export function VoidSchedule({ isOpen, onClose, windowManager }: VoidScheduleProps) {
+export function VoidSchedule({ isOpen, onClose, onMinimize, windowManager }: VoidScheduleProps) {
   const { t } = useTranslation()
   const [input, setInput] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -40,6 +41,7 @@ export function VoidSchedule({ isOpen, onClose, windowManager }: VoidSchedulePro
       title={t('desktop.schedule.title')}
       isOpen={isOpen}
       onClose={onClose}
+      onMinimize={onMinimize}
       windowId="schedule"
       windowManager={windowManager}
       initialSize={{ width: 300, height: 200 }}

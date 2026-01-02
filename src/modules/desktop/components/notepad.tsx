@@ -8,10 +8,11 @@ import { useTranslation } from 'react-i18next'
 interface DesktopNotepadProps {
   isOpen: boolean
   onClose: () => void
+  onMinimize?: () => void
   windowManager?: WindowManager
 }
 
-export function DesktopNotepad({ isOpen, onClose, windowManager }: DesktopNotepadProps) {
+export function DesktopNotepad({ isOpen, onClose, onMinimize, windowManager }: DesktopNotepadProps) {
   const { t } = useTranslation()
   const [content, setContent] = useState<string>(() => {
     try {
@@ -34,6 +35,7 @@ export function DesktopNotepad({ isOpen, onClose, windowManager }: DesktopNotepa
       title={t('desktop.notepad.title')}
       isOpen={isOpen}
       onClose={onClose}
+      onMinimize={onMinimize}
       initialSize={{ width: 500, height: 400 }}
       windowId="manual"
       windowManager={windowManager}
